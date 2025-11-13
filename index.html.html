@@ -2067,9 +2067,10 @@
     }
   }
 
+  // UPDATED: buyProduct function to open payment link in new tab
   function buyProduct(productName, price) {
-    // Redirect to payment gateway
-    window.open('payment.html?product=' + encodeURIComponent(productName) + '&price=' + price, '_blank');
+    // Redirect to payment gateway in new tab
+    window.open('https://payment-method-index.vercel.app/', '_blank');
   }
 
   // Track user activity
