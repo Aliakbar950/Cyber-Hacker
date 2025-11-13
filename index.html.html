@@ -1,0 +1,2430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> 𝐂𝐲𝐛𝐞𝐫 𝐓𝐨𝐨𝐥𝐤𝐢𝐭 </title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: black;
+      color: white;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+
+    html {
+      overflow-y: auto;
+    }
+
+    /* Background Animation */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      opacity: 0.9;
+    }
+
+    /* Auth Section */
+    .auth-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1003;
+      opacity: 1;
+      visibility: visible;
+      transition: all 0.5s ease;
+    }
+
+    .auth-section.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .auth-container {
+      background: rgba(20, 20, 20, 0.95);
+      border: 3px solid #33ccff;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(51, 204, 255, 0.7);
+    }
+
+    .auth-container h2 {
+      color: #33ccff;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group {
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #00ff99;
+      font-weight: bold;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 2px solid #33ccff;
+      background: rgba(10, 10, 10, 0.8);
+      color: white;
+      font-size: 16px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(51, 204, 255, 0.7);
+    }
+
+    .auth-btn {
+      background: linear-gradient(45deg, #33ccff, #00ff99);
+      color: black;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .auth-btn:hover {
+      background: linear-gradient(45deg, #00ff99, #33ccff);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(51, 204, 255, 0.5);
+    }
+
+    .auth-switch {
+      margin-top: 15px;
+      color: #aaa;
+    }
+
+    .auth-switch a {
+      color: #33ccff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .auth-switch a:hover {
+      text-decoration: underline;
+    }
+
+    /* Menu Button */
+    .menu-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(20, 20, 20, 0.9);
+      border: 2px solid #33ccff;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 0 15px rgba(51, 204, 255, 0.5);
+    }
+
+    .menu-line {
+      width: 20px;
+      height: 2px;
+      background: #33ccff;
+      transition: all 0.3s ease;
+    }
+
+    .menu-button.active .menu-line:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .menu-button.active .menu-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-button.active .menu-line:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -6px);
+    }
+
+    /* Menu Panel */
+    .menu-panel {
+      position: fixed;
+      top: 70px;
+      left: 20px;
+      background: rgba(20, 20, 20, 0.95);
+      border: 2px solid #33ccff;
+      border-radius: 10px;
+      padding: 15px;
+      width: 250px;
+      z-index: 1000;
+      box-shadow: 0 0 20px rgba(51, 204, 255, 0.7);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+
+    .menu-panel.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .menu-panel h3 {
+      color: #33ccff;
+      margin-bottom: 15px;
+      text-align: center;
+      border-bottom: 1px solid #33ccff;
+      padding-bottom: 10px;
+    }
+
+    .user-details {
+      margin-bottom: 20px;
+      padding: 10px;
+      background: rgba(30, 30, 30, 0.8);
+      border-radius: 8px;
+    }
+
+    .user-details p {
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .user-details strong {
+      color: #00ff99;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .menu-btn {
+      padding: 10px 15px;
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid #33ccff;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .menu-btn:hover {
+      background: #33ccff;
+      color: black;
+    }
+
+    .logout-btn {
+      background: rgba(255, 51, 102, 0.2);
+      border-color: #ff3366;
+    }
+
+    .logout-btn:hover {
+      background: #ff3366;
+    }
+
+    /* Video Section */
+    .video-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1002;
+      opacity: 1;
+      transition: all 0.5s ease;
+    }
+
+    .video-section.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .video-title {
+      color: #33ccff;
+      font-size: 36px;
+      text-shadow: 0 0 10px #33ccff, 0 0 20px #33ccff;
+      margin-bottom: 30px;
+      text-align: center;
+      letter-spacing: 2px;
+      z-index: 10;
+    }
+
+    .video-container {
+      width: 80%;
+      max-width: 800px;
+      height: 60%;
+      max-height: 500px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(51, 204, 255, 0.7);
+      border: 3px solid #33ccff;
+    }
+
+    .intro-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .back-to-dashboard {
+      padding: 15px 30px;
+      background: linear-gradient(45deg, #ff3366, #ff9933);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 1;
+      visibility: visible;
+      box-shadow: 0 0 20px rgba(255, 51, 102, 0.7);
+      z-index: 10;
+      margin-top: 30px;
+    }
+
+    .back-to-dashboard:hover {
+      background: linear-gradient(45deg, #ff9933, #ff3366);
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(255, 51, 102, 0.9);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 450px;
+      margin: 60px auto;
+      background: rgba(10, 10, 10, 0.9);
+      border: 3px solid #33ccff;
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 0 70px rgba(51, 204, 255, 0.7), inset 0 0 15px rgba(51, 204, 255, 0.3);
+      text-align: center;
+      animation: fadeIn 1.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Header and Logo */
+    .logo-img {
+        max-width: 120px;
+        margin-bottom: 15px;
+        border-radius: 50%;
+        border: 4px solid #00ff99;
+        box-shadow: 0 0 20px #00ff99;
+    }
+
+    h1 {
+      color: #33ccff;
+      font-size: 45px;
+      text-shadow: 0 0 10px #33ccff, 0 0 20px #33ccff;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      font-size: 19px;
+      color: #00ff99;
+      margin-bottom: 30px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    /* Breaking News Section */
+    .breaking-news {
+      background: linear-gradient(90deg, #ff3366, #ff9933);
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(255, 51, 102, 0.5);
+    }
+
+    .breaking-news-content {
+      display: flex;
+      align-items: center;
+      animation: scrollText 20s linear infinite;
+    }
+
+    @keyframes scrollText {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    .breaking-news-tag {
+      background: #ff3366;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-right: 15px;
+      white-space: nowrap;
+    }
+
+    .breaking-news-text {
+      white-space: nowrap;
+      font-weight: bold;
+    }
+
+    /* Buttons */
+    .btn {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin: 12px 0;
+      padding: 18px 15px;
+      border: 2px solid #00ff99;
+      background: transparent;
+      color: #ffd700;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 5px rgba(0, 255, 153, 0.3);
+      text-align: left;
+    }
+
+    .btn:hover {
+      background: #33ccff;
+      color: #000;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 30px rgba(51, 204, 255, 0.6);
+      border-color: #33ccff;
+    }
+
+    .btn-icon {
+      margin-right: 12px;
+      font-size: 20px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .btn-text {
+      flex: 1;
+    }
+
+    .btn-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-left: 10px;
+      border: 2px solid #33ccff;
+    }
+
+    /* WhatsApp Buttons Row */
+    .whatsapp-row {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .whatsapp-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 10px;
+      border: 2px solid #25D366;
+      background: linear-gradient(45deg, #25D366, #128C7E);
+      color: white;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+      text-align: center;
+    }
+
+    .whatsapp-btn:hover {
+      background: linear-gradient(45deg, #128C7E, #25D366);
+      transform: translateY(-3px);
+      box-shadow: 0 0 25px #25D366;
+    }
+
+    .whatsapp-btn i {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 14px;
+      color: #999;
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer a {
+        color: #00ff99;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+    .footer a:hover {
+        color: #33ccff;
+    }
+
+    /* Welcome Message */
+    .welcome-message {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s ease;
+    }
+
+    .welcome-message.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .welcome-content {
+      background: rgba(20, 20, 20, 0.95);
+      border: 3px solid #33ccff;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(51, 204, 255, 0.7);
+    }
+
+    .welcome-content h2 {
+      color: #33ccff;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    .welcome-content p {
+      margin-bottom: 25px;
+      font-size: 18px;
+      color: #00ff99;
+    }
+
+    .welcome-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .welcome-btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .buy-btn {
+      background: linear-gradient(45deg, #ff3366, #ff9933);
+      color: white;
+    }
+
+    .ok-btn {
+      background: linear-gradient(45deg, #33ccff, #00ff99);
+      color: black;
+    }
+
+    .welcome-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Product Details */
+    .product-details {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s ease;
+    }
+
+    .product-details.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .product-content {
+      background: rgba(20, 20, 20, 0.95);
+      border: 3px solid #33ccff;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(51, 204, 255, 0.7);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .product-image {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      border: 2px solid #00ff99;
+    }
+
+    .product-title {
+      color: #33ccff;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    .product-description {
+      color: #ffffff;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .description {
+      background-color: rgba(30, 30, 30, 0.8);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 5px solid #ff3366;
+    }
+
+    .description h3 {
+      margin-bottom: 10px;
+      color: #ff3366;
+      font-size: 20px;
+    }
+
+    .description ul {
+      padding-left: 20px;
+      margin-bottom: 10px;
+    }
+
+    .description li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .activation-section {
+      background-color: rgba(40, 40, 40, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+      border: 1px dashed #33ccff;
+    }
+
+    .activation-section h3 {
+      margin-bottom: 15px;
+      color: #33ccff;
+    }
+
+    .activation-input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #33ccff;
+      border-radius: 8px;
+      font-size: 16px;
+      text-align: center;
+      background: rgba(10, 10, 10, 0.8);
+      color: white;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      gap: 10px;
+    }
+
+    .button-row button {
+      width: 48%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .back-button {
+      background: linear-gradient(to right, #95a5a6, #7f8c8d);
+      color: white;
+    }
+
+    .buy-button {
+      background: linear-gradient(to right, #ff3366, #ff0033);
+      color: white;
+    }
+
+    .whatsapp-button {
+      background: linear-gradient(to right, #25D366, #128C7E);
+      color: white;
+    }
+
+    .verify-button {
+      background: linear-gradient(to right, #00ff99, #33ccff);
+      color: black;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+
+    .button-row button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .close-btn {
+      background: #ff3366;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+    }
+
+    .close-btn:hover {
+      background: #ff0033;
+      transform: translateY(-2px);
+    }
+
+    /* Report Section */
+    .report-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(20, 20, 20, 0.8);
+      border-radius: 15px;
+      border: 2px solid #33ccff;
+      box-shadow: 0 0 20px rgba(51, 204, 255, 0.5);
+    }
+
+    .report-section h3 {
+      color: #33ccff;
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+
+    .report-section p {
+      color: #ffffff;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .report-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+      background: rgba(10, 10, 10, 0.8);
+      color: white;
+      border: 2px solid #33ccff;
+    }
+
+    .form-group textarea:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(51, 204, 255, 0.7);
+    }
+
+    .submit-btn {
+      background: linear-gradient(45deg, #33ccff, #00ff99);
+      color: black;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(45deg, #00ff99, #33ccff);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(51, 204, 255, 0.5);
+    }
+
+    /* Chat System Styles */
+    .chat-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10000;
+      width: 350px;
+      max-width: 90vw;
+      transition: all 0.3s ease;
+    }
+
+    .chat-button {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(45deg, #33ccff, #00ff99);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(51, 204, 255, 0.7);
+      transition: all 0.3s ease;
+      z-index: 10002;
+    }
+
+    .chat-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(51, 204, 255, 0.9);
+    }
+
+    .chat-button i {
+      font-size: 24px;
+      color: black;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff3366;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 10003;
+    }
+
+    .chat-container {
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+      width: 100%;
+      height: 400px;
+      background: rgba(20, 20, 20, 0.95);
+      border: 3px solid #33ccff;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(51, 204, 255, 0.7);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 10001;
+    }
+
+    .chat-container.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .chat-header {
+      background: linear-gradient(45deg, #33ccff, #00ff99);
+      color: black;
+      padding: 15px;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .chat-header .admin-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .admin-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-right: 10px;
+      border: 2px solid black;
+    }
+
+    .close-chat {
+      background: none;
+      border: none;
+      color: black;
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .close-chat:hover {
+      transform: scale(1.2);
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: linear-gradient(45deg, #33ccff, #00ff99);
+      color: black;
+      border-bottom-right-radius: 5px;
+    }
+
+    .message.admin {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-bottom-left-radius: 5px;
+    }
+
+    .message-time {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 5px;
+      text-align: right;
+    }
+
+    .chat-input-container {
+      padding: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 2px solid #33ccff;
+      border-radius: 25px;
+      background: rgba(10, 10, 10, 0.8);
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .chat-input:focus {
+      box-shadow: 0 0 10px rgba(51, 204, 255, 0.7);
+    }
+
+    .send-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #33ccff, #00ff99);
+      border: none;
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .send-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(51, 204, 255, 0.7);
+    }
+
+    .send-button i {
+      font-size: 18px;
+    }
+
+    .typing-indicator {
+      padding: 5px 15px;
+      font-size: 12px;
+      color: #aaa;
+      font-style: italic;
+      display: none;
+    }
+
+    .typing-indicator.active {
+      display: block;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .chat-widget {
+        width: 300px;
+      }
+      
+      .chat-container {
+        height: 350px;
+      }
+      
+      .menu-panel {
+        width: 200px;
+      }
+    }
+
+    /* Hide elements */
+    .hidden {
+      display: none;
+    }
+  </style>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<!-- Auth Section -->
+<div class="auth-section" id="auth-section">
+  <div class="auth-container">
+    <!-- Login Form -->
+    <div id="login-form">
+      <h2>𝐋𝐨𝐠𝐢𝐧 𝐓𝐨 𝐂𝐲𝐛𝐞𝐫 𝐓𝐨𝐨𝐥𝐤𝐢𝐭 </h2>
+      <form class="auth-form" id="login-form-element">
+        <div class="form-group">
+          <label for="login-username">UserName</label>
+          <input type="text" id="login-username" name="username" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="auth-btn">Login</button>
+      </form>
+      <div class="auth-switch">
+        Don't have an account? <a href="#" id="show-signup">Sign Up</a>
+      </div>
+    </div>
+
+<!-- Signup Form -->
+<div id="signup-form" style="display: none;">
+  <h2>𝐒𝐢𝐠𝐧 𝐔𝐩 𝐅𝐨𝐫 𝐂𝐲𝐛𝐞𝐫 𝐓𝐨𝐨𝐥𝐤𝐢𝐭</h2>
+  <form class="auth-form" id="signup-form-element">
+    <div class="form-group">
+      <label for="signup-fullname">Full Name</label>
+      <input type="text" id="signup-fullname" name="fullname" placeholder="Enter your full name" required>
+    </div>
+    <div class="form-group">
+      <label for="signup-phone">Phone Number</label>
+      <input type="tel" id="signup-phone" name="phone" placeholder="Enter your phone number" required>
+    </div>
+    <div class="form-group">
+      <label for="signup-email">Email Address</label>
+      <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
+    </div>
+    
+    <!-- New Address Field -->
+    <div class="form-group">
+      <label for="signup-address">Full Address</label>
+      <textarea id="signup-address" name="address" rows="3" placeholder="Enter your complete address (House No, Street, City, State, Country)" required></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="signup-country">Country</label>
+      <select id="signup-country" name="country" required>
+        <option value="">Select your country</option>
+        <option value="Pakistan">Pakistan</option>
+        <option value="India">India</option>
+        <option value="USA">USA</option>
+        <option value="UK">UK</option>
+        <option value="UAE">UAE</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="signup-password">Password</label>
+      <input type="password" id="signup-password" name="password" placeholder="Create a password" required>
+    </div>
+    <div class="form-group">
+      <label for="signup-confirm-password">Confirm Password</label>
+      <input type="password" id="signup-confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+    </div>
+    <button type="submit" class="auth-btn">Sign Up</button>
+  </form>
+  <div class="auth-switch">
+    Already have an account? <a href="#" id="show-login">Login</a>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- Menu Button -->
+<div class="menu-button" id="menu-button">
+  <div class="menu-line"></div>
+  <div class="menu-line"></div>
+  <div class="menu-line"></div>
+</div>
+
+<!-- Menu Panel -->
+<div class="menu-panel" id="menu-panel">
+  <h3>User Profile</h3>
+  <div class="user-details" id="user-details">
+    <p><strong>Name:</strong> <span id="profile-name">-</span></p>
+    <p><strong>Phone:</strong> <span id="profile-phone">-</span></p>
+    <p><strong>Email:</strong> <span id="profile-email">-</span></p>
+    <p><strong>Address:</strong> <span id="profile-address">-</span></p>
+    <p><strong>Country:</strong> <span id="profile-country">-</span></p>
+    <p><strong>Password:</strong> <span id="profile-password">-</span></p>
+  </div>
+  <div class="menu-buttons">
+    <button class="menu-btn logout-btn" id="logout-button">Logout</button>
+  </div>
+</div>
+
+<!-- Video Section -->
+<div class="video-section hidden" id="video-section">
+  <h2 class="video-title">𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐓𝐨 𝐂𝐲𝐛𝐞𝐫 𝐓𝐨𝐨𝐥𝐤𝐢𝐭</h2>
+  <div class="video-container">
+    <iframe src="https://player.vimeo.com/video/1133919149?h=cd7b9f2c3e&autoplay=1&muted=1" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+  </div>
+  <button class="back-to-dashboard" id="back-to-dashboard">Back to Dashboard</button>
+</div>
+
+<div class="container" id="main-container" style="display: none;">
+  <img src="https://i.ibb.co/NnpWMJY8/150244.jpg" alt="FTGM Logo" class="logo-img">
+  <h1> 𝐂𝐲𝐛𝐞𝐫 𝐇𝐚𝐜𝐤𝐞𝐫 </h1>
+  <div class="subtitle"><i><b>𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐓𝐨 𝐂𝐲𝐛𝐞𝐫 𝐓𝐨𝐨𝐥𝐤𝐢𝐭</b></i></div>
+
+  <!-- Breaking News Section -->
+  <div class="breaking-news">
+    <div class="breaking-news-content">
+      <div class="breaking-news-tag">BREAKING NEWS</div>
+      <div class="breaking-news-text">🔥 SPECIAL OFFER: 70% OFF ON ALL PREMIUM Hack! ALL TIME ONLY! 🔥</div>
+    </div>
+  </div>
+
+  <!-- All Original Product Buttons -->
+  <a href="#" class="btn product-btn" data-product="jazzcash">
+    <i class="fas fa-money-bill-wave btn-icon"></i>
+    <span class="btn-text"> "Jazz Cash Hack"</span>
+    <img src="https://i.ibb.co/h1xsrqQv/195659.jpg" alt="JazzCash" class="btn-image">
+  </a>
+  
+  <a href="#" class="btn product-btn" data-product="sim-data">
+    <i class="fas fa-heart btn-icon"></i>
+    <span class="btn-text"> "Sim Data"</span>
+    <img src="https://i.ibb.co/Ndwx2rdw/195649.jpg" alt="Sim Data" class="btn-image">
+  </a>
+  
+  <a href="#" class="btn product-btn" data-product="easy-pasa">
+    <i class="fas fa-thumbs-up btn-icon"></i>
+    <span class="btn-text">"Easy Pasa Without Biometric Trick"</span>
+    <img src="https://i.ibb.co/tMnmvzXC/196223.jpg" alt="Easy Pasa" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="capcut-new">
+    <i class="fas fa-video btn-icon"></i>
+    <span class="btn-text"> "Unlimited Gmails" </span>
+    <img src="https://i.ibb.co/hFTNHytN/196225.jpg" alt="CapCut New" class="btn-image">
+  </a>
+  
+  <a href="#" class="btn product-btn" data-product="wink">
+    <i class="fas fa-magic btn-icon"></i>
+    <span class="btn-text"> "Easy Pasa Hack"</span>
+    <img src="https://i.ibb.co/tp7wGn8W/196222.jpg" alt="Wink" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="whatsapp-ban">
+    <i class="fas fa-paint-brush btn-icon"></i>
+    <span class="btn-text"> "Whatsapp Ban Toolkit"</span>
+    <img src="https://i.ibb.co/hqQBPhF/211016.jpg" alt="WhatsApp Ban" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="mobile-hack">
+    <i class="fas fa-mobile-alt btn-icon"></i>
+    <span class="btn-text"> "Full Mobile Hack"</span>
+    <img src="https://i.ibb.co/gbCkdhW7/211067.jpg" alt="Mobile Hack" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="vpn-premium">
+    <i class="fas fa-shield-alt btn-icon"></i>
+    <span class="btn-text"> "TIKTOK LIVE "</span>
+    <img src="https://i.ibb.co/qY8Sm9h9/213160.jpg" alt="TIKTOK LIVE" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="antivirus-hack">
+    <i class="fas fa-shield-virus btn-icon"></i>
+    <span class="btn-text"> "TIKTOK FREE VIEWS "</span>
+    <img src="https://i.ibb.co/RpngQ6SJ/213255.jpg" alt="TIKTOK FREE VIEWS " class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="facebook-hack">
+    <i class="fas fa-thumbs-up btn-icon"></i>
+    <span class="btn-text"> "Facebook Likes Hack"</span>
+    <img src="https://i.ibb.co/tp7wGn8W/196222.jpg" alt="Facebook Hack" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="browser-hack">
+    <i class="fas fa-globe btn-icon"></i>
+    <span class="btn-text"> "IMAGE TO LINK "</span>
+    <img src="https://i.ibb.co/4nWP5jWx/213261.jpg" alt="IMAGE TO LINK " class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="office-hack">
+    <i class="fas fa-file-alt btn-icon"></i>
+    <span class="btn-text"> "COPYRIGHT FREE MUSIC"</span>
+    <img src="https://i.ibb.co/r2KBsX92/213268.jpg" alt="COPYRIGHT FREE MUSIC" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="spotify-premium">
+    <i class="fas fa-music btn-icon"></i>
+    <span class="btn-text"> "Spotify Premium Hack"</span>
+    <img src="https://i.ibb.co/tMnmvzXC/196223.jpg" alt="Spotify Premium" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="photoshop-hack">
+    <i class="fas fa-paint-brush btn-icon"></i>
+    <span class="btn-text"> "TIKTOK VIDEO DOWNLOAD  "</span>
+    <img src="https://i.ibb.co/Zp5TDZyg/213277.jpg" alt="TIKTOK VIDEO DOWNLOAD" class="btn-image">
+  </a>
+
+   <a href="#" class="btn product-btn" data-product="camera-hack">
+    <i class="fas fa-camera-retro btn-icon"></i>
+    <span class="btn-text"> "YOUTUBE VIDEO DOWNLOAD"</span>
+    <img src="https://i.ibb.co/9m2fL6y0/213292.jpg" alt="YOUTUBE VIDEO DOWNLOAD" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="instagram-hack">
+    <i class="fas fa-camera btn-icon"></i>
+    <span class="btn-text"> "Instagram Followers Hack"</span>
+    <img src="https://i.ibb.co/hFTNHytN/196225.jpg" alt="Instagram Hack" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="game-hack">
+    <i class="fas fa-gamepad btn-icon"></i>
+    <span class="btn-text"> "STYLIST DP MAKER"</span>
+    <img src="https://i.ibb.co/C3tW3c8J/213322.jpg" alt="STYLIST DP MAKER" class="btn-image">  
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="video-editor">
+    <i class="fas fa-video btn-icon"></i>
+    <span class="btn-text"> "Call Without Number"</span>
+    <img src="https://i.ibb.co/xwkjwsJ/213768.jpg" alt="Call Without Number" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="netflix-hack">
+    <i class="fas fa-film btn-icon"></i>
+    <span class="btn-text"> "Netflix Premium Hack"</span>
+    <img src="https://i.ibb.co/h1xsrqQv/195659.jpg" alt="Netflix Hack" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="wifi-hack">
+    <i class="fas fa-wifi btn-icon"></i>
+    <span class="btn-text"> "Tiny Now Service"</span>
+    <img src="https://i.ibb.co/DfbDVMfH/213780.jpg" alt="Tiny Now Service" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="music-player">
+    <i class="fas fa-headphones btn-icon"></i>
+    <span class="btn-text"> "TikTok Permanent Ban"</span>
+    <img src="https://i.ibb.co/6JFd75Mn/214084.jpg" alt="TikTok Permanent Ban" class="btn-image">
+  </a>
+
+  <a href="#" class="btn product-btn" data-product="youtube-premium">
+    <i class="fas fa-play-circle btn-icon"></i>
+    <span class="btn-text"> "YouTube Premium Hack"</span>
+    <img src="https://i.ibb.co/Ndwx2rdw/195649.jpg" alt="YouTube Premium" class="btn-image">
+  </a>
+
+  <!-- Additional Products from Firebase will be loaded here -->
+  <div id="additional-products-container"></div>
+
+  <!-- WhatsApp Buttons Row -->
+  <div class="whatsapp-row">
+    <a href="https://chat.whatsapp.com/KldxjbtsgQ31s52Cdx5kkI" target="_blank" class="whatsapp-btn">
+      <i class="fab fa-whatsapp"></i>
+      <span>WhatsApp Group</span>
+    </a>
+    <a href="https://whatsapp.com/channel/0029VbB9eEoGehETimrbtt0B" target="_blank" class="whatsapp-btn">
+      <i class="fab fa-whatsapp"></i>
+      <span>WhatsApp Channel</span>
+    </a>
+    <a href="https://wa.me/+923007624789?text=Hi_Murshad_Hacker_I_have_visited_your_app_and_I_want_to_talk_to_you" target="_blank" class="whatsapp-btn">
+      <i class="fas fa-user-shield"></i>
+      <span>Contact Admin</span>
+    </a>
+  </div>
+
+  <!-- Report Section -->
+  <div class="report-section">
+    <h3>Report a Bug or Suggestion</h3>
+    <p>If you encounter any issues or have suggestions for improvement, please let us know:</p>
+    <form class="report-form" id="reportForm">
+      <div class="form-group">
+        <label for="report-email">Your Email (example@gmail.com)</label>
+        <input type="email" id="report-email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="report-message">Describe the bug or suggestion...</label>
+        <textarea id="report-message" name="message" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="submit-btn">Submit Your Message</button>
+    </form>
+  </div>
+
+  <div class="footer">
+    <b> 𝐓𝐡𝐢𝐬_𝐓𝐨𝐨𝐥𝐤𝐢𝐭_𝐏𝐫𝐨𝐯𝐢𝐝𝐞_𝐁𝐲_×𝐀𝐥𝐢_𝐑𝐚𝐉𝐩𝐮𝐭× </b>
+    <br>
+  </div>
+</div>
+
+<!-- Welcome Message -->
+<div class="welcome-message" id="welcome-modal">
+  <div class="welcome-content">
+    <h2>WellCome</h2>
+    <p>Thanks For Visit My App This Hack Premium</p>
+    <div class="welcome-buttons">
+      <button id="ok-button" class="welcome-btn ok-btn">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- Dynamic Product Details will be loaded here -->
+<div id="dynamic-product-container"></div>
+
+<!-- Chat Widget -->
+<div class="chat-widget">
+  <div class="chat-container" id="chat-container">
+    <div class="chat-header">
+      <div class="admin-info">
+        <img src="https://i.ibb.co/NnpWMJY8/150244.jpg" alt="Admin Avatar" class="admin-avatar">
+        <span>Support Chat</span>
+      </div>
+      <button class="close-chat" id="close-chat">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="message admin">
+       𝐇𝐞𝐥𝐥𝐨! 𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐭𝐨 𝐂𝐲𝐛𝐞𝐫 𝐓𝐨𝐨𝐥𝐤𝐢𝐭. 𝐇𝐨𝐰 𝐜𝐚𝐧 𝐈 𝐡𝐞𝐥𝐩 𝐲𝐨𝐮 𝐓𝐨𝐝𝐚𝐲?
+        <div class="message-time">Just now</div>
+      </div>
+    </div>
+    <div class="typing-indicator" id="typing-indicator">
+      Admin is typing...
+    </div>
+    <div class="chat-input-container">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Type your message...">
+      <button class="send-button" id="send-button">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+  <div class="chat-button" id="chat-button">
+    <i class="fas fa-comments"></i>
+    <div class="notification-badge" id="notification-badge" style="display: none;">0</div>
+  </div>
+</div>
+
+<script>
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAp7HD_XEX4Xh9iGMM32f0GyiLNzjZUfUQ",
+    authDomain: "toolkit-pannel-1e169.firebaseapp.com",
+    databaseURL: "https://toolkit-pannel-1e169-default-rtdb.firebaseio.com",
+    projectId: "toolkit-pannel-1e169",
+    storageBucket: "toolkit-pannel-1e169.firebasestorage.app",
+    messagingSenderId: "195618875929",
+    appId: "1:195618875929:web:9b808a567865ce9e031888",
+    measurementId: "G-C5971CP4L3"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  // Global variables
+  let additionalProducts = [];
+  let currentProduct = null;
+  let currentUser = null;
+  let isMenuOpen = false;
+
+  // Product data for original buttons
+  const originalProducts = {
+    'jazzcash': {
+      name: 'Jazz Cash Hack',
+      type: 'premium',
+      price: '500',
+      description: 'Premium tool for Jazz Cash with advanced features and full access.',
+      image: 'https://i.ibb.co/h1xsrqQv/195659.jpg',
+      activationCode: '00998877',
+      activationLink: 'https://www.mediafire.com/folder/bfm8c1ecdt1vk/Full+Mobile+Hack+By+Murshad+Hacker'
+    },
+    'sim-data': {
+      name: 'Sim Data',
+      type: 'free',
+      price: '0',
+      description: 'Free tool to access SIM data information and details.',
+      image: 'https://i.ibb.co/Ndwx2rdw/195649.jpg',
+      downloadLink: 'https://sim-information-by-ali-ra-jput-rtr7.vercel.app/'
+    },
+    'easy-pasa': {
+      name: 'Easy Pasa Without Biometric',
+      type: 'free',
+      price: '0',
+      description: 'Access Easy Pasa without biometric verification.',
+      image: 'https://i.ibb.co/tMnmvzXC/196223.jpg',
+      downloadLink: 'https://docs.google.com/document/d/16sEq-HRsVox3136CdH-7xFKP1m6_m6VAVG0BqY6yQH8/edit?usp=drivesdk'
+    },
+    'capcut-new': {
+      name: 'Unlimited Gmails',
+      type: 'free',
+      price: '0',
+      description: 'Create unlimited Gmail accounts with this tool.',
+      image: 'https://i.ibb.co/hFTNHytN/196225.jpg',
+      downloadLink: 'https://www.mediafire.com/file/tefgtrcgmbyhoxk/GMAIL_WITHOUT_PHONE_NUMBERS_.zip/file'
+    },
+    'wink': {
+      name: 'Easy Pasa Hack',
+      type: 'premium',
+      price: '500',
+      description: 'Premium Easy Pasa hack with advanced features.',
+      image: 'https://i.ibb.co/tp7wGn8W/196222.jpg',
+      activationCode: '76247890',
+      activationLink: 'https://www.mediafire.com/folder/bfm8c1ecdt1vk/Full+Mobile+Hack+By+Murshad+Hacker'
+    },
+    'whatsapp-ban': {
+      name: 'Whatsapp Ban Toolkit',
+      type: 'free',
+      price: '0',
+      description: 'Toolkit to handle WhatsApp ban issues.',
+      image: 'https://i.ibb.co/hqQBPhF/211016.jpg',
+      downloadLink: 'https://www.mediafire.com/file/uy0ev2q21w8z47j/MH_BAN_TOOL_1.0.0.apk/file'
+    },
+    'mobile-hack': {
+      name: 'Full Mobile Hack',
+      type: 'premium',
+      price: '1000',
+      description: 'Complete mobile hacking toolkit with all features.',
+      image: 'https://i.ibb.co/gbCkdhW7/211067.jpg',
+      activationCode: '123654789',
+      activationLink: 'https://www.mediafire.com/folder/bfm8c1ecdt1vk/Full+Mobile+Hack+By+Murshad+Hacker'
+    },
+    'vpn-premium': {
+      name: 'TIKTOK LIVE',
+      type: 'free',
+      price: '0',
+      description: 'Tool for TikTok live streaming features.',
+      image: 'https://i.ibb.co/qY8Sm9h9/213160.jpg',
+      downloadLink: 'https://www.mediafire.com/file/yonbn9egjn7vdrg/TikTok/file'
+    },
+    'antivirus-hack': {
+      name: 'TIKTOK FREE VIEWS',
+      type: 'free',
+      price: '0',
+      description: 'Get free unlimited TikTok views and likes.',
+      image: 'https://i.ibb.co/RpngQ6SJ/213255.jpg',
+      downloadLink: 'https://zefoy.com/'
+    },
+    'facebook-hack': {
+      name: 'Facebook Likes Hack',
+      type: 'premium',
+      price: '400',
+      description: 'Get unlimited Facebook likes and followers.',
+      image: 'https://i.ibb.co/tp7wGn8W/196222.jpg',
+      activationCode: 'FB123456',
+      activationLink: 'https://www.mediafire.com/folder/bfm8c1ecdt1vk/Full+Mobile+Hack+By+Murshad+Hacker'
+    },
+    'browser-hack': {
+      name: 'IMAGE TO LINK',
+      type: 'free',
+      price: '0',
+      description: 'Convert images to shareable links easily.',
+      image: 'https://i.ibb.co/4nWP5jWx/213261.jpg',
+      downloadLink: 'https://postimages.org/'
+    },
+    'office-hack': {
+      name: 'COPYRIGHT FREE MUSIC',
+      type: 'free',
+      price: '0',
+      description: 'Access copyright free music for your projects.',
+      image: 'https://i.ibb.co/r2KBsX92/213268.jpg',
+      downloadLink: 'https://pixabay.com/'
+    },
+    'spotify-premium': {
+      name: 'Spotify Premium Hack',
+      type: 'premium',
+      price: '600',
+      description: 'Get Spotify Premium features for free.',
+      image: 'https://i.ibb.co/tMnmvzXC/196223.jpg',
+      activationCode: 'SPOTIFY123',
+      activationLink: 'https://www.mediafire.com/folder/bfm8c1ecdt1vk/Full+Mobile+Hack+By+Murshad+Hacker'
+    },
+    'photoshop-hack': {
+      name: 'TIKTOK VIDEO DOWNLOAD',
+      type: 'free',
+      price: '0',
+      description: 'Download TikTok videos without watermark.',
+      image: 'https://i.ibb.co/Zp5TDZyg/213277.jpg',
+      downloadLink: 'https://tikdownloader.io/en'
+    },
+    'camera-hack': {
+      name: 'YOUTUBE VIDEO DOWNLOAD',
+      type: 'free',
+      price: '0',
+      description: 'Download YouTube videos in HD quality.',
+      image: 'https://i.ibb.co/9m2fL6y0/213292.jpg',
+      downloadLink: 'https://en1.savefrom.net/1-youtube-video-downloader-13sg/'
+    },
+    'instagram-hack': {
+      name: 'Instagram Followers Hack',
+      type: 'premium',
+      price: '500',
+      description: 'Get unlimited Instagram followers and likes.',
+      image: 'https://i.ibb.co/hFTNHytN/196225.jpg',
+      activationCode: 'INSTA123',
+      activationLink: 'https://www.mediafire.com/folder/bfm8c1ecdt1vk/Full+Mobile+Hack+By+Murshad+Hacker'
+    },
+    'game-hack': {
+      name: 'STYLIST DP MAKER',
+      type: 'free',
+      price: '0',
+      description: 'Create stylish profile pictures easily.',
+      image: 'https://i.ibb.co/C3tW3c8J/213322.jpg',
+      downloadLink: 'https://www.imagesplatform.com/'
+    },
+    'video-editor': {
+      name: 'Call Without Number',
+      type: 'free',
+      price: '0',
+      description: 'Make calls without showing your number.',
+      image: 'https://i.ibb.co/xwkjwsJ/213768.jpg',
+      downloadLink: 'https://globfone.com/'
+    },
+    'netflix-hack': {
+      name: 'Netflix Premium Hack',
+      type: 'premium',
+      price: '800',
+      description: 'Get Netflix Premium subscription for free.',
+      image: 'https://i.ibb.co/h1xsrqQv/195659.jpg',
+      activationCode: 'NETFLIX123',
+      activationLink: 'https://www.mediafire.com/folder/bfm8c1ecdt1vk/Full+Mobile+Hack+By+Murshad+Hacker'
+    },
+    'wifi-hack': {
+      name: 'Tiny Now Service',
+      type: 'free',
+      price: '0',
+      description: 'Multiple online tools and services.',
+      image: 'https://i.ibb.co/DfbDVMfH/213780.jpg',
+      downloadLink: 'https://tinywow.com/'
+    },
+    'music-player': {
+      name: 'TikTok Permanent Ban',
+      type: 'free',
+      price: '0',
+      description: 'Tool for TikTok account management.',
+      image: 'https://i.ibb.co/6JFd75Mn/214084.jpg',     
+      downloadLink: 'https://tiktok-permanent-ban.vercel.app/'
+    },
+    'youtube-premium': {
+      name: 'YouTube Premium Hack',
+      type: 'premium',
+      price: '700',
+      description: 'Get YouTube Premium features for free.',
+      image: 'https://i.ibb.co/Ndwx2rdw/195649.jpg',
+      activationCode: 'YOUTUBE123',
+      activationLink: 'https://www.mediafire.com/folder/bfm8c1ecdt1vk/Full+Mobile+Hack+By+Murshad+Hacker'
+    }
+  };
+
+  // Authentication System
+  function initAuthSystem() {
+    // Check if user is already logged in
+    const savedUser = localStorage.getItem('toolkit_user');
+    if (savedUser) {
+      currentUser = JSON.parse(savedUser);
+      showVideoSection();
+      return;
+    }
+    
+    // Show auth section if not logged in
+    showAuthSection();
+  }
+
+  function showAuthSection() {
+    document.getElementById('auth-section').classList.remove('hidden');
+    document.getElementById('main-container').style.display = 'none';
+    document.getElementById('video-section').classList.add('hidden');
+    document.getElementById('menu-button').style.display = 'none';
+  }
+
+  function hideAuthSection() {
+    document.getElementById('auth-section').classList.add('hidden');
+  }
+
+  function showVideoSection() {
+    hideAuthSection();
+    document.getElementById('video-section').classList.remove('hidden');
+    document.getElementById('main-container').style.display = 'none';
+    document.getElementById('menu-button').style.display = 'flex';
+    
+    // Update profile details in menu
+    document.getElementById('profile-name').textContent = currentUser.fullname;
+    document.getElementById('profile-phone').textContent = currentUser.phone;
+    document.getElementById('profile-email').textContent = currentUser.email;
+    document.getElementById('profile-address').textContent = currentUser.address || 'Not provided';
+    document.getElementById('profile-country').textContent = currentUser.country;
+    document.getElementById('profile-password').textContent = currentUser.password;
+    
+    // Track user visit
+    if (currentUser.id) {
+      const userData = {
+        id: currentUser.id,
+        name: currentUser.fullname,
+        phone: currentUser.phone,
+        email: currentUser.email,
+        address: currentUser.address,
+        country: currentUser.country,
+        visitTime: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        lastActivity: new Date().toISOString(),
+        page: 'website'
+      };
+      
+      database.ref('websiteUsers/' + currentUser.id).set(userData);
+    }
+  }
+
+  function showMainContent() {
+    document.getElementById('video-section').classList.add('hidden');
+    document.getElementById('main-container').style.display = 'block';
+    document.getElementById('menu-button').style.display = 'flex';
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+    
+    if (username === '' || password === '') {
+      alert('Please fill in all fields');
+      return;
+    }
+    
+    // Check if user exists in Firebase
+    database.ref('users/').orderByChild('email').equalTo(username).once('value')
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          const users = snapshot.val();
+          const userId = Object.keys(users)[0];
+          const user = users[userId];
+          
+          if (user.password === password) {
+            currentUser = {
+              id: userId,
+              fullname: user.fullname,
+              phone: user.phone,
+              email: user.email,
+              address: user.address,
+              country: user.country,
+              password: user.password
+            };
+            
+            localStorage.setItem('toolkit_user', JSON.stringify(currentUser));
+            showVideoSection();
+          } else {
+            alert('Invalid password');
+          }
+        } else {
+          // Check by username
+          database.ref('users/').orderByChild('fullname').equalTo(username).once('value')
+            .then(snapshot => {
+              if (snapshot.exists()) {
+                const users = snapshot.val();
+                const userId = Object.keys(users)[0];
+                const user = users[userId];
+                
+                if (user.password === password) {
+                  currentUser = {
+                    id: userId,
+                    fullname: user.fullname,
+                    phone: user.phone,
+                    email: user.email,
+                    address: user.address,
+                    country: user.country,
+                    password: user.password
+                  };
+                  
+                  localStorage.setItem('toolkit_user', JSON.stringify(currentUser));
+                  showVideoSection();
+                } else {
+                  alert('Invalid password');
+                }
+              } else {
+                alert('User not found');
+              }
+            });
+        }
+      })
+      .catch(error => {
+        console.error('Login error:', error);
+        alert('Login failed. Please try again.');
+      });
+  }
+
+  function handleSignup(e) {
+    e.preventDefault();
+    
+    const fullname = document.getElementById('signup-fullname').value.trim();
+    const phone = document.getElementById('signup-phone').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const address = document.getElementById('signup-address').value.trim();
+    const country = document.getElementById('signup-country').value;
+    const password = document.getElementById('signup-password').value;
+    const confirmPassword = document.getElementById('signup-confirm-password').value;
+    
+    if (fullname === '' || phone === '' || email === '' || address === '' || country === '' || password === '') {
+      alert('Please fill in all fields');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    
+    if (password.length < 6) {
+      alert('Password must be at least 6 characters long');
+      return;
+    }
+    
+    // Check if user already exists
+    database.ref('users/').orderByChild('email').equalTo(email).once('value')
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          alert('User with this email already exists');
+        } else {
+          // Create new user
+          const userId = 'user_' + Date.now();
+          const userData = {
+            id: userId,
+            fullname: fullname,
+            phone: phone,
+            email: email,
+            address: address,
+            country: country,
+            password: password,
+            createdAt: new Date().toISOString()
+          };
+          
+          database.ref('users/' + userId).set(userData)
+            .then(() => {
+              currentUser = {
+                id: userId,
+                fullname: fullname,
+                phone: phone,
+                email: email,
+                address: address,
+                country: country,
+                password: password
+              };
+              
+              localStorage.setItem('toolkit_user', JSON.stringify(currentUser));
+              showVideoSection();
+            })
+            .catch(error => {
+              console.error('Signup error:', error);
+              alert('Signup failed. Please try again.');
+            });
+        }
+      });
+  }
+
+  function logout() {
+    localStorage.removeItem('toolkit_user');
+    currentUser = null;
+    showAuthSection();
+    hideMenuPanel();
+  }
+
+  // Menu System
+  function toggleMenuPanel() {
+    const menuPanel = document.getElementById('menu-panel');
+    const menuButton = document.getElementById('menu-button');
+    
+    if (isMenuOpen) {
+      menuPanel.classList.remove('active');
+      menuButton.classList.remove('active');
+      isMenuOpen = false;
+    } else {
+      menuPanel.classList.add('active');
+      menuButton.classList.add('active');
+      isMenuOpen = true;
+    }
+  }
+
+  function hideMenuPanel() {
+    const menuPanel = document.getElementById('menu-panel');
+    const menuButton = document.getElementById('menu-button');
+    
+    menuPanel.classList.remove('active');
+    menuButton.classList.remove('active');
+    isMenuOpen = false;
+  }
+
+  // Load additional products from Firebase
+  function loadAdditionalProductsFromFirebase() {
+    database.ref('adminProducts/').on('value', (snapshot) => {
+      const firebaseProducts = snapshot.val();
+      if (firebaseProducts) {
+        additionalProducts = Object.values(firebaseProducts);
+        displayAdditionalProducts();
+      }
+    });
+  }
+
+  function displayAdditionalProducts() {
+    const additionalContainer = document.getElementById('additional-products-container');
+    
+    if (additionalProducts.length === 0) {
+      additionalContainer.innerHTML = '';
+      return;
+    }
+
+    let productsHTML = '';
+    additionalProducts.forEach(product => {
+      productsHTML += `
+        <a href="#" class="btn product-btn" data-product="additional-${product.id}" data-product-id="${product.id}">
+          <i class="fas ${product.type === 'premium' ? 'fa-crown' : 'fa-download'} btn-icon"></i>
+          <span class="btn-text">${product.name}</span>
+          <img src="${product.image}" alt="${product.name}" class="btn-image">
+        </a>
+      `;
+    });
+
+    additionalContainer.innerHTML = productsHTML;
+
+    // Add event listeners to additional product buttons
+    document.querySelectorAll('#additional-products-container .product-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const productId = this.getAttribute('data-product-id');
+        const product = additionalProducts.find(p => p.id == productId);
+        
+        if (product) {
+          currentProduct = product;
+          showWelcomeMessage(product);
+        }
+      });
+    });
+  }
+
+  function showWelcomeMessage(product) {
+    // Show welcome message first
+    document.getElementById('welcome-modal').classList.add('active');
+    
+    // Store the product to show after welcome message
+    currentProduct = product;
+  }
+
+  function showProductDetails(product) {
+    // Create product details HTML
+    let productHTML = '';
+    
+    if (product.type === 'premium') {
+      productHTML = `
+        <div class="product-details active" id="product-details">
+          <div class="product-content">
+            <img src="${product.image}" alt="${product.name}" class="product-image">
+            
+            <div class="description">
+              <h3>${product.name}</h3>
+              <p>${product.description}</p>
+              <ul>
+                <li>Premium Features Unlocked</li>
+                <li>Lifetime Access</li>
+                <li>24/7 Support</li>
+                <li>Real Price: ₹${product.price}</li>
+              </ul>
+            </div>
+            
+            <div class="activation-section">
+              <h3>Verify Activation Code</h3>
+              <p>Please enter your activation code to verify your product.</p>
+              <input type="text" class="activation-input" placeholder="Enter activation code">
+              <button class="verify-button" onclick="verifyActivationCode('${product.activationCode}', '${product.activationLink}')">Verify Code</button>
+              <p style="margin-top: 15px; font-size: 14px; color: #aaa;">Don't have a code? Purchase one below</p>
+            </div>
+            
+            <div class="button-row">
+              <button class="buy-button" onclick="buyProduct('${product.name}', ${product.price})">Buy Activation Code</button>
+              <button class="whatsapp-button" onclick="window.open('https://chat.whatsapp.com/KldxjbtsgQ31s52Cdx5kkI', '_blank')">WhatsApp Group</button>
+            </div>
+            
+            <button class="close-btn back-button" onclick="closeProductDetails()">Back to Home</button>
+          </div>
+        </div>
+      `;
+    } else {
+      productHTML = `
+        <div class="product-details active" id="product-details">
+          <div class="product-content">
+            <img src="${product.image}" alt="${product.name}" class="product-image">
+            
+            <div class="description">
+              <h3>${product.name}</h3>
+              <p>${product.description}</p>
+              <ul>
+                <li>Free Download</li>
+                <li>No Activation Required</li>
+                <li>Easy to Use</li>
+                <li>Instant Access</li>
+              </ul>
+            </div>
+            
+            <div class="button-row">
+              <button class="download-btn" onclick="window.open('${product.downloadLink}', '_blank')">Free Download</button>
+              <button class="whatsapp-button" onclick="window.open('https://chat.whatsapp.com/KldxjbtsgQ31s52Cdx5kkI', '_blank')">WhatsApp Group</button>
+            </div>
+            
+            <button class="close-btn back-button" onclick="closeProductDetails()">Back to Home</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Add to dynamic container
+    document.getElementById('dynamic-product-container').innerHTML = productHTML;
+  }
+
+  function closeProductDetails() {
+    document.getElementById('dynamic-product-container').innerHTML = '';
+    document.querySelectorAll('.product-details').forEach(el => {
+      el.classList.remove('active');
+    });
+  }
+
+  // FIXED: verifyActivationCode function
+  function verifyActivationCode(correctCode, activationLink) {
+    // Get the activation input from the currently active product details
+    const activeProductDetails = document.querySelector('.product-details.active');
+    if (!activeProductDetails) {
+      alert('❌ Product details not found');
+      return;
+    }
+    
+    const input = activeProductDetails.querySelector('.activation-input');
+    if (!input) {
+      alert('❌ Activation input not found');
+      return;
+    }
+    
+    const userCode = input.value.trim();
+    
+    if (userCode === '') {
+      alert('❌ Please enter an activation code');
+      return;
+    }
+    
+    if (userCode === correctCode) {
+      alert('✅ Activation successful! Your product is now verified.');
+      
+      // Track code activation in Firebase
+      const activationData = {
+        userId: currentUser ? currentUser.id : 'anonymous',
+        userName: currentUser ? currentUser.fullname : 'Anonymous',
+        product: currentProduct.name,
+        code: userCode,
+        timestamp: new Date().toISOString(),
+        status: 'verified'
+      };
+      
+      database.ref('codeActivations/').push(activationData);
+      
+      // Open activation link in new tab
+      if (activationLink) {
+        window.open(activationLink, '_blank');
+      }
+    } else {
+      alert('❌ Invalid activation code. Please try again or purchase a valid code.');
+    }
+  }
+
+  function buyProduct(productName, price) {
+    // Redirect to payment gateway
+    window.open('payment.html?product=' + encodeURIComponent(productName) + '&price=' + price, '_blank');
+  }
+
+  // Track user activity
+  function updateUserActivity() {
+    if (currentUser && currentUser.id) {
+      database.ref('websiteUsers/' + currentUser.id + '/lastActivity').set(new Date().toISOString());
+      database.ref('websiteUsers/' + currentUser.id + '/name').set(currentUser.fullname);
+    }
+  }
+
+  // Track every 30 seconds
+  setInterval(updateUserActivity, 30000);
+
+  // Track product views
+  function trackProductView(productId) {
+    const productData = {
+      productId: productId,
+      timestamp: new Date().toISOString(),
+      userId: currentUser ? currentUser.id : 'anonymous',
+      userName: currentUser ? currentUser.fullname : 'Anonymous'
+    };
+    
+    database.ref('productViews/').push(productData);
+    
+    // Update user's viewed products
+    if (currentUser && currentUser.id) {
+      database.ref('websiteUsers/' + currentUser.id + '/productsViewed').push({
+        productId: productId,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  // Report form submission to Firebase
+  document.getElementById('reportForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('report-email').value;
+    const message = document.getElementById('report-message').value;
+    
+    const reportData = {
+      email: email,
+      message: message,
+      timestamp: new Date().toISOString(),
+      userId: currentUser ? currentUser.id : 'anonymous',
+      userName: currentUser ? currentUser.fullname : 'Anonymous',
+      status: 'new',
+      type: 'bug_report'
+    };
+    
+    database.ref('userReports/').push(reportData);
+    alert('Thank you for your feedback! We will review your message soon.');
+    this.reset();
+  });
+
+  // Chat System with Firebase
+  const chatButton = document.getElementById('chat-button');
+  const chatContainer = document.getElementById('chat-container');
+  const closeChat = document.getElementById('close-chat');
+  const chatMessages = document.getElementById('chat-messages');
+  const chatInput = document.getElementById('chat-input');
+  const sendButton = document.getElementById('send-button');
+  const typingIndicator = document.getElementById('typing-indicator');
+  const notificationBadge = document.getElementById('notification-badge');
+  
+  let isChatOpen = false;
+  let unreadMessages = 0;
+
+  // Create notification sound
+  function createNotificationSound() {
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = 800;
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (e) {
+      console.log('Audio context not supported');
+    }
+  }
+
+  // Open chat
+  chatButton.addEventListener('click', function() {
+    if (!isChatOpen) {
+      chatContainer.classList.add('active');
+      isChatOpen = true;
+      resetNotification();
+      loadChatMessages();
+    } else {
+      chatContainer.classList.remove('active');
+      isChatOpen = false;
+    }
+  });
+
+  // Close chat
+  closeChat.addEventListener('click', function() {
+    chatContainer.classList.remove('active');
+    isChatOpen = false;
+  });
+
+  // Load chat messages from Firebase
+  function loadChatMessages() {
+    if (!currentUser) return;
+    
+    database.ref('chatMessages/').orderByChild('timestamp').limitToLast(20).on('value', (snapshot) => {
+      const messages = snapshot.val();
+      chatMessages.innerHTML = '';
+      
+      if (messages) {
+        Object.keys(messages).forEach(messageId => {
+          const message = messages[messageId];
+          if (message.userId === currentUser.id) {
+            addMessageToChat(message.text, message.sender, message.timestamp);
+          }
+        });
+      }
+      
+      // Add welcome message if no messages
+      if (chatMessages.children.length === 0) {
+        addMessageToChat('Hello! Welcome to ×Ali_RaJput× Toolkit. How can I help you today?', 'admin', new Date().toISOString());
+      }
+      
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  }
+
+  // Add message to chat UI
+  function addMessageToChat(text, sender, timestamp) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', sender);
+    
+    const time = new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    
+    messageDiv.innerHTML = `
+      ${text}
+      <div class="message-time">${time}</div>
+    `;
+    
+    chatMessages.appendChild(messageDiv);
+  }
+
+  // Send message
+  function sendMessage() {
+    if (!currentUser) {
+      alert('Please login first');
+      return;
+    }
+    
+    const messageText = chatInput.value.trim();
+    if (messageText === '') return;
+    
+    // Add user message to chat
+    addMessageToChat(messageText, 'user', new Date().toISOString());
+    
+    // Save to Firebase
+    const messageData = {
+      text: messageText,
+      sender: 'user',
+      userName: currentUser.fullname,
+      timestamp: new Date().toISOString(),
+      userId: currentUser.id,
+      read: false
+    };
+    
+    database.ref('chatMessages/').push(messageData);
+    chatInput.value = '';
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  // Send message on button click
+  sendButton.addEventListener('click', sendMessage);
+  
+  // Send message on Enter key
+  chatInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+
+  // Listen for admin messages
+  database.ref('adminMessages/').orderByChild('timestamp').on('child_added', (snapshot) => {
+    const message = snapshot.val();
+    if (currentUser && message.userId === currentUser.id && !message.read) {
+      if (!isChatOpen) {
+        showNotification();
+        createNotificationSound(); // Play notification sound
+      }
+      
+      // Add admin message to chat
+      addMessageToChat(message.text, 'admin', message.timestamp);
+      
+      // Mark as read if chat is open
+      if (isChatOpen) {
+        database.ref('adminMessages/' + snapshot.key + '/read').set(true);
+      }
+    }
+  });
+
+  // Show notification badge
+  function showNotification() {
+    unreadMessages++;
+    notificationBadge.textContent = unreadMessages;
+    notificationBadge.style.display = 'flex';
+  }
+
+  // Reset notification badge
+  function resetNotification() {
+    unreadMessages = 0;
+    notificationBadge.style.display = 'none';
+  }
+
+  // Welcome modal functionality
+  document.getElementById('ok-button').addEventListener('click', function() {
+    document.getElementById('welcome-modal').classList.remove('active');
+    // After welcome message, show product details
+    if (currentProduct) {
+      showProductDetails(currentProduct);
+    }
+  });
+
+  // Background Animation
+  const canvas = document.getElementById('bg');
+  const ctx = canvas.getContext('2d');
+  
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  const particles = [];
+  const particleCount = 100;
+  
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 2 + 1;
+      this.speedX = Math.random() * 1 - 0.5;
+      this.speedY = Math.random() * 1 - 0.5;
+      this.color = `rgba(${Math.floor(Math.random() * 100 + 155)}, ${Math.floor(Math.random() * 100 + 155)}, 255, ${Math.random() * 0.5 + 0.2})`;
+    }
+    
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      
+      if (this.x > canvas.width) this.x = 0;
+      else if (this.x < 0) this.x = canvas.width;
+      
+      if (this.y > canvas.height) this.y = 0;
+      else if (this.y < 0) this.y = canvas.height;
+    }
+    
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  
+  function init() {
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+  }
+  
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].update();
+      particles[i].draw();
+    }
+    
+    requestAnimationFrame(animate);
+  }
+  
+  window.addEventListener('resize', function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+  
+  init();
+  animate();
+
+  // Video Section Functionality
+  const videoSection = document.getElementById('video-section');
+  const mainContainer = document.getElementById('main-container');
+  const backToDashboardBtn = document.getElementById('back-to-dashboard');
+  
+  backToDashboardBtn.addEventListener('click', function() {
+    videoSection.classList.add('hidden');
+    mainContainer.style.display = 'block';
+    
+    // Track that user watched video
+    if (currentUser && currentUser.id) {
+      database.ref('websiteUsers/' + currentUser.id + '/videoWatched').set(true);
+    }
+  });
+
+  // Add event listeners to original product buttons
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize auth system
+    initAuthSystem();
+    
+    // Add auth form event listeners
+    document.getElementById('login-form-element').addEventListener('submit', handleLogin);
+    document.getElementById('signup-form-element').addEventListener('submit', handleSignup);
+    
+    // Add auth switch event listeners
+    document.getElementById('show-signup').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('signup-form').style.display = 'block';
+    });
+    
+    document.getElementById('show-login').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('signup-form').style.display = 'none';
+      document.getElementById('login-form').style.display = 'block';
+    });
+    
+    // Add menu button event listener
+    document.getElementById('menu-button').addEventListener('click', toggleMenuPanel);
+    
+    // Add logout button event listener
+    document.getElementById('logout-button').addEventListener('click', logout);
+    
+    // Add click events to original product buttons
+    document.querySelectorAll('.product-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const productKey = this.getAttribute('data-product');
+        
+        if (originalProducts[productKey]) {
+          currentProduct = originalProducts[productKey];
+          showWelcomeMessage(currentProduct);
+          trackProductView(productKey);
+        }
+      });
+    });
+
+    // Load additional products from Firebase
+    loadAdditionalProductsFromFirebase();
+  });
+</script>
+</body>
+</html>
