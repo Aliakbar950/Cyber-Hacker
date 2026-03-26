@@ -72,7 +72,7 @@
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-        /* KEYFRAME ANIMATIONS (same as original) */
+        /* KEYFRAME ANIMATIONS */
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes pulse-cyan { 0% { box-shadow: 0 0 0 0 rgba(0,242,255,0.7); } 70% { box-shadow: 0 0 0 15px rgba(0,242,255,0); } 100% { box-shadow: 0 0 0 0 rgba(0,242,255,0); } }
         @keyframes pulse-green { 0% { opacity:1; text-shadow:0 0 10px #00ff00; } 50% { opacity:0.4; text-shadow:0 0 25px #00ff00; } 100% { opacity:1; text-shadow:0 0 10px #00ff00; } }
@@ -104,7 +104,7 @@
         .btn { width:100%; padding:15px; background:linear-gradient(90deg, var(--dark-cyan), var(--primary)); border:none; border-radius:10px; color:black; font-weight:900; cursor:pointer; margin-top:25px; text-transform:uppercase; letter-spacing:2px; transition:0.3s; font-family:'Rajdhani'; font-size:18px; }
         .btn:hover { transform:scale(1.02); box-shadow:0 0 20px var(--primary); }
 
-        /* FORGOT PASSWORD MODAL (unchanged) */
+        /* FORGOT PASSWORD MODAL */
         .forgot-pass-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.98); display:none; flex-direction:column; justify-content:center; align-items:center; padding:30px; z-index:100; backdrop-filter:blur(8px); animation:fadeIn 0.4s ease; }
         .forgot-pass-card { background:linear-gradient(145deg,#001a22,#000000); border:2px solid var(--primary); border-radius:20px; padding:40px; width:90%; max-width:450px; text-align:center; box-shadow:0 0 50px rgba(0,242,255,0.4); animation:popupScale 0.5s cubic-bezier(0.175,0.885,0.32,1.275); }
         .forgot-pass-title { color:var(--primary); font-family:'Rajdhani'; font-size:32px; font-weight:900; text-shadow:0 0 20px var(--primary); margin-bottom:10px; }
@@ -124,13 +124,15 @@
         .tm-btn { background:linear-gradient(90deg,#004d00,var(--success-green)); color:black; border:none; padding:18px; border-radius:12px; font-weight:900; font-size:18px; width:100%; cursor:pointer; text-transform:uppercase; letter-spacing:2px; transition:0.3s; font-family:'Rajdhani'; }
         .tm-btn:hover { transform:scale(1.05); box-shadow:0 0 30px rgba(0,255,0,0.5); }
 
-        /* NEW ADMIN MESSAGE MODAL (popup with timer) */
+        /* ADMIN MESSAGE MODAL (popup with timer) */
         #adminMessageModal { display:none; }
         .admin-message-card { border:2px solid var(--primary) !important; box-shadow:0 0 50px rgba(0,242,255,0.4) !important; }
         .admin-message-card .tm-icon { color:var(--primary) !important; text-shadow:0 0 30px var(--primary) !important; animation:pulse-cyan 2s infinite; }
         .admin-message-card .tm-amount { color:var(--primary) !important; font-size:24px; letter-spacing:2px; }
         .admin-message-card .tm-desc { text-align:left; background:#050505; padding:15px; border-radius:8px; margin-bottom:25px; border:1px solid #112222; }
         .timer-text { color:var(--pending-orange); font-size:12px; margin-top:10px; }
+        .close-icon-abs { position:absolute; top:15px; right:20px; font-size:24px; color:#aaa; cursor:pointer; transition:0.3s; }
+        .close-icon-abs:hover { color:var(--primary); }
 
         /* DASHBOARD & SIDEBAR (unchanged) */
         #dashboard { display:none; height:100vh; flex-direction:row; animation:fadeIn 0.5s ease; width:100vw; overflow:hidden; }
@@ -188,7 +190,7 @@
         .tool-title { color:white; font-family:'Rajdhani'; font-size:15px; font-weight:700; letter-spacing:0.5px; word-break:break-word; line-height:1.2; }
         .tool-sub { font-size:9px; color:#888; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-top:4px; }
 
-        /* Rest of the original CSS (unchanged) - news, config, purchases, etc. */
+        /* NEWS, CONFIG, PURCHASES, EARN, SEND MONEY, CHAT, ETC. (unchanged) */
         .news-card { background:#050a0a; border:1px solid var(--primary); border-radius:16px; overflow:hidden; margin-bottom:25px; box-shadow:0 5px 20px rgba(0,0,0,0.5); animation:slideUpGlow 0.5s ease; transition:0.3s; position:relative; }
         .news-card:hover { transform:translateY(-5px); box-shadow:var(--box-glow); border-color:#00e5ff; }
         .news-img-wrap { width:100%; background:#000; }
@@ -240,7 +242,6 @@
         .tk-btn.apkpure { background:linear-gradient(90deg,#00b16a,#00e676); border-color:#00e676; color:black; }
         .tk-btn:hover { transform:scale(1.05); box-shadow:0 0 15px rgba(255,255,255,0.2); }
 
-        /* Wallet & Earn sections */
         .wallet-header { background:linear-gradient(145deg,#001a22,#000000); border:2px solid var(--primary); border-radius:20px; padding:30px; margin-bottom:30px; box-shadow:0 0 30px rgba(0,242,255,0.3); position:relative; overflow:hidden; animation:earnPulse 3s infinite; }
         .wallet-balance { font-size:clamp(32px,5vw,48px); font-weight:900; color:var(--primary); font-family:'Rajdhani'; text-shadow:0 0 20px rgba(0,242,255,0.5); line-height:1.2; }
         .wallet-label { color:#00e5ff; font-size:14px; text-transform:uppercase; letter-spacing:2px; margin-bottom:5px; }
@@ -482,9 +483,10 @@
         </div>
     </div>
 
-    <!-- NEW ADMIN MESSAGE MODAL (pop-up with timer) -->
+    <!-- ADMIN MESSAGE MODAL (pop-up with timer and close icon) -->
     <div id="adminMessageModal" class="transaction-modal-overlay">
         <div class="transaction-modal-card admin-message-card">
+            <i class="fa fa-times close-icon-abs" onclick="closeAdminMessageModal()"></i>
             <i class="fa fa-bell tm-icon" style="color:var(--primary);"></i>
             <h2 class="tm-title" id="adminMsgTitle" style="color:var(--primary);">📢 ADMIN MESSAGE</h2>
             <div class="tm-desc" id="adminMsgBody" style="text-align:left;"></div>
@@ -575,16 +577,16 @@
                         <i class="fa fa-times" onclick="showSection('home', document.querySelector('.btn-unified'))" style="position:absolute; right:25px; top:25px; color:#555; font-size:22px; cursor:pointer;"></i>
                         <h2 style="color:var(--primary); margin-bottom:30px; font-family:'Rajdhani'; border-bottom:2px solid #112222; padding-bottom:15px; font-size:32px; font-weight:900;">MY PROFILE</h2>
                         <table class="profile-table">
-                            <tr><td>CODENAME</td><td id="profNameDisplay" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
-                            <tr><td>LINKED EMAIL</td><td id="profEmailDisplay" style="color:var(--primary); font-weight:bold;">Loading...</td></tr>
-                            <tr><td>SECURITY KEY</td><td id="profPassDisplay" style="font-family:monospace; color:var(--primary); font-weight:bold; letter-spacing:2px;">Loading...</td></tr>
-                            <tr><td>REFERRAL CODE</td><td id="profRefCode" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
-                            <tr><td>SEND MONEY ID</td><td id="profSendId" style="color:var(--primary); font-weight:bold; font-family:monospace; font-size:16px;">Loading...</td></tr>
-                            <tr><td>REFERRAL LINK</td><td id="profRefLink" style="color:var(--primary); font-size:12px; word-break:break-all;"></td></tr>
-                            <tr><td>TOTAL REFERRALS</td><td id="profTotalRef" style="color:var(--primary); font-weight:bold;">0</td></tr>
-                            <tr><td>TOTAL CHECK-INS</td><td id="profTotalCheckin" style="color:var(--primary); font-weight:bold;">0</td></tr>
-                            <tr><td>WALLET BALANCE</td><td id="profWallet" style="color:var(--primary); font-weight:bold; font-size:20px;">PKR 0</td></tr>
-                            <tr><td>NETWORK STATUS</td><td><span style="color:var(--success-green); font-weight:bold;"><i class="fa fa-circle" style="font-size:10px; margin-right:5px;"></i> ONLINE</span></td></tr>
+                             <tr><td>CODENAME</td><td id="profNameDisplay" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
+                             <tr><td>LINKED EMAIL</td><td id="profEmailDisplay" style="color:var(--primary); font-weight:bold;">Loading...</td></tr>
+                             <tr><td>SECURITY KEY</td><td id="profPassDisplay" style="font-family:monospace; color:var(--primary); font-weight:bold; letter-spacing:2px;">Loading...</td></tr>
+                             <tr><td>REFERRAL CODE</td><td id="profRefCode" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
+                             <tr><td>SEND MONEY ID</td><td id="profSendId" style="color:var(--primary); font-weight:bold; font-family:monospace; font-size:16px;">Loading...</td></tr>
+                             <tr><td>REFERRAL LINK</td><td id="profRefLink" style="color:var(--primary); font-size:12px; word-break:break-all;"></td></tr>
+                             <tr><td>TOTAL REFERRALS</td><td id="profTotalRef" style="color:var(--primary); font-weight:bold;">0</td></tr>
+                             <tr><td>TOTAL CHECK-INS</td><td id="profTotalCheckin" style="color:var(--primary); font-weight:bold;">0</td></tr>
+                             <tr><td>WALLET BALANCE</td><td id="profWallet" style="color:var(--primary); font-weight:bold; font-size:20px;">PKR 0</td></tr>
+                             <tr><td>NETWORK STATUS</td><td><span style="color:var(--success-green); font-weight:bold;"><i class="fa fa-circle" style="font-size:10px; margin-right:5px;"></i> ONLINE</span></td></tr>
                         </table>
                         <h3 style="color:white; font-size:18px; margin-bottom:15px; margin-top:40px; font-family:'Rajdhani'; font-weight:800;">UPDATE SECURITY KEY</h3>
                         <input type="password" id="newPass" class="input-box" placeholder="Enter New Password" style="margin-top:0; background:#000;">
@@ -1063,7 +1065,6 @@
                         loadReferralHistory(loggedInUser.uid);
                         loadCheckinHistory(loggedInUser.uid);
                         loadTransactionHistory(loggedInUser.uid);
-                        // NEW: listen for admin messages
                         listenForAdminMessages(loggedInUser.uid);
                     } else {
                         switchPage('login');
@@ -1254,7 +1255,6 @@
             try {
                 await auth.currentUser.updatePassword(np);
                 await db.collection('users').doc(auth.currentUser.uid).update({ password: np });
-                // Show success modal instead of toast
                 showTransactionSuccessModal("SECURITY KEY UPDATED", "Your password has been changed successfully.");
                 document.getElementById('newPass').value = "";
             } catch(e) { showToast("ERROR: " + e.message); }
@@ -1333,7 +1333,14 @@
                         if(d.type === 'checkin') { recipient = 'System Reward'; type = 'CHECK-IN'; }
                         if(d.type === 'referral') { recipient = 'Referral Reward'; type = 'REFERRAL'; }
                         let statusColor = d.status === 'completed' ? 'var(--success-green)' : (d.status === 'rejected' ? 'var(--danger-red)' : 'var(--pending-orange)');
-                        tbody.innerHTML += `<tr><td>${date}</td><td style="font-weight:bold; color:white;">${recipient}</td><td><span style="color:${typeColor}; font-weight:bold;">${type}</span></td><td class="${amountClass}">${amountSign}PKR ${d.amount}</td><td><span style="color:${statusColor}; font-weight:bold;">${d.status.toUpperCase()}</span></td></tr>`;
+                        tbody.innerHTML += `
+                             <tr>
+                                <td>${date}</td><td style="font-weight:bold; color:white;">${recipient}</td>
+                                <td><span style="color:${typeColor}; font-weight:bold;">${type}</span></td>
+                                <td class="${amountClass}">${amountSign}PKR ${d.amount}</td>
+                                <td><span style="color:${statusColor}; font-weight:bold;">${d.status.toUpperCase()}</span></td>
+                             </tr>
+                        `;
                     });
                 } catch(err) {}
             };
@@ -1917,7 +1924,6 @@
 
         function listenForAdminMessages(uid) {
             db.collection('admin_user_messages').where('userId', '==', uid).where('seen', '==', false).onSnapshot(snap => {
-                // Add any new unseen messages to queue
                 snap.docChanges().forEach(change => {
                     if (change.type === 'added') {
                         const data = change.doc.data();
@@ -1926,7 +1932,6 @@
                         }
                     }
                 });
-                // If queue has messages and modal not visible, show next
                 if (messageQueue.length > 0 && document.getElementById('adminMessageModal').style.display !== 'flex') {
                     showNextAdminMessage();
                 }
@@ -1940,9 +1945,7 @@
             document.getElementById('adminMsgTitle').innerHTML = `<i class="fa fa-bell"></i> ${msg.title || '📢 ADMIN MESSAGE'}`;
             document.getElementById('adminMsgBody').innerHTML = `<div class="pre-wrap-text">${msg.body}</div>`;
             document.getElementById('adminMessageModal').style.display = 'flex';
-            // Play sound
             playNotifSound();
-            // Start 5-second auto-close timer
             let secondsLeft = 5;
             const timerEl = document.getElementById('adminMsgTimer');
             timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
@@ -1966,11 +1969,9 @@
             }
             document.getElementById('adminMessageModal').style.display = 'none';
             if (currentMessageId) {
-                // Mark message as seen in Firestore
                 await db.collection('admin_user_messages').doc(currentMessageId).update({ seen: true, autoClosed: autoClosed });
                 currentMessageId = null;
             }
-            // Show next message in queue if any
             if (messageQueue.length > 0) {
                 showNextAdminMessage();
             }
