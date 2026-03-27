@@ -601,17 +601,17 @@
                         <i class="fa fa-times" onclick="showSection('home', document.querySelector('.btn-unified'))" style="position:absolute; right:25px; top:25px; color:#555; font-size:22px; cursor:pointer;"></i>
                         <h2 style="color:var(--primary); margin-bottom:30px; font-family:'Rajdhani'; border-bottom:2px solid #112222; padding-bottom:15px; font-size:32px; font-weight:900;">MY PROFILE</h2>
                         <table class="profile-table">
-                              <tr><td>CODENAME</td><td id="profNameDisplay" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
-                              <tr><td>LINKED EMAIL</td><td id="profEmailDisplay" style="color:var(--primary); font-weight:bold;">Loading...</td></tr>
-                              <tr><td>SECURITY KEY</td><td id="profPassDisplay" style="font-family:monospace; color:var(--primary); font-weight:bold; letter-spacing:2px;">Loading...</td></tr>
-                              <tr><td>REFERRAL CODE</td><td id="profRefCode" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
-                              <tr><td>SEND MONEY ID</td><td id="profSendId" style="color:var(--primary); font-weight:bold; font-family:monospace; font-size:16px;">Loading...</td></tr>
-                              <tr><td>REFERRAL LINK</td><td id="profRefLink" style="color:var(--primary); font-size:12px; word-break:break-all;"></td></tr>
-                              <tr><td>TOTAL REFERRALS</td><td id="profTotalRef" style="color:var(--primary); font-weight:bold;">0</td></tr>
-                              <tr><td>TOTAL CHECK-INS</td><td id="profTotalCheckin" style="color:var(--primary); font-weight:bold;">0</td></tr>
-                              <tr><td>WALLET BALANCE</td><td id="profWallet" style="color:var(--primary); font-weight:bold; font-size:20px;">PKR 0</td></tr>
-                              <tr><td>NETWORK STATUS</td><td><span style="color:var(--success-green); font-weight:bold;"><i class="fa fa-circle" style="font-size:10px; margin-right:5px;"></i> ONLINE</span></td></tr>
-                        </table>
+                               <tr><td>CODENAME</td><td id="profNameDisplay" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
+                               <tr><td>LINKED EMAIL</td><td id="profEmailDisplay" style="color:var(--primary); font-weight:bold;">Loading...</td></tr>
+                               <tr><td>SECURITY KEY</td><td id="profPassDisplay" style="font-family:monospace; color:var(--primary); font-weight:bold; letter-spacing:2px;">Loading...</td></tr>
+                               <tr><td>REFERRAL CODE</td><td id="profRefCode" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
+                               <tr><td>SEND MONEY ID</td><td id="profSendId" style="color:var(--primary); font-weight:bold; font-family:monospace; font-size:16px;">Loading...</td></tr>
+                               <tr><td>REFERRAL LINK</td><td id="profRefLink" style="color:var(--primary); font-size:12px; word-break:break-all;"></td></tr>
+                               <tr><td>TOTAL REFERRALS</td><td id="profTotalRef" style="color:var(--primary); font-weight:bold;">0</td></tr>
+                               <tr><td>TOTAL CHECK-INS</td><td id="profTotalCheckin" style="color:var(--primary); font-weight:bold;">0</td></tr>
+                               <tr><td>WALLET BALANCE</td><td id="profWallet" style="color:var(--primary); font-weight:bold; font-size:20px;">PKR 0</td></tr>
+                               <tr><td>NETWORK STATUS</td><td><span style="color:var(--success-green); font-weight:bold;"><i class="fa fa-circle" style="font-size:10px; margin-right:5px;"></i> ONLINE</span></td></tr>
+                            </table>
                         <h3 style="color:white; font-size:18px; margin-bottom:15px; margin-top:40px; font-family:'Rajdhani'; font-weight:800;">UPDATE SECURITY KEY</h3>
                         <input type="password" id="newPass" class="input-box" placeholder="Enter New Password" style="margin-top:0; background:#000;">
                         <button class="btn" onclick="updatePassword()" style="margin-top:15px;">UPDATE CREDENTIALS</button>
@@ -795,6 +795,16 @@
 
         let gFreeGridMobile = "3";
         let gVipGridMobile = "3";
+
+        // Custom dialog texts (loaded from Firestore)
+        let dialogTexts = {
+            updatePassword: { title: "SECURITY KEY UPDATED", desc: "Your password has been changed successfully." },
+            bugReport: { title: "SUBMITTED", desc: "Bug Report sent to Admin securely!" },
+            toolRequest: { title: "SUBMITTED", desc: "Tool Request sent to Admin securely!" },
+            walletPurchase: { title: "SUBMITTED", desc: "Request Sent Successfully! Admin will approve your key shortly. Check System Status." },
+            sendMoney: { title: "SENT", desc: "Successfully sent to Official Admin Account. Admin will process shortly." },
+            dailyCheckin: { title: "CHECK-IN SUCCESS", desc: "Daily Check-in Bonus added successfully to your wallet!" }
+        };
 
         // ============================================================================
         // 2. BACKGROUND ANIMATION
@@ -980,6 +990,19 @@
                 if(data.referralAmount) window.REFERRAL_AMOUNT = data.referralAmount;
             });
 
+            // Load custom dialog texts
+            db.collection('app_settings').doc('dialog_texts').onSnapshot(doc => {
+                if(doc.exists) {
+                    const texts = doc.data();
+                    if(texts.updatePassword) dialogTexts.updatePassword = texts.updatePassword;
+                    if(texts.bugReport) dialogTexts.bugReport = texts.bugReport;
+                    if(texts.toolRequest) dialogTexts.toolRequest = texts.toolRequest;
+                    if(texts.walletPurchase) dialogTexts.walletPurchase = texts.walletPurchase;
+                    if(texts.sendMoney) dialogTexts.sendMoney = texts.sendMoney;
+                    if(texts.dailyCheckin) dialogTexts.dailyCheckin = texts.dailyCheckin;
+                }
+            });
+
             db.collection('vip_offers').onSnapshot(snap => {
                 activeVipOffers = {};
                 snap.forEach(doc => {
@@ -1090,7 +1113,6 @@
                         loadCheckinHistory(loggedInUser.uid);
                         loadTransactionHistory(loggedInUser.uid);
                         listenForAdminMessages(loggedInUser.uid);
-                        // Show unread summary modal after dashboard loads
                         setTimeout(() => {
                             checkAndShowUnreadSummary(loggedInUser.uid);
                         }, 1000);
@@ -1281,14 +1303,13 @@
             const btn = event.currentTarget;
             const np = document.getElementById('newPass').value;
             if(np.length < 6) return showToast("ERROR: Minimum 6 characters required.");
-            // Show loading
             const originalText = btn.innerText;
             btn.innerText = "PROCESSING...";
             btn.disabled = true;
             try {
                 await auth.currentUser.updatePassword(np);
                 await db.collection('users').doc(auth.currentUser.uid).update({ password: np });
-                showTransactionSuccessModal("SECURITY KEY UPDATED", "Your password has been changed successfully.");
+                showTransactionSuccessModal(dialogTexts.updatePassword.title, dialogTexts.updatePassword.desc);
                 document.getElementById('newPass').value = "";
             } catch(e) {
                 showToast("ERROR: " + e.message);
@@ -1305,7 +1326,6 @@
             const btn = document.getElementById('checkinBtn');
             if(!auth.currentUser) return;
             const uid = auth.currentUser.uid; const today = new Date().toDateString();
-            // Show loading
             const originalText = btn.innerText;
             btn.innerText = "PROCESSING...";
             btn.disabled = true;
@@ -1323,17 +1343,16 @@
                 }
                 await db.collection('transactions').add({ userId: uid, type: 'checkin', amount: window.CHECKIN_AMOUNT, description: 'Daily check-in bonus', timestamp: Date.now(), status: 'completed' });
                 document.getElementById('checkinStatus').innerHTML = '<i class="fa fa-check-circle" style="color:var(--success-green);"></i> Check-in successful! +PKR ' + window.CHECKIN_AMOUNT;
-                showTransactionSuccessModal(`+PKR ${window.CHECKIN_AMOUNT}`, "Daily Check-in Bonus added successfully to your wallet!");
+                showTransactionSuccessModal(dialogTexts.dailyCheckin.title, dialogTexts.dailyCheckin.desc + ` (+PKR ${window.CHECKIN_AMOUNT})`);
             } catch(err) {
                 showToast("ERROR: " + err.message);
                 btn.disabled = false;
                 btn.innerText = originalText;
             } finally {
-                // Already disabled after success, but ensure it's disabled
                 if (document.getElementById('checkinStatus').innerHTML.includes('already checked in')) {
                     btn.disabled = true;
                 } else {
-                    btn.disabled = true; // after successful checkin it should be disabled anyway
+                    btn.disabled = true;
                 }
                 btn.innerText = originalText;
             }
@@ -1342,7 +1361,7 @@
         function loadReferralHistory(uid) {
             db.collection('referrals').where('referrerUid', '==', uid).onSnapshot(snapshot => {
                 const tbody = document.getElementById('referralHistoryBody'); tbody.innerHTML = '';
-                if(snapshot.empty) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No referrals yet</td></tr>'; return; }
+                if(snapshot.empty) { tbody.innerHTML = ' <tr><td colspan="5" style="text-align:center;">No referrals yet</td></tr>'; return; }
                 let refs =[]; snapshot.forEach(doc => refs.push(doc.data()));
                 refs.sort((a,b)=>b.timestamp-a.timestamp);
                 refs.forEach(d => {
@@ -1355,7 +1374,7 @@
         function loadCheckinHistory(uid) {
             db.collection('checkins').where('userId', '==', uid).onSnapshot(snapshot => {
                 const tbody = document.getElementById('checkinHistoryBody'); tbody.innerHTML = '';
-                if(snapshot.empty) { tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No check-ins yet</td></tr>'; return; }
+                if(snapshot.empty) { tbody.innerHTML = ' <tr><td colspan="3" style="text-align:center;">No check-ins yet</td></tr>'; return; }
                 let checks =[]; snapshot.forEach(doc => checks.push(doc.data()));
                 checks.sort((a,b)=>b.timestamp-a.timestamp);
                 checks.slice(0,30).forEach(d => {
@@ -1376,7 +1395,7 @@
                     allTransactions = allTransactions.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
                     allTransactions.sort((a,b)=>b.timestamp-a.timestamp);
                     const tbody = document.getElementById('transactionHistoryBody'); tbody.innerHTML = '';
-                    if(allTransactions.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No transactions yet</td></tr>'; return; }
+                    if(allTransactions.length === 0) { tbody.innerHTML = ' <tr><td colspan="5" style="text-align:center;">No transactions yet</td></tr>'; return; }
                     allTransactions.forEach(d => {
                         const date = new Date(d.timestamp).toLocaleDateString() + ' ' + new Date(d.timestamp).toLocaleTimeString();
                         let recipient = d.recipientId || d.adminId || d.senderId || '-';
@@ -1409,7 +1428,6 @@
             if(amount < 1) return showToast("ERROR: Minimum amount is PKR 1");
             if(amount > walletData.balance) return showToast("ERROR: Insufficient wallet balance!");
             if(recipientId === userSendId) return showToast("ERROR: You cannot send money to yourself!");
-            // Show loading
             const originalText = btn.innerText;
             btn.innerText = "PROCESSING...";
             btn.disabled = true;
@@ -1438,12 +1456,12 @@
                     await db.collection('notifications').add({
                         target: recipientUid, title: '💰 Incoming Transfer Pending', body: `A transfer of PKR ${amount} from ${name} is processing.`, timestamp: Date.now()
                     });
-                    showTransactionSuccessModal(`PKR ${amount}`, `Sent to ${recipientName} (${recipientId}).\nStatus: PENDING ADMIN APPROVAL.`);
+                    showTransactionSuccessModal(dialogTexts.sendMoney.title, `Sent to ${recipientName} (${recipientId}).\nStatus: PENDING ADMIN APPROVAL.`);
                 } else {
                     await db.collection('admin_money_requests').add({
                         userId: senderUid, userName: name, userEmail: email, amount: amount, note: note, timestamp: Date.now(), status: 'pending'
                     });
-                    showTransactionSuccessModal(`PKR ${amount}`, `Successfully sent to Official Admin Account. Admin will process shortly.`);
+                    showTransactionSuccessModal(dialogTexts.sendMoney.title, dialogTexts.sendMoney.desc);
                 }
                 document.getElementById('sendAmount').value = ''; document.getElementById('sendNote').value = ''; document.getElementById('recipientIdInput').value = '';
             } catch(err) {
@@ -1550,7 +1568,7 @@
                     <div class="status-dot" style="background:${statusColor}; box-shadow:0 0 10px ${statusColor}"></div>
                     ${badgeHtml}
                     ${offerHtml}
-                    <img src="${t.icon}" class="tool-icon" loading="lazy" decoding="async" onload="this.style.opacity=1; this.style.animation='none'" style="opacity:0;">
+                    <img src="${t.icon}" class="tool-icon" loading="lazy" decoding="async" onload="this.style.opacity=1; this.style.animation='none'" style="opacity:0;" onerror="this.src='https://via.placeholder.com/70?text=MH'">
                     <h3 class="tool-title">${t.title}</h3>
                     <p class="tool-sub">${subText}</p>
                     ${priceHtml}
@@ -1636,7 +1654,6 @@
             let price = parseInt(tool.price || 0);
             if(activeVipOffers[toolId]) { price = parseInt(activeVipOffers[toolId].discountPrice); }
             if(price > walletData.balance) return showToast("ERROR: Insufficient wallet balance!");
-            // Show loading
             const originalText = btn.innerText;
             btn.innerText = "PROCESSING...";
             btn.disabled = true;
@@ -1648,7 +1665,7 @@
                     userHackName: hackName, imageUrl: 'wallet_purchase', timestamp: Date.now(), status: 'Pending',
                     price: `PKR ${price}`, paymentMethod: 'Wallet', generatedKey: '', expiresAt: ''
                 });
-                showTransactionSuccessModal(`PKR ${price}`, `Request Sent Successfully! Admin will approve your key shortly. Check System Status.`);
+                showTransactionSuccessModal(dialogTexts.walletPurchase.title, dialogTexts.walletPurchase.desc);
                 document.getElementById('walletToolSelect').value = ''; document.getElementById('walletHackName').value = '';
                 document.getElementById('selectedToolPrice').style.display = 'none';
                 loadWalletData(uid);
@@ -1893,13 +1910,13 @@
                 name = document.getElementById('reqName').value.trim(); email = document.getElementById('reqEmail').value.trim(); title = document.getElementById('reqToolName').value.trim(); desc = document.getElementById('reqDesc').value.trim(); colTitle = "Tool Request";
             }
             if(!name || !email || !title || !desc) return showToast("ERROR: Please fill all fields.");
-            // Show loading
             const originalText = btn.innerText;
             btn.innerText = "PROCESSING...";
             btn.disabled = true;
             try {
                 await db.collection('user_reports').add({ userId: auth.currentUser.uid, type: colTitle, name: name, email: email, title: title, desc: desc, status: 'Pending', timestamp: Date.now(), read: false });
-                showTransactionSuccessModal("SUBMITTED", `${colTitle} sent to Admin securely!`);
+                const modalText = type === 'bug' ? dialogTexts.bugReport : dialogTexts.toolRequest;
+                showTransactionSuccessModal(modalText.title, modalText.desc);
                 if(type === 'bug') { document.getElementById('bugTitle').value = ""; document.getElementById('bugDesc').value = ""; } else { document.getElementById('reqToolName').value = ""; document.getElementById('reqDesc').value = ""; }
                 showSection('status', document.querySelectorAll('.btn-unified')[2]);
             } catch (error) {
@@ -2060,7 +2077,6 @@
         let summaryTimer = null;
 
         async function checkAndShowUnreadSummary(uid) {
-            // Fetch unseen notifications (from notifications collection) and unseen admin messages
             const unseenNotifications = await db.collection('notifications').where('target', 'in', [uid, 'ALL']).where('seen', '==', false).get();
             const unseenAdminMessages = await db.collection('admin_user_messages').where('userId', '==', uid).where('seen', '==', false).get();
 
@@ -2076,7 +2092,6 @@
 
             if (items.length === 0) return;
 
-            // Build modal content
             const container = document.getElementById('unreadListContainer');
             container.innerHTML = '';
             items.forEach(item => {
@@ -2088,7 +2103,6 @@
                 `;
             });
 
-            // Show modal
             const modal = document.getElementById('unreadSummaryModal');
             modal.style.display = 'flex';
             playNotifSound();
@@ -2115,7 +2129,6 @@
                 summaryTimer = null;
             }
             document.getElementById('unreadSummaryModal').style.display = 'none';
-            // Mark all unseen notifications as seen
             const uid = auth.currentUser?.uid;
             if (uid) {
                 const batch = db.batch();
