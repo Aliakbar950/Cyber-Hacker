@@ -601,16 +601,16 @@
                         <i class="fa fa-times" onclick="showSection('home', document.querySelector('.btn-unified'))" style="position:absolute; right:25px; top:25px; color:#555; font-size:22px; cursor:pointer;"></i>
                         <h2 style="color:var(--primary); margin-bottom:30px; font-family:'Rajdhani'; border-bottom:2px solid #112222; padding-bottom:15px; font-size:32px; font-weight:900;">MY PROFILE</h2>
                         <table class="profile-table">
-                               <tr><td>CODENAME</td><td id="profNameDisplay" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
-                               <tr><td>LINKED EMAIL</td><td id="profEmailDisplay" style="color:var(--primary); font-weight:bold;">Loading...</td></tr>
-                               <tr><td>SECURITY KEY</td><td id="profPassDisplay" style="font-family:monospace; color:var(--primary); font-weight:bold; letter-spacing:2px;">Loading...</td></tr>
-                               <tr><td>REFERRAL CODE</td><td id="profRefCode" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
-                               <tr><td>SEND MONEY ID</td><td id="profSendId" style="color:var(--primary); font-weight:bold; font-family:monospace; font-size:16px;">Loading...</td></tr>
-                               <tr><td>REFERRAL LINK</td><td id="profRefLink" style="color:var(--primary); font-size:12px; word-break:break-all;"></td></tr>
-                               <tr><td>TOTAL REFERRALS</td><td id="profTotalRef" style="color:var(--primary); font-weight:bold;">0</td></tr>
-                               <tr><td>TOTAL CHECK-INS</td><td id="profTotalCheckin" style="color:var(--primary); font-weight:bold;">0</td></tr>
-                               <tr><td>WALLET BALANCE</td><td id="profWallet" style="color:var(--primary); font-weight:bold; font-size:20px;">PKR 0</td></tr>
-                               <tr><td>NETWORK STATUS</td><td><span style="color:var(--success-green); font-weight:bold;"><i class="fa fa-circle" style="font-size:10px; margin-right:5px;"></i> ONLINE</span></td></tr>
+                                <tr><td>CODENAME</td><td id="profNameDisplay" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
+                                <tr><td>LINKED EMAIL</td><td id="profEmailDisplay" style="color:var(--primary); font-weight:bold;">Loading...</td></tr>
+                                <tr><td>SECURITY KEY</td><td id="profPassDisplay" style="font-family:monospace; color:var(--primary); font-weight:bold; letter-spacing:2px;">Loading...</td></tr>
+                                <tr><td>REFERRAL CODE</td><td id="profRefCode" style="color:var(--primary); font-weight:bold; font-size:16px;">Loading...</td></tr>
+                                <tr><td>SEND MONEY ID</td><td id="profSendId" style="color:var(--primary); font-weight:bold; font-family:monospace; font-size:16px;">Loading...</td></tr>
+                                <tr><td>REFERRAL LINK</td><td id="profRefLink" style="color:var(--primary); font-size:12px; word-break:break-all;"></td></tr>
+                                <tr><td>TOTAL REFERRALS</td><td id="profTotalRef" style="color:var(--primary); font-weight:bold;">0</td></tr>
+                                <tr><td>TOTAL CHECK-INS</td><td id="profTotalCheckin" style="color:var(--primary); font-weight:bold;">0</td></tr>
+                                <tr><td>WALLET BALANCE</td><td id="profWallet" style="color:var(--primary); font-weight:bold; font-size:20px;">PKR 0</td></tr>
+                                <tr><td>NETWORK STATUS</td><td><span style="color:var(--success-green); font-weight:bold;"><i class="fa fa-circle" style="font-size:10px; margin-right:5px;"></i> ONLINE</span></td></tr>
                             </table>
                         <h3 style="color:white; font-size:18px; margin-bottom:15px; margin-top:40px; font-family:'Rajdhani'; font-weight:800;">UPDATE SECURITY KEY</h3>
                         <input type="password" id="newPass" class="input-box" placeholder="Enter New Password" style="margin-top:0; background:#000;">
@@ -1361,7 +1361,7 @@
         function loadReferralHistory(uid) {
             db.collection('referrals').where('referrerUid', '==', uid).onSnapshot(snapshot => {
                 const tbody = document.getElementById('referralHistoryBody'); tbody.innerHTML = '';
-                if(snapshot.empty) { tbody.innerHTML = ' <tr><td colspan="5" style="text-align:center;">No referrals yet</td></tr>'; return; }
+                if(snapshot.empty) { tbody.innerHTML = '  <tr><td colspan="5" style="text-align:center;">No referrals yet</td></tr>'; return; }
                 let refs =[]; snapshot.forEach(doc => refs.push(doc.data()));
                 refs.sort((a,b)=>b.timestamp-a.timestamp);
                 refs.forEach(d => {
@@ -1374,7 +1374,7 @@
         function loadCheckinHistory(uid) {
             db.collection('checkins').where('userId', '==', uid).onSnapshot(snapshot => {
                 const tbody = document.getElementById('checkinHistoryBody'); tbody.innerHTML = '';
-                if(snapshot.empty) { tbody.innerHTML = ' <tr><td colspan="3" style="text-align:center;">No check-ins yet</td></tr>'; return; }
+                if(snapshot.empty) { tbody.innerHTML = '  <tr><td colspan="3" style="text-align:center;">No check-ins yet</td></tr>'; return; }
                 let checks =[]; snapshot.forEach(doc => checks.push(doc.data()));
                 checks.sort((a,b)=>b.timestamp-a.timestamp);
                 checks.slice(0,30).forEach(d => {
@@ -1395,7 +1395,7 @@
                     allTransactions = allTransactions.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
                     allTransactions.sort((a,b)=>b.timestamp-a.timestamp);
                     const tbody = document.getElementById('transactionHistoryBody'); tbody.innerHTML = '';
-                    if(allTransactions.length === 0) { tbody.innerHTML = ' <tr><td colspan="5" style="text-align:center;">No transactions yet</td></tr>'; return; }
+                    if(allTransactions.length === 0) { tbody.innerHTML = '  <tr><td colspan="5" style="text-align:center;">No transactions yet</td></tr>'; return; }
                     allTransactions.forEach(d => {
                         const date = new Date(d.timestamp).toLocaleDateString() + ' ' + new Date(d.timestamp).toLocaleTimeString();
                         let recipient = d.recipientId || d.adminId || d.senderId || '-';
@@ -2152,8 +2152,8 @@
 
         function showTransactionSuccessModal(amount, desc) {
             const modal = document.getElementById('transactionSuccessModal');
-            document.getElementById('tsAmountDisplay').innerText = amount;
-            document.getElementById('tsDescDisplay').innerText = desc;
+            document.getElementById('tsAmountDisplay').innerHTML = amount;
+            document.getElementById('tsDescDisplay').innerHTML = desc;
             modal.style.display = 'flex';
             setTimeout(() => { closeTransactionModal(); }, 5000);
         }
