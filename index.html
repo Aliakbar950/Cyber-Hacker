@@ -187,11 +187,35 @@
         .search-box:focus { border-color:var(--primary); box-shadow:inset 0 0 15px rgba(0,242,255,0.1),0 0 15px rgba(0,242,255,0.2); }
         .search-icon { position:absolute; right:25px; top:18px; color:#666; font-size:18px; }
 
-        /* NEW: Search Tabs */
+        /* UPDATED: Search Tabs – smaller & premium */
         .search-tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .search-tab-btn { flex: 1; padding: 12px 20px; border-radius: 10px; border: 2px solid var(--primary); background: transparent; color: var(--primary); font-weight: 800; font-family: 'Rajdhani', sans-serif; letter-spacing: 2px; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        .search-tab-btn.active { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
-        .search-tab-btn:hover:not(.active) { box-shadow: 0 0 15px rgba(0,242,255,0.3); border-color: #00e5ff; }
+        .search-tab-btn { 
+            flex: 1; 
+            padding: 8px 15px; 
+            border-radius: 8px; 
+            border: 2px solid var(--primary); 
+            background: transparent; 
+            color: var(--primary); 
+            font-weight: 800; 
+            font-family: 'Rajdhani', sans-serif; 
+            letter-spacing: 2px; 
+            font-size: 13px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            text-transform: uppercase; 
+            position: relative;
+            overflow: hidden;
+        }
+        .search-tab-btn.active { 
+            background: linear-gradient(135deg, var(--dark-cyan), var(--primary)); 
+            color: black; 
+            box-shadow: 0 0 20px var(--primary); 
+            border-color: var(--primary); 
+        }
+        .search-tab-btn:hover:not(.active) { 
+            box-shadow: 0 0 15px rgba(0,242,255,0.4); 
+            border-color: #00e5ff; 
+        }
 
         .tools-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:20px; width:100%; }
         @media (min-width:769px) and (max-width:1023px) { .tools-grid { grid-template-columns:repeat(4,1fr) !important; gap:15px; } }
@@ -199,7 +223,25 @@
         .tool-card:hover { border-color:var(--primary); background:#00111a; transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.8); }
         .tool-icon { width:70px; height:70px; border-radius:50%; border:2px solid #222; margin-bottom:12px; object-fit:cover; transition:all 0.4s ease; background:linear-gradient(90deg,#050a0a 25%,#112222 50%,#050a0a 75%); background-size:200% 100%; animation:skeletonLoading 1.5s infinite; }
         .tool-card:hover .tool-icon { border-color:var(--primary); box-shadow:var(--text-glow); transform:scale(1.05); }
-        .offer-badge { position:absolute; top:35px; left:-30px; background:var(--danger-red); color:white; font-family:'Rajdhani'; font-size:11px; font-weight:900; padding:5px 30px; transform:rotate(-45deg); box-shadow:0 0 15px rgba(255,0,0,0.6); letter-spacing:1px; z-index:10; text-transform:uppercase; animation:pulse-gold 2s infinite; }
+        /* UPDATED: Premium offer badge */
+        .offer-badge { 
+            position:absolute; 
+            top:35px; 
+            left:-30px; 
+            background: linear-gradient(135deg, #ff0a0a, #ff5500); 
+            color:white; 
+            font-family:'Rajdhani'; 
+            font-size:12px; 
+            font-weight:900; 
+            padding:5px 30px; 
+            transform:rotate(-45deg); 
+            box-shadow:0 0 25px rgba(255,0,0,0.8), 0 0 45px rgba(255,165,0,0.6); 
+            letter-spacing:1px; 
+            z-index:10; 
+            text-transform:uppercase; 
+            animation:pulse-gold 1.8s infinite; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
         .badge-free { position:absolute; top:10px; right:10px; background:var(--primary); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; letter-spacing:1px; }
         .badge-vip { position:absolute; top:10px; right:10px; background:var(--vip-gold); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; box-shadow:0 0 10px rgba(255,215,0,0.5); letter-spacing:1px; }
         .status-dot { width:8px; height:8px; border-radius:50%; position:absolute; top:15px; left:15px; }
@@ -526,16 +568,17 @@
         </div>
     </div>
 
-    <!-- NEW UNREAD SUMMARY MODAL -->
+    <!-- UPDATED UNREAD SUMMARY MODAL (System Alerts) -->
     <div id="unreadSummaryModal" class="transaction-modal-overlay">
         <div class="transaction-modal-card unread-summary-card">
             <i class="fa fa-times close-icon-abs" onclick="closeUnreadSummaryModal(true)"></i>
-            <i class="fa fa-bell tm-icon" style="color:var(--primary);"></i>
-            <h2 class="tm-title" style="color:var(--primary);">📬 NEW UPDATES</h2>
+            <i class="fa fa-exclamation-triangle tm-icon" style="color:var(--primary); font-size: 60px;"></i>
+            <h2 class="tm-title" style="color:var(--primary);">SYSTEM ALERTS</h2>
+            <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Pending actions while you were offline</p>
             <div class="unread-list" id="unreadListContainer"></div>
             <div id="unreadSummaryTimer" class="timer-text">Auto‑close in 5 seconds</div>
             <div class="btn-row" style="margin-top:15px;">
-                <button class="btn-modal btn-next" style="background:var(--primary);" onclick="closeUnreadSummaryModal(false)">CLOSE</button>
+                <button class="btn-modal btn-next" style="background:var(--primary);" onclick="closeUnreadSummaryModal(false)">PROCEED TO DASHBOARD</button>
             </div>
         </div>
     </div>
@@ -570,6 +613,8 @@
                     <div class="btn-unified sub-btn" onclick="openSocial('grp')"><i class="fab fa-telegram"></i> TELEGRAM GROUP</div>
                     <div class="btn-unified sub-btn" onclick="openSocial('chnl')"><i class="fab fa-telegram-plane"></i> TELEGRAM CHANNEL</div>
                     <div class="btn-unified sub-btn" onclick="openSocial('wa')"><i class="fab fa-whatsapp"></i> WHATSAPP CHANNEL</div>
+                    <!-- NEW: WhatsApp Group button -->
+                    <div class="btn-unified sub-btn" onclick="window.open('https://chat.whatsapp.com/LigfVakaSalEID2OVTTOea', '_blank')"><i class="fab fa-whatsapp"></i> WHATSAPP GROUP</div>
                     <div class="btn-unified sub-btn" onclick="window.location.href='https://wa.me/923007624789?text=I_Need_Your_Help_Expanding_And_Your_Website_With_Information_About_The_Tool'" style="border-color:var(--primary);"><i class="fab fa-whatsapp"></i> ADMIN HERE</div>
                     <div class="btn-unified sub-btn" onclick="openGmailApp()"><i class="fa fa-envelope"></i> HELP MAIL</div>
                 </div>
@@ -611,7 +656,7 @@
                 <!-- HOME SECTION (TOOLS GRID) -->
                 <div id="homeSection" class="dash-section">
                     <div class="search-container"><input type="text" id="searchInput" class="search-box" placeholder="Search available tools..." onkeyup="searchTools()"><i class="fa fa-search search-icon"></i></div>
-                    <!-- NEW: Search Mode Tabs -->
+                    <!-- UPDATED: Search Mode Tabs -->
                     <div class="search-tabs" id="searchTabs">
                         <button class="search-tab-btn active" id="tabFree" onclick="setToolsMode(false)">FREE HACKS</button>
                         <button class="search-tab-btn" id="tabVip" onclick="setToolsMode(true)">VIP HACKS</button>
