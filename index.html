@@ -139,7 +139,7 @@
         .unread-summary-card { border:2px solid var(--primary) !important; box-shadow:0 0 50px rgba(0,242,255,0.4) !important; }
         .unread-summary-card .tm-icon { color:var(--primary) !important; text-shadow:0 0 30px var(--primary) !important; animation:pulse-cyan 2s infinite; }
         .unread-list { max-height: 300px; overflow-y: auto; text-align: left; background: #050505; border-radius: 12px; padding: 10px; margin: 20px 0; border: 1px solid #112222; }
-        .unread-item { padding: 12px; border-bottom: 1px solid #112222; }
+        .unread-item { padding: 12px; border-bottom: 1px solid #112222; cursor: pointer; }
         .unread-item:last-child { border-bottom: none; }
         .unread-title { color: var(--primary); font-weight: bold; font-size: 16px; margin-bottom: 5px; }
         .unread-body { color: #ccc; font-size: 13px; line-height: 1.4; }
@@ -186,6 +186,12 @@
         .search-box { width:100%; padding:18px 50px 18px 25px; background:rgba(0,10,15,0.6); border:1px solid var(--border); border-radius:15px; color:white; outline:none; transition:0.3s; font-family:'Poppins'; font-size:15px; backdrop-filter:blur(5px); }
         .search-box:focus { border-color:var(--primary); box-shadow:inset 0 0 15px rgba(0,242,255,0.1),0 0 15px rgba(0,242,255,0.2); }
         .search-icon { position:absolute; right:25px; top:18px; color:#666; font-size:18px; }
+
+        /* NEW: Search Tabs */
+        .search-tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .search-tab-btn { flex: 1; padding: 12px 20px; border-radius: 10px; border: 2px solid var(--primary); background: transparent; color: var(--primary); font-weight: 800; font-family: 'Rajdhani', sans-serif; letter-spacing: 2px; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        .search-tab-btn.active { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
+        .search-tab-btn:hover:not(.active) { box-shadow: 0 0 15px rgba(0,242,255,0.3); border-color: #00e5ff; }
 
         .tools-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:20px; width:100%; }
         @media (min-width:769px) and (max-width:1023px) { .tools-grid { grid-template-columns:repeat(4,1fr) !important; gap:15px; } }
@@ -252,6 +258,16 @@
         .tk-btn.apkpure { background:linear-gradient(90deg,#00b16a,#00e676); border-color:#00e676; color:black; }
         .tk-btn:hover { transform:scale(1.05); box-shadow:0 0 15px rgba(255,255,255,0.2); }
 
+        /* NEW DYNAMIC TOOLKIT ITEM STYLES */
+        .toolkit-item { background:#00080a; border:1px solid var(--primary); border-radius:15px; padding:25px; margin-bottom:25px; box-shadow:0 0 20px rgba(0,242,255,0.1); transition:0.3s; }
+        .toolkit-item:hover { border-color:#00e5ff; box-shadow:0 0 30px rgba(0,242,255,0.3); }
+        .toolkit-item-title { color:var(--primary); font-family:'Rajdhani'; font-size:28px; font-weight:900; margin-bottom:15px; text-shadow:var(--text-glow); }
+        .toolkit-images { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
+        .toolkit-images img { max-width:100%; height:auto; border-radius:10px; border:1px solid #222; max-height:180px; object-fit:contain; }
+        .toolkit-item-desc { color:#ccc; font-size:14px; line-height:1.6; margin-bottom:25px; background:#000; padding:15px; border-radius:10px; border:1px solid #112222; white-space:pre-wrap; }
+        .download-toolkit-btn { display:inline-block; width:100%; padding:15px; background:linear-gradient(90deg,var(--dark-cyan),var(--primary)); color:black; font-weight:900; font-size:18px; text-align:center; border-radius:10px; cursor:pointer; border:none; text-decoration:none; transition:0.3s; font-family:'Rajdhani'; letter-spacing:2px; }
+        .download-toolkit-btn:hover { transform:scale(1.02); box-shadow:0 0 30px rgba(0,242,255,0.7); }
+
         .wallet-header { background:linear-gradient(145deg,#001a22,#000000); border:2px solid var(--primary); border-radius:20px; padding:30px; margin-bottom:30px; box-shadow:0 0 30px rgba(0,242,255,0.3); position:relative; overflow:hidden; animation:earnPulse 3s infinite; }
         .wallet-balance { font-size:clamp(32px,5vw,48px); font-weight:900; color:var(--primary); font-family:'Rajdhani'; text-shadow:0 0 20px rgba(0,242,255,0.5); line-height:1.2; }
         .wallet-label { color:#00e5ff; font-size:14px; text-transform:uppercase; letter-spacing:2px; margin-bottom:5px; }
@@ -307,6 +323,9 @@
         .chat-float { position:fixed; bottom:30px; right:30px; background:linear-gradient(45deg,var(--dark-cyan),var(--primary)); width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; color:black; cursor:pointer; z-index:999; transition:0.3s; border:2px solid #00f2ff; animation:chatBounce 3s infinite; }
         .chat-float:hover { animation:none; transform:scale(1.1); box-shadow:var(--box-glow); }
         .chat-dot { position:absolute; top:5px; right:5px; background:white; width:15px; height:15px; border-radius:50%; box-shadow:0 0 10px white; border:2px solid var(--primary); display:none; }
+        /* NEW: Chat unread count badge */
+        .chat-unread-badge { position: absolute; top: -6px; right: -6px; background: var(--primary); color: black; font-size: 11px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; box-shadow: 0 0 10px var(--primary); }
+
         .chat-box { position:fixed; bottom:115px; right:30px; width:350px; height:500px; max-height:80vh; background:var(--panel); border:1px solid var(--primary); border-radius:15px; display:none; flex-direction:column; overflow:hidden; z-index:1000; box-shadow:0 10px 50px rgba(0,0,0,0.9); }
         .chat-header { padding:18px; background:linear-gradient(90deg,#000,var(--dark-cyan)); display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--primary); }
         .msg { padding:12px 16px; border-radius:12px; margin-bottom:10px; max-width:80%; font-size:13px; line-height:1.5; word-wrap:break-word; white-space:pre-wrap; }
@@ -516,7 +535,7 @@
             <div class="unread-list" id="unreadListContainer"></div>
             <div id="unreadSummaryTimer" class="timer-text">Auto‑close in 5 seconds</div>
             <div class="btn-row" style="margin-top:15px;">
-                <button class="btn-modal btn-next" style="background:var(--primary);" onclick="closeUnreadSummaryModal(true)">CLOSE</button>
+                <button class="btn-modal btn-next" style="background:var(--primary);" onclick="closeUnreadSummaryModal(false)">CLOSE</button>
             </div>
         </div>
     </div>
@@ -592,6 +611,11 @@
                 <!-- HOME SECTION (TOOLS GRID) -->
                 <div id="homeSection" class="dash-section">
                     <div class="search-container"><input type="text" id="searchInput" class="search-box" placeholder="Search available tools..." onkeyup="searchTools()"><i class="fa fa-search search-icon"></i></div>
+                    <!-- NEW: Search Mode Tabs -->
+                    <div class="search-tabs" id="searchTabs">
+                        <button class="search-tab-btn active" id="tabFree" onclick="setToolsMode(false)">FREE HACKS</button>
+                        <button class="search-tab-btn" id="tabVip" onclick="setToolsMode(true)">VIP HACKS</button>
+                    </div>
                     <div class="tools-grid" id="toolsContainer"></div>
                 </div>
 
@@ -701,14 +725,15 @@
                     <div id="newsContainer"><div style="text-align:center; padding:30px; color:#555;">Loading updates...</div></div>
                 </div>
 
-                <!-- TOOLKITS DOWNLOAD SECTION -->
+                <!-- TOOLKITS DOWNLOAD SECTION (DYNAMIC) -->
                 <div id="toolkitsSection" class="dash-section" style="display:none; max-width:700px; margin:0 auto;">
                     <div class="tool-card" style="border-color:var(--primary); text-align:left; cursor:default;">
                         <i class="fa fa-times" onclick="showSection('home', document.querySelector('.btn-unified'))" style="position:absolute; right:25px; top:25px; color:#555; font-size:22px; cursor:pointer;"></i>
                         <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;"><i class="fa fa-download" style="font-size:40px; color:var(--primary);"></i><h2 id="tkTitleDisplay" style="color:white; font-family:'Rajdhani'; font-size:32px; font-weight:900;">MH TOOLKIT DOWNLOAD</h2></div>
                         <p id="tkDescDisplay" style="color:#aaa; font-size:14px; line-height:1.6; margin-bottom:30px; background:#000; padding:15px; border-radius:10px; border:1px solid #222; white-space:pre-wrap;">Download the official toolkit app for maximum performance.</p>
-                        <div class="toolkit-box"><h4 style="color:white; font-family:'Rajdhani'; font-size:20px; margin-bottom:5px;">MIRROR 1 - MEDIAFIRE</h4><p style="color:#777; font-size:11px; margin-bottom:15px;">Fast direct download.</p><a id="tkBtnMf" href="#" target="_blank" class="tk-btn mediafire"><i class="fa fa-fire"></i> <span id="tkNameMf">DOWNLOAD MEDIAFIRE</span></a></div>
-                        <div class="toolkit-box"><h4 style="color:white; font-family:'Rajdhani'; font-size:20px; margin-bottom:5px;">MIRROR 2 - APKPURE</h4><p style="color:#777; font-size:11px; margin-bottom:15px;">Alternative high-speed server.</p><a id="tkBtnApk" href="#" target="_blank" class="tk-btn apkpure"><i class="fab fa-android"></i> <span id="tkNameApk">DOWNLOAD APKPURE</span></a></div>
+                        <div id="dynamicToolkitItemsContainer">
+                            <!-- Dynamic toolkit items loaded from Firestore -->
+                        </div>
                     </div>
                 </div>
 
@@ -717,7 +742,11 @@
         </div>
 
         <!-- LIVE CHAT SYSTEM WIDGET -->
-        <div class="chat-float" onclick="toggleChat()"><i class="fa fa-comments"></i><div class="chat-dot" id="chatUnreadDot"></div></div>
+        <div class="chat-float" onclick="toggleChat()">
+            <i class="fa fa-comments"></i>
+            <div class="chat-dot" id="chatUnreadDot"></div>
+            <span class="chat-unread-badge" id="chatUnreadCount" style="display:none;">0</span>
+        </div>
         <div class="chat-box" id="chatWindow">
             <div class="chat-header"><span style="color:white; font-weight:900; font-family:'Rajdhani'; font-size:20px;"><i class="fa fa-headset" style="color:var(--primary); margin-right:8px;"></i> MH LIVE SUPPORT</span><i class="fa fa-times" onclick="toggleChat()" style="cursor:pointer; color:#aaa; font-size:20px;"></i></div>
             <div id="chatBody" style="flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; background:#0a0a0a;"></div>
@@ -946,10 +975,6 @@
                 if(data.subText) document.getElementById('headerSubText').innerText = data.subText;
                 if(data.tkTitle) document.getElementById('tkTitleDisplay').innerText = data.tkTitle;
                 if(data.tkDesc) document.getElementById('tkDescDisplay').innerText = data.tkDesc;
-                if(data.tkMfName) document.getElementById('tkNameMf').innerText = data.tkMfName;
-                if(data.tkMfLink) document.getElementById('tkBtnMf').href = data.tkMfLink;
-                if(data.tkApkName) document.getElementById('tkNameApk').innerText = data.tkApkName;
-                if(data.tkApkLink) document.getElementById('tkBtnApk').href = data.tkApkLink;
                 window.adminIsOnline = data.adminOnline === true;
                 const adminStatusSpan = document.getElementById('adminOnlineStatusText');
                 if(window.adminIsOnline) {
@@ -1059,6 +1084,14 @@
                         if(sec) sec.remove();
                     }
                 });
+            });
+
+            // Load dynamic Toolkit items
+            db.collection('app_settings').doc('toolkit').onSnapshot(doc => {
+                if(doc.exists) {
+                    const toolkitData = doc.data();
+                    renderToolkitItems(toolkitData.buttons || []);
+                }
             });
         }
 
@@ -1568,7 +1601,7 @@
                     <div class="status-dot" style="background:${statusColor}; box-shadow:0 0 10px ${statusColor}"></div>
                     ${badgeHtml}
                     ${offerHtml}
-                    <img src="${t.icon}" class="tool-icon" loading="lazy" decoding="async" onload="this.style.opacity=1; this.style.animation='none'" style="opacity:0;" onerror="this.src='https://via.placeholder.com/70?text=MH'">
+                    <img src="${t.icon}" class="tool-icon" loading="eager" decoding="sync" onload="this.style.opacity=1; this.style.animation='none'" style="opacity:0;" onerror="this.src='https://via.placeholder.com/70?text=MH'">
                     <h3 class="tool-title">${t.title}</h3>
                     <p class="tool-sub">${subText}</p>
                     ${priceHtml}
@@ -1582,6 +1615,23 @@
                 card.onclick = () => { openToolModal(t); };
                 cont.appendChild(card);
             });
+        }
+
+        // NEW: Set tools mode from search tabs
+        function setToolsMode(vip) {
+            if (isVipMode !== vip) {
+                toggleMode(); // uses existing toggleMode which swaps header and mode
+            }
+            // Update active tab styling
+            document.getElementById('tabFree').classList.toggle('active', !vip);
+            document.getElementById('tabVip').classList.toggle('active', vip);
+            // ensure header VIP button matches
+            const headerBtn = document.getElementById('modeSwitchBtn');
+            if (vip && !headerBtn.classList.contains('active-vip')) {
+                toggleMode(); // already done above, but just to be safe
+            } else if (!vip && headerBtn.classList.contains('active-vip')) {
+                toggleMode();
+            }
         }
 
         function toggleMode() {
@@ -1599,6 +1649,9 @@
             }
             updateDynamicGridStyle();
             renderTools();
+            // Sync search tabs
+            document.getElementById('tabFree').classList.toggle('active', !isVipMode);
+            document.getElementById('tabVip').classList.toggle('active', isVipMode);
         }
 
         function searchTools() {
@@ -1707,13 +1760,13 @@
             document.getElementById('modalContentInner').innerHTML = `
                 <i class="fa fa-times" onclick="closeModal()" style="position:absolute; right:25px; top:25px; color:#666; cursor:pointer; font-size:24px;"></i>
                 <div class="step active" id="freeStep1">
-                    <img src="${t.icon}" style="width:100px; height:100px; border-radius:50%; border:4px solid var(--success-green); margin-bottom:20px; object-fit:cover;">
+                    <img src="${t.icon}" style="width:100px; height:100px; border-radius:50%; border:4px solid var(--success-green); margin-bottom:20px; object-fit:cover;" loading="eager" decoding="sync">
                     <h3 style="margin-bottom:5px; color:white; font-family:'Rajdhani'; font-size:32px; font-weight:900;">${t.welcomeMsg || 'WELCOME TO FREE TOOL!'}</h3>
                     <p style="font-size:14px; color:#ccc; margin-bottom:30px;">You are about to access <br><strong style="color:var(--success-green);">${t.title}</strong></p>
                     <div class="btn-row"><button class="btn-modal btn-back" onclick="closeModal()">${gTxtCancel}</button><button class="btn-modal btn-next" onclick="nextFreeStep(2)">${gTxtNext}</button></div>
                 </div>
                 <div class="step" id="freeStep2">
-                    <img src="${t.icon}" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--primary); margin-bottom:15px; object-fit:cover;">
+                    <img src="${t.icon}" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--primary); margin-bottom:15px; object-fit:cover;" loading="eager" decoding="sync">
                     <h3 style="color:white; font-family:'Rajdhani'; font-size:28px; font-weight:900; margin-bottom:10px;">${t.title}</h3>
                     ${t.video ? `<div class="video-container" style="aspect-ratio: ${t.videoRatio || '9/16'};">${getVideoEmbedHtml(t.video)}</div>` : ''}
                     <p class="pre-wrap-text" style="font-size:13px; color:#aaa; background:#111; padding:15px; border-radius:10px; margin-bottom:20px; text-align:left;">${t.desc || 'No description available.'}</p>
@@ -1735,7 +1788,7 @@
             document.getElementById('modalContentInner').innerHTML = `
                 <i class="fa fa-times" onclick="closeModal()" style="position:absolute; right:25px; top:25px; color:#666; cursor:pointer; font-size:24px;"></i>
                 <div class="step active" id="step1">
-                    <img src="${t.icon}" style="width:100px; height:100px; border-radius:50%; border:4px solid var(--primary); margin-bottom:20px; object-fit:cover; box-shadow:var(--box-glow);">
+                    <img src="${t.icon}" style="width:100px; height:100px; border-radius:50%; border:4px solid var(--primary); margin-bottom:20px; object-fit:cover; box-shadow:var(--box-glow);" loading="eager" decoding="sync">
                     <h3 style="color:white; font-family:'Rajdhani'; font-size:32px; font-weight:900; margin-bottom:5px;">${t.title}</h3>
                     <p style="color:var(--primary); font-size:14px; font-weight:bold; margin-bottom:25px; text-transform:uppercase; letter-spacing:2px;">${t.welcome || "VIP Access Required"}</p>
                     <div style="width:60px; height:4px; background:var(--primary); margin:0 auto 25px; border-radius:2px;"></div>
@@ -1899,7 +1952,39 @@
         }
 
         // ============================================================================
-        // 11. REPORTS, NOTIFICATIONS & CHAT
+        // 11. DYNAMIC TOOLKIT ITEMS RENDERING
+        // ============================================================================
+        function renderToolkitItems(items) {
+            const container = document.getElementById('dynamicToolkitItemsContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            if(!items || items.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:30px; color:#555;">No toolkit downloads available yet.</div>';
+                return;
+            }
+            items.forEach(item => {
+                const imagesHtml = (item.images && item.images.length > 0) ? 
+                    item.images.map(url => `<img src="${url}" alt="Toolkit Image" loading="eager" decoding="sync" onerror="this.style.display='none'">`).join('') 
+                    : '';
+                const desc = item.description || 'No description provided.';
+                const downloadUrl = item.fileUrl || item.link;
+                const isDownload = !!item.fileUrl;
+                const btnHtml = downloadUrl ? 
+                    `<a href="${downloadUrl}" class="download-toolkit-btn" ${isDownload ? 'download' : ''} ${!isDownload ? `onclick="event.preventDefault(); window.location.href='${downloadUrl}'; return false;"` : ''}>DOWNLOAD TOOLKIT</a>` 
+                    : '';
+                container.innerHTML += `
+                    <div class="toolkit-item">
+                        <div class="toolkit-item-title">${item.name}</div>
+                        ${imagesHtml ? `<div class="toolkit-images">${imagesHtml}</div>` : ''}
+                        <div class="toolkit-item-desc pre-wrap-text">${desc}</div>
+                        ${btnHtml}
+                    </div>
+                `;
+            });
+        }
+
+        // ============================================================================
+        // 12. REPORTS, NOTIFICATIONS & CHAT
         // ============================================================================
         async function submitReport(type) {
             const btn = event.currentTarget;
@@ -1971,9 +2056,72 @@
             });
         }
 
+        // CHAT UNREAD COUNT LOGIC
+        let chatLastReadTime = parseInt(localStorage.getItem('mh_chatLastRead') || '0');
+        let unreadChatCount = 0;
+
+        function updateChatBadge() {
+            const badge = document.getElementById('chatUnreadCount');
+            const dot = document.getElementById('chatUnreadDot');
+            if (unreadChatCount > 0) {
+                badge.style.display = 'flex';
+                badge.innerText = unreadChatCount;
+                dot.style.display = 'none'; // we can replace dot with number
+            } else {
+                badge.style.display = 'none';
+                dot.style.display = 'none';
+            }
+        }
+
         function toggleChat() {
-            const c = document.getElementById('chatWindow'); c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
-            if(c.style.display === 'flex') { const body = document.getElementById('chatBody'); body.scrollTop = body.scrollHeight; document.getElementById('chatUnreadDot').style.display = 'none'; }
+            const c = document.getElementById('chatWindow');
+            c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
+            if(c.style.display === 'flex') {
+                // Mark all chat as read
+                chatLastReadTime = Date.now();
+                localStorage.setItem('mh_chatLastRead', chatLastReadTime);
+                unreadChatCount = 0;
+                updateChatBadge();
+                document.getElementById('chatBody').scrollTop = document.getElementById('chatBody').scrollHeight;
+            }
+        }
+
+        function loadChat(uid) {
+            db.collection('chats').doc(uid).collection('messages').orderBy('time','asc').onSnapshot(snap => {
+                const body = document.getElementById('chatBody');
+                body.innerHTML = '';
+                let messagesAdded = 0;
+                let adminUnreadCount = 0;
+                snap.forEach(doc => {
+                    const m = doc.data();
+                    let extClass = m.isAutoReply ? 'system-reply' : (m.sender==='user'?'sent':'received');
+                    body.innerHTML += `<div class="msg ${extClass}">${m.text}</div>`;
+                    if (m.sender === 'admin' && m.time > chatLastReadTime && !m.isAutoReply) {
+                        adminUnreadCount++;
+                    }
+                    messagesAdded++;
+                });
+                // If chat window is not open, update unread count
+                if (document.getElementById('chatWindow').style.display !== 'flex') {
+                    unreadChatCount = adminUnreadCount;
+                    updateChatBadge();
+                } else {
+                    // Chat is open, mark all as read
+                    chatLastReadTime = Date.now();
+                    localStorage.setItem('mh_chatLastRead', chatLastReadTime);
+                    unreadChatCount = 0;
+                    updateChatBadge();
+                }
+                if (!firstChatLoad && messagesAdded > 0) {
+                    const lastMsg = snap.docs[snap.docs.length-1].data();
+                    if (lastMsg.sender === 'admin' && !lastMsg.isAutoReply) {
+                        playChatSound();
+                        showNativeNotif("MH Live Support", "Admin has replied to your message.");
+                    }
+                }
+                firstChatLoad = false;
+                body.scrollTop = body.scrollHeight;
+            });
         }
 
         async function sendMessage() {
@@ -1992,25 +2140,8 @@
             } catch (err) {}
         }
 
-        function loadChat(uid) {
-            db.collection('chats').doc(uid).collection('messages').orderBy('time','asc').onSnapshot(snap => {
-                const body = document.getElementById('chatBody'); body.innerHTML = ''; let messagesAdded = 0; let latestSender = "";
-                snap.forEach(doc => {
-                    const m = doc.data();
-                    let extClass = m.isAutoReply ? 'system-reply' : (m.sender==='user'?'sent':'received');
-                    body.innerHTML += `<div class="msg ${extClass}">${m.text}</div>`;
-                    latestSender = m.sender; messagesAdded++;
-                });
-                if(!firstChatLoad && messagesAdded > 0 && latestSender === 'admin') {
-                    playChatSound(); showNativeNotif("MH Live Support", "Admin has replied to your message.");
-                    if(document.getElementById('chatWindow').style.display !== 'flex') { showToast("New message from Support!"); document.getElementById('chatUnreadDot').style.display = 'block'; }
-                }
-                firstChatLoad = false; body.scrollTop = body.scrollHeight;
-            });
-        }
-
         // ============================================================================
-        // 12. ADMIN MESSAGES (POP-UP WITH TIMER)
+        // 13. ADMIN MESSAGES (POP-UP WITH TIMER)
         // ============================================================================
         let messageQueue = [];
         let currentMessageId = null;
@@ -2072,35 +2203,64 @@
         }
 
         // ============================================================================
-        // 13. UNREAD SUMMARY MODAL (NEW)
+        // 14. UNREAD SUMMARY MODAL (UPDATED: includes chat, marks seen only on click)
         // ============================================================================
         let summaryTimer = null;
 
         async function checkAndShowUnreadSummary(uid) {
             const unseenNotifications = await db.collection('notifications').where('target', 'in', [uid, 'ALL']).where('seen', '==', false).get();
             const unseenAdminMessages = await db.collection('admin_user_messages').where('userId', '==', uid).where('seen', '==', false).get();
+            // Get unread chat messages
+            const chatSnap = await db.collection('chats').doc(uid).collection('messages')
+                .where('sender', '==', 'admin')
+                .where('isAutoReply', '==', false) // exclude auto-replies
+                .get();
 
             const items = [];
             unseenNotifications.forEach(doc => {
                 const d = doc.data();
-                items.push({ type: 'notification', title: d.title, body: d.body, id: doc.id });
+                items.push({ type: 'notification', title: d.title, body: d.body, id: doc.id, docRef: doc.ref });
             });
             unseenAdminMessages.forEach(doc => {
                 const d = doc.data();
-                items.push({ type: 'admin_message', title: d.title || '📢 Admin Message', body: d.body, id: doc.id });
+                items.push({ type: 'admin_message', title: d.title || '📢 Admin Message', body: d.body, id: doc.id, docRef: doc.ref });
             });
+            // Group chat messages as a single entry
+            if (!chatSnap.empty) {
+                const unreadChats = [];
+                chatSnap.forEach(doc => {
+                    if (doc.data().time > chatLastReadTime) {
+                        unreadChats.push(doc.data().text.substring(0, 50) + '…');
+                    }
+                });
+                if (unreadChats.length > 0) {
+                    items.push({ type: 'chat', title: `Unread Messages (${unreadChats.length})`, body: unreadChats.join('\n'), id: 'chat_summary' });
+                }
+            }
 
             if (items.length === 0) return;
 
             const container = document.getElementById('unreadListContainer');
             container.innerHTML = '';
             items.forEach(item => {
-                container.innerHTML += `
-                    <div class="unread-item">
-                        <div class="unread-title">${item.title}</div>
-                        <div class="unread-body pre-wrap-text">${item.body}</div>
-                    </div>
-                `;
+                const div = document.createElement('div');
+                div.className = 'unread-item';
+                div.innerHTML = `<div class="unread-title">${item.title}</div><div class="unread-body pre-wrap-text">${item.body}</div>`;
+                div.onclick = async (e) => {
+                    e.stopPropagation();
+                    await markUnreadItemSeen(item);
+                    // Navigate based on type
+                    if (item.type === 'notification') {
+                        toggleNotifPanel(); // opens notification panel
+                    } else if (item.type === 'admin_message') {
+                        // already may have been shown, but we could re-show the modal? Not needed.
+                        // Just mark as seen, nothing else.
+                    } else if (item.type === 'chat') {
+                        toggleChat(); // opens chat
+                    }
+                    closeUnreadSummaryModal(false);
+                };
+                container.appendChild(div);
             });
 
             const modal = document.getElementById('unreadSummaryModal');
@@ -2123,25 +2283,32 @@
             }, 1000);
         }
 
+        async function markUnreadItemSeen(item) {
+            if (item.type === 'notification' || item.type === 'admin_message') {
+                if (item.docRef) {
+                    await item.docRef.update({ seen: true });
+                }
+            } else if (item.type === 'chat') {
+                chatLastReadTime = Date.now();
+                localStorage.setItem('mh_chatLastRead', chatLastReadTime);
+                unreadChatCount = 0;
+                updateChatBadge();
+            }
+        }
+
         async function closeUnreadSummaryModal(autoClosed = false) {
             if (summaryTimer) {
                 clearInterval(summaryTimer);
                 summaryTimer = null;
             }
             document.getElementById('unreadSummaryModal').style.display = 'none';
-            const uid = auth.currentUser?.uid;
-            if (uid) {
-                const batch = db.batch();
-                const unseenNotifSnapshot = await db.collection('notifications').where('target', 'in', [uid, 'ALL']).where('seen', '==', false).get();
-                unseenNotifSnapshot.forEach(doc => batch.update(doc.ref, { seen: true }));
-                const unseenAdminMsgSnapshot = await db.collection('admin_user_messages').where('userId', '==', uid).where('seen', '==', false).get();
-                unseenAdminMsgSnapshot.forEach(doc => batch.update(doc.ref, { seen: true }));
-                await batch.commit();
-            }
+            // No bulk seen marking; items remain unseen until clicked.
+            // However, we could also mark all notifications and admin messages as seen if autoClosed? 
+            // According to requirement, we shouldn't. So we do nothing here.
         }
 
         // ============================================================================
-        // 14. UTILITIES (toast, modal, news, etc.)
+        // 15. UTILITIES (toast, modal, news, etc.)
         // ============================================================================
         function showToast(msg) {
             const toast = document.getElementById('toast');
@@ -2257,6 +2424,8 @@
         window.playNotifSound = playNotifSound;
         window.playChatSound = playChatSound;
         window.closeUnreadSummaryModal = closeUnreadSummaryModal;
+        window.setToolsMode = setToolsMode;
+        window.toggleChat = toggleChat;
     </script>
 </body>
 </html>
