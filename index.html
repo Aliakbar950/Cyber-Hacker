@@ -84,6 +84,10 @@
         @keyframes glowText { 0% { text-shadow:0 0 5px var(--primary); } 50% { text-shadow:0 0 20px var(--primary); } 100% { text-shadow:0 0 5px var(--primary); } }
         @keyframes popupScale { 0% { transform:scale(0.8); opacity:0; } 100% { transform:scale(1); opacity:1; } }
         @keyframes skeletonLoading { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
+        @keyframes offerShine {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
 
         /* SPLASH SCREEN */
         #splash { position:fixed; inset:0; background:var(--bg); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.5s ease; }
@@ -187,34 +191,39 @@
         .search-box:focus { border-color:var(--primary); box-shadow:inset 0 0 15px rgba(0,242,255,0.1),0 0 15px rgba(0,242,255,0.2); }
         .search-icon { position:absolute; right:25px; top:18px; color:#666; font-size:18px; }
 
-        /* UPDATED: Search Tabs – smaller & premium */
-        .search-tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .search-tab-btn { 
-            flex: 1; 
-            padding: 8px 15px; 
-            border-radius: 8px; 
-            border: 2px solid var(--primary); 
-            background: transparent; 
-            color: var(--primary); 
-            font-weight: 800; 
-            font-family: 'Rajdhani', sans-serif; 
-            letter-spacing: 2px; 
-            font-size: 13px; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            text-transform: uppercase; 
-            position: relative;
-            overflow: hidden;
+        /* ULTRA COMPACT PREMIUM SEARCH TABS (like FAK OFFICIAL) */
+        .search-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            justify-content: center;
         }
-        .search-tab-btn.active { 
-            background: linear-gradient(135deg, var(--dark-cyan), var(--primary)); 
-            color: black; 
-            box-shadow: 0 0 20px var(--primary); 
-            border-color: var(--primary); 
+        .search-tab-btn {
+            flex: none;
+            padding: 6px 18px;
+            border-radius: 20px;
+            border: 1px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-weight: 800;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            min-width: 90px;
+            text-align: center;
         }
-        .search-tab-btn:hover:not(.active) { 
-            box-shadow: 0 0 15px rgba(0,242,255,0.4); 
-            border-color: #00e5ff; 
+        .search-tab-btn.active {
+            background: var(--primary);
+            color: black;
+            box-shadow: 0 0 15px var(--primary);
+            border-color: var(--primary);
+        }
+        .search-tab-btn:hover:not(.active) {
+            box-shadow: 0 0 15px rgba(0,242,255,0.4);
+            border-color: #00e5ff;
         }
 
         .tools-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:20px; width:100%; }
@@ -223,24 +232,25 @@
         .tool-card:hover { border-color:var(--primary); background:#00111a; transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.8); }
         .tool-icon { width:70px; height:70px; border-radius:50%; border:2px solid #222; margin-bottom:12px; object-fit:cover; transition:all 0.4s ease; background:linear-gradient(90deg,#050a0a 25%,#112222 50%,#050a0a 75%); background-size:200% 100%; animation:skeletonLoading 1.5s infinite; }
         .tool-card:hover .tool-icon { border-color:var(--primary); box-shadow:var(--text-glow); transform:scale(1.05); }
-        /* UPDATED: Premium offer badge */
-        .offer-badge { 
-            position:absolute; 
-            top:35px; 
-            left:-30px; 
-            background: linear-gradient(135deg, #ff0a0a, #ff5500); 
-            color:white; 
-            font-family:'Rajdhani'; 
-            font-size:12px; 
-            font-weight:900; 
-            padding:5px 30px; 
-            transform:rotate(-45deg); 
-            box-shadow:0 0 25px rgba(255,0,0,0.8), 0 0 45px rgba(255,165,0,0.6); 
-            letter-spacing:1px; 
-            z-index:10; 
-            text-transform:uppercase; 
-            animation:pulse-gold 1.8s infinite; 
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        /* ULTRA PREMIUM OFFER BADGE WITH SHIMMER */
+        .offer-badge {
+            position: absolute;
+            top: 35px;
+            left: -30px;
+            background: linear-gradient(135deg, #ff004c, #ff5500, #ff004c);
+            background-size: 300% 100%;
+            color: white;
+            font-family: 'Rajdhani';
+            font-size: 12px;
+            font-weight: 900;
+            padding: 5px 30px;
+            transform: rotate(-45deg);
+            box-shadow: 0 0 25px rgba(255,0,0,0.9), 0 0 45px rgba(255,165,0,0.7);
+            letter-spacing: 1px;
+            z-index: 10;
+            text-transform: uppercase;
+            animation: offerShine 2s linear infinite;
+            text-shadow: 0 0 12px rgba(255,255,255,0.6);
         }
         .badge-free { position:absolute; top:10px; right:10px; background:var(--primary); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; letter-spacing:1px; }
         .badge-vip { position:absolute; top:10px; right:10px; background:var(--vip-gold); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; box-shadow:0 0 10px rgba(255,215,0,0.5); letter-spacing:1px; }
@@ -656,7 +666,7 @@
                 <!-- HOME SECTION (TOOLS GRID) -->
                 <div id="homeSection" class="dash-section">
                     <div class="search-container"><input type="text" id="searchInput" class="search-box" placeholder="Search available tools..." onkeyup="searchTools()"><i class="fa fa-search search-icon"></i></div>
-                    <!-- UPDATED: Search Mode Tabs -->
+                    <!-- UPDATED: Search Mode Tabs (compact premium) -->
                     <div class="search-tabs" id="searchTabs">
                         <button class="search-tab-btn active" id="tabFree" onclick="setToolsMode(false)">FREE HACKS</button>
                         <button class="search-tab-btn" id="tabVip" onclick="setToolsMode(true)">VIP HACKS</button>
