@@ -84,15 +84,6 @@
         @keyframes glowText { 0% { text-shadow:0 0 5px var(--primary); } 50% { text-shadow:0 0 20px var(--primary); } 100% { text-shadow:0 0 5px var(--primary); } }
         @keyframes popupScale { 0% { transform:scale(0.8); opacity:0; } 100% { transform:scale(1); opacity:1; } }
         @keyframes skeletonLoading { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
-        @keyframes offerShine {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
-        }
-        @keyframes offerPulse {
-            0% { box-shadow: 0 0 5px rgba(0,255,0,0.7); }
-            50% { box-shadow: 0 0 15px rgba(0,255,0,1); }
-            100% { box-shadow: 0 0 5px rgba(0,255,0,0.7); }
-        }
 
         /* SPLASH SCREEN */
         #splash { position:fixed; inset:0; background:var(--bg); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.5s ease; }
@@ -283,66 +274,32 @@
         .search-box:focus { border-color:var(--primary); box-shadow:inset 0 0 15px rgba(0,242,255,0.1),0 0 15px rgba(0,242,255,0.2); }
         .search-icon { position:absolute; right:25px; top:18px; color:#666; font-size:18px; }
 
-        /* ULTRA COMPACT PREMIUM SEARCH TABS (like FAK OFFICIAL) */
-        .search-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-            justify-content: center;
-        }
-        .search-tab-btn {
-            flex: none;
-            padding: 8px 22px;
-            border-radius: 30px;
-            border: 2px solid var(--primary);
-            background: transparent;
-            color: var(--primary);
-            font-weight: 800;
-            font-family: 'Rajdhani', sans-serif;
-            letter-spacing: 1px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            min-width: 110px;
-            text-align: center;
-            box-shadow: 0 0 5px rgba(0,242,255,0.2);
-        }
-        .search-tab-btn.active {
-            background: var(--primary);
-            color: black;
-            box-shadow: 0 0 20px var(--primary);
-            border-color: var(--primary);
-        }
-        .search-tab-btn:hover:not(.active) {
-            box-shadow: 0 0 18px rgba(0,242,255,0.6);
-            border-color: #00e5ff;
-        }
-
         .tools-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:20px; width:100%; }
         @media (min-width:769px) and (max-width:1023px) { .tools-grid { grid-template-columns:repeat(4,1fr) !important; gap:15px; } }
-        .tool-card { background:#050a0a; border:1px solid #112222; padding:25px 10px; border-radius:16px; text-align:center; position:relative; transition:all 0.3s ease; cursor:pointer; animation:slideUpGlow 0.5s ease; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .tool-card { background:#050a0a; border:1px solid #112222; padding:25px 10px; border-radius:16px; text-align:center; position:relative; transition:all 0.3s ease; cursor:pointer; animation:slideUpGlow 0.5s ease; overflow: hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; }
         .tool-card:hover { border-color:var(--primary); background:#00111a; transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.8); }
         .tool-icon { width:70px; height:70px; border-radius:50%; border:2px solid #222; margin-bottom:12px; object-fit:cover; transition:all 0.4s ease; background:linear-gradient(90deg,#050a0a 25%,#112222 50%,#050a0a 75%); background-size:200% 100%; animation:skeletonLoading 1.5s infinite; }
         .tool-card:hover .tool-icon { border-color:var(--primary); box-shadow:var(--text-glow); transform:scale(1.05); }
-        /* ULTRA PREMIUM OFFER BADGE - SIDE LABEL (SMALL GLOWING PILL) */
+
+        /* ─────────────── ✦ OFFER BADGE (CLEAN INSIDE CORNER) ✦ ─────────────── */
         .offer-badge {
             position: absolute;
-            top: 12px;
-            left: 12px;
-            background: linear-gradient(135deg, #00cc00, #00ff66);
-            color: black;
-            font-family: 'Rajdhani';
-            font-size: 10px;
+            top: 0;
+            left: 0;
+            background: linear-gradient(to bottom, #d32f2f, #b71c1c);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
             font-weight: 900;
-            padding: 4px 12px;
-            border-radius: 20px;
-            box-shadow: 0 0 15px rgba(0,255,0,0.8);
-            letter-spacing: 1px;
+            padding: 5px 18px 5px 10px;
+            border-radius: 0 0 10px 0;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.6);
             z-index: 10;
             text-transform: uppercase;
-            animation: offerPulse 2s infinite;
+            letter-spacing: 1px;
+            line-height: 1.2;
         }
+
         .badge-free { position:absolute; top:10px; right:10px; background:var(--primary); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; letter-spacing:1px; }
         .badge-vip { position:absolute; top:10px; right:10px; background:var(--vip-gold); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; box-shadow:0 0 10px rgba(255,215,0,0.5); letter-spacing:1px; }
         .status-dot { width:8px; height:8px; border-radius:50%; position:absolute; top:15px; left:15px; }
@@ -757,11 +714,7 @@
                 <!-- HOME SECTION (TOOLS GRID) -->
                 <div id="homeSection" class="dash-section">
                     <div class="search-container"><input type="text" id="searchInput" class="search-box" placeholder="Search available tools..." onkeyup="searchTools()"><i class="fa fa-search search-icon"></i></div>
-                    <!-- UPDATED: Search Mode Tabs (compact premium) -->
-                    <div class="search-tabs" id="searchTabs">
-                        <button class="search-tab-btn active" id="tabFree" onclick="setToolsMode(false)">FREE HACKS</button>
-                        <button class="search-tab-btn" id="tabVip" onclick="setToolsMode(true)">VIP HACKS</button>
-                    </div>
+                    <!-- FREE HACKS / VIP HACKS search tabs removed. Use the VIP button in top bar to switch modes. -->
                     <div class="tools-grid" id="toolsContainer"></div>
                 </div>
 
@@ -823,7 +776,7 @@
                         <input type="text" id="walletUserName" class="input-box" placeholder="Your Full Name">
                         <input type="email" id="walletUserEmail" class="input-box" placeholder="Your Email">
                         <input type="text" id="walletHackName" class="input-box" placeholder="Enter Hack / Game Name">
-                        <div style="margin:20px 0;"><button class="btn" onclick="buyVIPWithWallet()" style="background:linear-gradient(90deg,var(--dark-cyan),var(--primary)); color:black; font-weight:900;">BUY WITH WALLET (PKR <span id="walletPriceDisplay">0</span>)</button></div>
+                        <div style="margin:20px 0;"><button class="btn" onclick="buyVIPWithWallet(event)" style="background:linear-gradient(90deg,var(--dark-cyan),var(--primary)); color:black; font-weight:900;">BUY WITH WALLET (PKR <span id="walletPriceDisplay">0</span>)</button></div>
                         <p style="font-size:12px; color:#aaa;">After purchase, Admin will process it. Check System Status for updates.</p>
                     </div>
                     <div class="report-form-container" style="border-color:var(--danger-red);">
@@ -832,7 +785,7 @@
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><input type="text" id="bugName" class="input-box" placeholder="Your Name" style="margin-top:0;"><input type="email" id="bugEmail" class="input-box" placeholder="Your Email" style="margin-top:0;"></div>
                         <input type="text" id="bugTitle" class="input-box" placeholder="Issue Title">
                         <textarea id="bugDesc" class="input-box" placeholder="Describe the problem..."></textarea>
-                        <button class="btn" style="background:var(--danger-red); color:white;" onclick="submitReport('bug')">SUBMIT BUG REPORT</button>
+                        <button class="btn" style="background:var(--danger-red); color:white;" onclick="submitReport('bug', event)">SUBMIT BUG REPORT</button>
                     </div>
                     <div class="report-form-container" style="border-color:#00ff00;">
                         <h2 style="color:#00ff00; font-family:'Rajdhani'; font-size:28px; font-weight:900; margin-bottom:10px;"><i class="fa fa-plus-circle"></i> REQUEST A NEW TOOL</h2>
@@ -840,7 +793,7 @@
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><input type="text" id="reqName" class="input-box" placeholder="Your Name" style="margin-top:0;"><input type="email" id="reqEmail" class="input-box" placeholder="Your Email" style="margin-top:0;"></div>
                         <input type="text" id="reqToolName" class="input-box" placeholder="Tool/Game Name">
                         <textarea id="reqDesc" class="input-box" placeholder="Why do you need this?"></textarea>
-                        <button class="btn" onclick="submitReport('request')" style="background:linear-gradient(90deg,#004d00,#00ff00); color:black;">SUBMIT TOOL REQUEST</button>
+                        <button class="btn" onclick="submitReport('request', event)" style="background:linear-gradient(90deg,#004d00,#00ff00); color:black;">SUBMIT TOOL REQUEST</button>
                     </div>
                 </div>
 
@@ -860,7 +813,7 @@
                 <div id="sendmoneySection" class="dash-section" style="display:none; max-width:650px; margin:0 auto;">
                     <div class="wallet-header" style="border-color:var(--primary);"><div class="wallet-label">YOUR WALLET BALANCE</div><div class="wallet-balance" id="sendWalletBalance">PKR 0</div></div>
                     <div class="send-money-box"><h3 style="color:var(--success-green); font-family:'Rajdhani'; font-size:24px; font-weight:900; margin-bottom:15px;"><i class="fa fa-id-card"></i> YOUR SEND MONEY ID</h3><div class="user-id-display" style="border-color:var(--success-green);"><span class="user-id-text" id="userSendId" style="color:var(--success-green); font-size:20px;">MH-USER-12345</span><button class="copy-btn" onclick="copyUserSendId()" style="background:var(--success-green); color:black;"><i class="fa fa-copy"></i> COPY ID</button></div><p style="color:#aaa; font-size:12px; margin-top:10px;">Share this ID with anyone to receive PKR directly into your wallet.</p></div>
-                    <div class="send-money-box"><h2 style="color:var(--primary); font-family:'Rajdhani'; font-size:32px; font-weight:900; margin-bottom:20px; border-bottom:2px solid #112222; padding-bottom:15px;"><i class="fa fa-paper-plane"></i> TRANSFER FUNDS</h2><div class="form-label" style="color:var(--vip-gold);">OFFICIAL ADMIN ID (For Admin Payments)</div><div class="admin-id-container"><input type="text" id="adminIdReadonly" class="admin-id-input" value="ADMIN_MH" readonly><button class="copy-btn-large" onclick="copyAdminId()" style="background:var(--vip-gold); color:black;"><i class="fa fa-copy"></i> COPY</button></div><div class="form-label">ENTER RECIPIENT ID</div><input type="text" id="recipientIdInput" class="input-box" placeholder="Paste Admin or User ID here..." style="font-family:monospace; font-size:16px; font-weight:bold;"><div class="form-label">TRANSFER AMOUNT (PKR)</div><input type="number" id="sendAmount" class="input-box" placeholder="Enter Amount to Send" min="1" step="1" style="font-weight:bold; font-size:18px;"><div class="form-label">YOUR NAME</div><input type="text" id="sendName" class="input-box" placeholder="Confirm Your Full Name"><div class="form-label">YOUR EMAIL</div><input type="email" id="sendEmail" class="input-box" placeholder="Confirm Your Email"><div class="form-label">TRANSACTION NOTE (OPTIONAL)</div><textarea id="sendNote" class="input-box" placeholder="Add a short note..." style="height:80px;"></textarea><button class="send-money-btn" onclick="sendMoneyToUser()"><i class="fa fa-paper-plane"></i> SEND SECURE PAYMENT</button><p style="font-size:12px; color:var(--pending-orange); margin-top:15px; text-align:center;">Note: All user-to-user transfers must be approved by the Admin before completion.</p></div>
+                    <div class="send-money-box"><h2 style="color:var(--primary); font-family:'Rajdhani'; font-size:32px; font-weight:900; margin-bottom:20px; border-bottom:2px solid #112222; padding-bottom:15px;"><i class="fa fa-paper-plane"></i> TRANSFER FUNDS</h2><div class="form-label" style="color:var(--vip-gold);">OFFICIAL ADMIN ID (For Admin Payments)</div><div class="admin-id-container"><input type="text" id="adminIdReadonly" class="admin-id-input" value="ADMIN_MH" readonly><button class="copy-btn-large" onclick="copyAdminId()" style="background:var(--vip-gold); color:black;"><i class="fa fa-copy"></i> COPY</button></div><div class="form-label">ENTER RECIPIENT ID</div><input type="text" id="recipientIdInput" class="input-box" placeholder="Paste Admin or User ID here..." style="font-family:monospace; font-size:16px; font-weight:bold;"><div class="form-label">TRANSFER AMOUNT (PKR)</div><input type="number" id="sendAmount" class="input-box" placeholder="Enter Amount to Send" min="1" step="1" style="font-weight:bold; font-size:18px;"><div class="form-label">YOUR NAME</div><input type="text" id="sendName" class="input-box" placeholder="Confirm Your Full Name"><div class="form-label">YOUR EMAIL</div><input type="email" id="sendEmail" class="input-box" placeholder="Confirm Your Email"><div class="form-label">TRANSACTION NOTE (OPTIONAL)</div><textarea id="sendNote" class="input-box" placeholder="Add a short note..." style="height:80px;"></textarea><button class="send-money-btn" onclick="sendMoneyToUser(event)"><i class="fa fa-paper-plane"></i> SEND SECURE PAYMENT</button><p style="font-size:12px; color:var(--pending-orange); margin-top:15px; text-align:center;">Note: All user-to-user transfers must be approved by the Admin before completion.</p></div>
                     <h3 style="color:var(--primary); margin:30px 0 20px; font-family:'Rajdhani'; font-size:24px; font-weight:900;">TRANSACTION HISTORY</h3>
                     <div class="table-responsive"><div class="history-table"><table><thead><tr><th>Date</th><th>Recipient/Sender</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead><tbody id="transactionHistoryBody"><tr><td colspan="5" style="text-align:center;">Loading transactions...</td></tr></tbody></table></div></div>
                 </div>
@@ -1254,6 +1207,9 @@
             const ref = urlParams.get('ref');
             if(ref) document.getElementById('regRef').value = ref;
             listenToAppConfig();
+            // Start fetching tools & news early (during splash) for instant dashboard
+            fetchAllTools();
+            loadDailyNews();
             let p = 0;
             let fill = document.getElementById('fill');
             let perc = document.getElementById('loadPerc');
@@ -1275,34 +1231,52 @@
             checkAppReady();
         });
 
+        // Flag to prevent calling completion multiple times
+        let splashCompleted = false;
+
         function checkAppReady() {
-            if(animationDone && authStateResolved) {
-                document.getElementById('splash').style.opacity = '0';
+            if (!animationDone || !authStateResolved || splashCompleted) return;
+            splashCompleted = true;
+            const splash = document.getElementById('splash');
+            splash.style.opacity = '0';
+
+            const onTransitionEnd = () => {
+                splash.removeEventListener('transitionend', onTransitionEnd);
+                splash.style.display = 'none';
+                proceedAfterSplash();
+            };
+            splash.addEventListener('transitionend', onTransitionEnd);
+
+            // Fallback if transitionend doesn't fire
+            setTimeout(() => {
+                splash.removeEventListener('transitionend', onTransitionEnd);
+                if (splash.style.display !== 'none') {
+                    splash.style.display = 'none';
+                    proceedAfterSplash();
+                }
+            }, 600);
+        }
+
+        function proceedAfterSplash() {
+            if (loggedInUser) {
+                db.collection('users').doc(loggedInUser.uid).update({ status: 'online' }).catch(() => {});
+                loadData(loggedInUser.uid);
+                loadWalletData(loggedInUser.uid);
+                switchPage('dashboard');
+                loadChat(loggedInUser.uid);
+                loadNotifications(loggedInUser.uid);
+                loadUserPurchases(loggedInUser.uid);
+                loadVipDirectAccess(loggedInUser.uid);
+                loadUserReportsHistory(loggedInUser.uid);
+                loadReferralHistory(loggedInUser.uid);
+                loadCheckinHistory(loggedInUser.uid);
+                loadTransactionHistory(loggedInUser.uid);
+                listenForAdminMessages(loggedInUser.uid);
                 setTimeout(() => {
-                    document.getElementById('splash').style.display = 'none';
-                    if(loggedInUser) {
-                        db.collection('users').doc(loggedInUser.uid).update({ status: 'online' }).catch(()=>{});
-                        loadData(loggedInUser.uid);
-                        loadWalletData(loggedInUser.uid);
-                        switchPage('dashboard');
-                        fetchAllTools();
-                        loadChat(loggedInUser.uid);
-                        loadNotifications(loggedInUser.uid);
-                        loadUserPurchases(loggedInUser.uid);
-                        loadVipDirectAccess(loggedInUser.uid);
-                        loadUserReportsHistory(loggedInUser.uid);
-                        loadDailyNews();
-                        loadReferralHistory(loggedInUser.uid);
-                        loadCheckinHistory(loggedInUser.uid);
-                        loadTransactionHistory(loggedInUser.uid);
-                        listenForAdminMessages(loggedInUser.uid);
-                        setTimeout(() => {
-                            checkAndShowUnreadSummary(loggedInUser.uid);
-                        }, 1000);
-                    } else {
-                        switchPage('login');
-                    }
-                }, 500);
+                    checkAndShowUnreadSummary(loggedInUser.uid);
+                }, 1000);
+            } else {
+                switchPage('login');
             }
         }
 
@@ -1359,7 +1333,8 @@
                         });
                         await db.collection('notifications').add({
                             target: referrer.id, title: '🎉 Referral Bonus!',
-                            body: `You earned PKR ${window.REFERRAL_AMOUNT} for referring ${n}!`, timestamp: Date.now()
+                            body: `You earned PKR ${window.REFERRAL_AMOUNT} for referring ${n}!`, timestamp: Date.now(),
+                            seen: false
                         });
                     }
                 }
@@ -1598,7 +1573,7 @@
             rcvRef.onSnapshot(()=>renderMergedHistory());
         }
 
-        async function sendMoneyToUser() {
+        async function sendMoneyToUser(event) {
             const btn = event.currentTarget;
             if(!auth.currentUser) return;
             const senderUid = auth.currentUser.uid;
@@ -1637,7 +1612,8 @@
                         senderName: name, note: note, timestamp: Date.now(), status: 'pending'
                     });
                     await db.collection('notifications').add({
-                        target: recipientUid, title: '💰 Incoming Transfer Pending', body: `A transfer of PKR ${amount} from ${name} is processing.`, timestamp: Date.now()
+                        target: recipientUid, title: '💰 Incoming Transfer Pending', body: `A transfer of PKR ${amount} from ${name} is processing.`, timestamp: Date.now(),
+                        seen: false
                     });
                     showTransactionSuccessModal(dialogTexts.sendMoney.title, `Sent to ${recipientName} (${recipientId}).\nStatus: PENDING ADMIN APPROVAL.`);
                 } else {
@@ -1767,21 +1743,7 @@
             });
         }
 
-        // Updated: Set tools mode from search tabs
-        function setToolsMode(vip) {
-            if (isVipMode !== vip) {
-                toggleMode();
-            }
-            document.getElementById('tabFree').classList.toggle('active', !vip);
-            document.getElementById('tabVip').classList.toggle('active', vip);
-            const headerBtn = document.getElementById('modeSwitchBtn');
-            if (vip && !headerBtn.classList.contains('active-vip')) {
-                toggleMode();
-            } else if (!vip && headerBtn.classList.contains('active-vip')) {
-                toggleMode();
-            }
-        }
-
+        // Toggle mode via header button only (search tabs removed)
         function toggleMode() {
             isVipMode = !isVipMode;
             const btn = document.getElementById('modeSwitchBtn');
@@ -1797,8 +1759,6 @@
             }
             updateDynamicGridStyle();
             renderTools();
-            document.getElementById('tabFree').classList.toggle('active', !isVipMode);
-            document.getElementById('tabVip').classList.toggle('active', isVipMode);
         }
 
         function searchTools() {
@@ -1839,7 +1799,7 @@
         }
         document.getElementById('walletToolSelect')?.addEventListener('change', updateSelectedToolPrice);
 
-        async function buyVIPWithWallet() {
+        async function buyVIPWithWallet(event) {
             const btn = event.currentTarget;
             if(!auth.currentUser) return;
             const uid = auth.currentUser.uid;
@@ -1895,7 +1855,7 @@
             if (!paymentMethods || paymentMethods.length === 0) return '<p style="color:#777; padding:20px; background:#111; border-radius:10px;">No payment methods defined.</p>';
             let html = '';
             paymentMethods.forEach(p => {
-                let imageBlock = (p.img && p.img.trim() !== '') ? `<div class="qr-image-box"><img src="${p.img}" alt="QR Code" onerror="this.parentElement.innerHTML='<div style=\\'padding:20px; color:#ff4444;\\'>Image failed to load.</div>'"></div>` : `<div class="qr-image-box" style="padding:20px; color:#555;">NO QR CODE PROVIDED</div>`;
+                let imageBlock = (p.img && p.img.trim() !== '') ? `<div class="qr-image-box"><img src="${p.img}" alt="QR Code" onerror="this.parentElement.innerHTML='<div style=\'padding:20px; color:#ff4444;\'>Image failed to load.</div>'"></div>` : `<div class="qr-image-box" style="padding:20px; color:#555;">NO QR CODE PROVIDED</div>`;
                 html += `<div class="pay-card-wrap"><h4 class="pay-header">${p.title || "PAYMENT METHOD"}</h4><div class="pay-desc pre-wrap-text" style="color:white; font-size:15px; font-family:'Rajdhani';">${p.name || "N/A"}</div>${imageBlock}</div>`;
             });
             return html;
@@ -2135,7 +2095,7 @@
         // ============================================================================
         // 12. REPORTS, NOTIFICATIONS & CHAT
         // ============================================================================
-        async function submitReport(type) {
+        async function submitReport(type, event) {
             const btn = event.currentTarget;
             let name, email, title, desc, colTitle;
             if(type === 'bug') {
@@ -2350,8 +2310,14 @@
         let summaryTimer = null;
 
         async function checkAndShowUnreadSummary(uid) {
-            const unseenNotifications = await db.collection('notifications').where('target', 'in', [uid, 'ALL']).where('seen', '==', false).get();
-            const unseenAdminMessages = await db.collection('admin_user_messages').where('userId', '==', uid).where('seen', '==', false).get();
+            // Fetch all notifications where target matches, then filter out those with seen === true
+            const notifSnapshot = await db.collection('notifications').where('target', 'in', [uid, 'ALL']).get();
+            const unseenNotifications = notifSnapshot.docs.filter(doc => doc.data().seen !== true);
+            
+            // Fetch all admin messages for this user, then filter out those already seen
+            const adminMsgSnapshot = await db.collection('admin_user_messages').where('userId', '==', uid).get();
+            const unseenAdminMessages = adminMsgSnapshot.docs.filter(doc => doc.data().seen !== true);
+            
             const chatSnap = await db.collection('chats').doc(uid).collection('messages')
                 .where('sender', '==', 'admin')
                 .where('isAutoReply', '==', false)
@@ -2534,11 +2500,12 @@
                     document.getElementById('demoTitleDisplay').innerHTML = d.title;
                     const videoContainer = document.getElementById('demoVideoContainer');
                     if (d.videoUrl) {
+                        if (d.description === undefined || d.description === null) d.description = '';
                         videoContainer.innerHTML = getVideoEmbedHtml(d.videoUrl);
                     } else {
                         videoContainer.innerHTML = '<div style="display:flex; align-items:center; justify-content:center; height:100%; color:#555; background:#111;">No preview video</div>';
                     }
-                    document.getElementById('demoDescDisplay').innerHTML = d.description.replace(/\n/g, '<br>');
+                    document.getElementById('demoDescDisplay').innerHTML = (d.description || '').replace(/\n/g, '<br>');
                     document.getElementById('demoSystemModal').style.display = 'flex';
                 }
             }).catch(err => console.error(err));
@@ -2569,7 +2536,6 @@
         window.playNotifSound = playNotifSound;
         window.playChatSound = playChatSound;
         window.closeUnreadSummaryModal = closeUnreadSummaryModal;
-        window.setToolsMode = setToolsMode;
         window.toggleChat = toggleChat;
     </script>
 </body>
