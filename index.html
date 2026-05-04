@@ -274,6 +274,43 @@
         .search-box:focus { border-color:var(--primary); box-shadow:inset 0 0 15px rgba(0,242,255,0.1),0 0 15px rgba(0,242,255,0.2); }
         .search-icon { position:absolute; right:25px; top:18px; color:#666; font-size:18px; }
 
+        /* ─────────────── NEW MODE TABS (ALL / FREE / PREMIUM) ─────────────── */
+        .mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-top: -10px;
+            margin-bottom: 25px;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+        .mode-btn {
+            padding: 6px 16px;
+            background: #0a0a0a;
+            border: 1px solid #003344;
+            color: #777;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 60px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .mode-btn.active {
+            background: var(--primary);
+            color: black;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .mode-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
         .tools-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:20px; width:100%; }
         @media (min-width:769px) and (max-width:1023px) { .tools-grid { grid-template-columns:repeat(4,1fr) !important; gap:15px; } }
         .tool-card { background:#050a0a; border:1px solid #112222; padding:25px 10px; border-radius:16px; text-align:center; position:relative; transition:all 0.3s ease; cursor:pointer; animation:slideUpGlow 0.5s ease; overflow: hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; }
@@ -480,6 +517,21 @@
         .site-footer { text-align:center; padding:25px 15px; color:#555; font-family:'Rajdhani',sans-serif; font-size:14px; letter-spacing:2px; border-top:1px solid #112222; margin-top:40px; }
         .site-footer span { color:var(--primary); font-weight:900; }
 
+        /* ======================== IMPROVED MOBILE STYLES FOR EARN & SEND MONEY ======================== */
+        @media (max-width: 768px) {
+            .wallet-header { padding: 20px; margin-bottom: 20px; }
+            .wallet-balance { font-size: 28px; }
+            .wallet-stats { gap: 10px; }
+            .checkin-card { padding: 20px; margin-bottom: 20px; }
+            .checkin-btn { font-size: 18px; padding: 15px; }
+            .referral-box { padding: 20px; }
+            .send-money-box { padding: 20px; margin-bottom: 20px; }
+            .send-money-btn { font-size: 18px; padding: 15px; }
+            .history-table th, .history-table td { padding: 10px; font-size: 12px; }
+            .wallet-stat-card { padding: 15px; }
+            .wallet-stat-value { font-size: 22px; }
+        }
+
         @media (max-width: 768px) {
             .top-nav { padding:0 15px; height:75px; }
             .menu-toggle { display:block; }
@@ -633,7 +685,7 @@
             <i class="fa fa-bell tm-icon" style="color:var(--primary); font-size: 50px;"></i>
             <h2 class="tm-title" style="color:var(--primary); font-size:28px; margin-bottom:5px;">SYSTEM ALERTS</h2>
             <p style="color:#888; font-size:12px; margin-bottom:15px;">Pending actions while you were offline</p>
-            <div class="unread-list" id="unreadListContainer"></div>
+            <div class="unread-list" id="unreadListContainer" style="max-height:400px;"></div>
             <div id="unreadSummaryTimer" class="timer-text" style="display:block; text-align:center;">Auto‑close in 5 seconds</div>
             <div class="btn-row" style="margin-top:15px; justify-content:center;">
                 <button class="btn-modal btn-next" style="background:var(--primary); color:black; box-shadow:0 0 15px rgba(0,242,255,0.4); width:auto; padding:14px 25px;" onclick="closeUnreadSummaryModal(false)">PROCEED TO DASHBOARD</button>
@@ -714,7 +766,12 @@
                 <!-- HOME SECTION (TOOLS GRID) -->
                 <div id="homeSection" class="dash-section">
                     <div class="search-container"><input type="text" id="searchInput" class="search-box" placeholder="Search available tools..." onkeyup="searchTools()"><i class="fa fa-search search-icon"></i></div>
-                    <!-- FREE HACKS / VIP HACKS search tabs removed. Use the VIP button in top bar to switch modes. -->
+                    <!-- NEW MODE SELECTOR TABS -->
+                    <div class="mode-tabs" id="modeTabs">
+                        <button class="mode-btn active" data-mode="free" onclick="setToolMode('free')">FREE</button>
+                        <button class="mode-btn" data-mode="premium" onclick="setToolMode('premium')">PREMIUM</button>
+                        <button class="mode-btn" data-mode="all" onclick="setToolMode('all')">ALL</button>
+                    </div>
                     <div class="tools-grid" id="toolsContainer"></div>
                 </div>
 
@@ -925,8 +982,8 @@
         let gTxtUpload = "UPLOAD PROOF";
         let gTxtLoading = "SYSTEM LOADING...";
 
-        let gFreeGridMobile = "3";
-        let gVipGridMobile = "3";
+        let gFreeGridMobile = "2";   // changed default to 2 for mobile
+        let gVipGridMobile = "2";    // changed default to 2 for mobile
 
         // Custom dialog texts (loaded from Firestore)
         let dialogTexts = {
@@ -937,6 +994,9 @@
             sendMoney: { title: "SENT", desc: "Successfully sent to Official Admin Account. Admin will process shortly." },
             dailyCheckin: { title: "CHECK-IN SUCCESS", desc: "Daily Check-in Bonus added successfully to your wallet!" }
         };
+
+        // NEW: active tool filter (FREE by default)
+        let activeToolFilter = 'free';   // possible values: 'free', 'premium', 'all'
 
         // ============================================================================
         // 2. BACKGROUND ANIMATION
@@ -1040,7 +1100,8 @@
                 styleTag.id = 'dynamicGridStyle';
                 document.head.appendChild(styleTag);
             }
-            let cols = isVipMode ? gVipGridMobile : gFreeGridMobile;
+            // Use 2 columns for mobile regardless of mode
+            let cols = "2";
             let iconSize, fontSize, subSize;
             if (cols === "1") { iconSize = "80px"; fontSize = "16px"; subSize = "11px"; }
             else if (cols === "2") { iconSize = "60px"; fontSize = "13px"; subSize = "9px"; }
@@ -1078,6 +1139,7 @@
                 if(data.subText) document.getElementById('headerSubText').innerText = data.subText;
                 if(data.tkTitle) document.getElementById('tkTitleDisplay').innerText = data.tkTitle;
                 if(data.tkDesc) document.getElementById('tkDescDisplay').innerText = data.tkDesc;
+                const prevOnline = window.adminIsOnline;
                 window.adminIsOnline = data.adminOnline === true;
                 const adminStatusSpan = document.getElementById('adminOnlineStatusText');
                 if(window.adminIsOnline) {
@@ -1086,6 +1148,11 @@
                 } else {
                     adminStatusSpan.innerHTML = `<i class="fa fa-times-circle" style="color:var(--danger-red);"></i> OFFLINE`;
                     adminStatusSpan.className = "config-status status-disabled";
+                }
+                // Play sound when admin comes online
+                if (!prevOnline && window.adminIsOnline) {
+                    showToast("Admin is now online!");
+                    playNotifSound();
                 }
                 if(data.themePrimary) {
                     document.documentElement.style.setProperty('--primary', data.themePrimary);
@@ -1137,7 +1204,9 @@
                     const d = doc.data();
                     activeVipOffers[d.toolId] = d;
                 });
-                if(isVipMode) renderTools();
+                if(activeToolFilter === 'premium' || activeToolFilter === 'all') {
+                    renderTools();
+                }
                 populateWalletToolSelect();
             });
 
@@ -1677,7 +1746,7 @@
         }
 
         // ============================================================================
-        // 9. TOOLS & OFFER SYSTEM RENDERING
+        // 9. TOOLS & OFFER SYSTEM RENDERING (with new mode filter)
         // ============================================================================
         let initToolsBoot = true;
         function fetchAllTools() {
@@ -1687,7 +1756,7 @@
                     let data = doc.data(); allFreeTools.push({id: doc.id, ...data});
                     if(!initToolsBoot && data.timestamp > bootTime) showNativeNotif("New Free Tool Added!", `${data.title} is now available.`);
                 });
-                if(!isVipMode) renderTools();
+                if(activeToolFilter === 'free' || activeToolFilter === 'all') renderTools();
             });
             db.collection('vip_tools').orderBy('order', 'asc').onSnapshot(snap => {
                 allVipTools =[];
@@ -1695,7 +1764,7 @@
                     let data = doc.data(); allVipTools.push({id: doc.id, ...data});
                     if(!initToolsBoot && data.timestamp > bootTime) showNativeNotif("New VIP Tool!", `${data.title} added to Premium.`);
                 });
-                if(isVipMode) renderTools();
+                if(activeToolFilter === 'premium' || activeToolFilter === 'all') renderTools();
                 populateWalletToolSelect();
                 updateDynamicGridStyle();
                 setTimeout(() => { initToolsBoot = false; }, 3000);
@@ -1705,17 +1774,32 @@
         function renderTools() {
             const cont = document.getElementById('toolsContainer');
             cont.innerHTML = '';
-            const toolsToRender = isVipMode ? allVipTools : allFreeTools;
-            cont.className = 'tools-grid ' + (isVipMode ? `grid-${gVipGridMobile}` : `grid-${gFreeGridMobile}`);
+            let toolsToRender = [];
+            if(activeToolFilter === 'free') {
+                toolsToRender = allFreeTools;
+                cont.className = 'tools-grid';
+            } else if(activeToolFilter === 'premium') {
+                toolsToRender = allVipTools;
+                cont.className = 'tools-grid';
+            } else { // all
+                toolsToRender = [...allFreeTools, ...allVipTools];
+                cont.className = 'tools-grid';
+            }
+
             toolsToRender.forEach(t => {
                 const card = document.createElement('div');
                 card.className = 'tool-card';
-                let badgeHtml = isVipMode ? `<div class="badge-vip">VIP</div>` : `<div class="badge-free">FREE</div>`;
+                // Determine if free or vip
+                const isVipTool = allVipTools.some(v => v.id === t.id) && !allFreeTools.some(f => f.id === t.id); // crude
+                let badgeHtml = '';
+                if (!isVipTool) badgeHtml = `<div class="badge-free">FREE</div>`;
+                else badgeHtml = `<div class="badge-vip">VIP</div>`;
+
                 let statusColor = (t.isWorking !== false) ? 'var(--success-green)' : 'var(--danger-red)';
-                let subText = isVipMode ? (t.welcome || "MH VIP EXCLUSIVE") : "MH HACKS FREE TOOL";
+                let subText = isVipTool ? (t.welcome || "MH VIP EXCLUSIVE") : "MH HACKS FREE TOOL";
                 let offerHtml = '';
                 let priceHtml = '';
-                if(isVipMode && t.price) {
+                if(isVipTool && t.price) {
                     if(activeVipOffers[t.id]) {
                         offerHtml = `<div class="offer-badge">${activeVipOffers[t.id].offerName}</div>`;
                         priceHtml = `<div style="color:var(--primary); font-weight:bold; text-decoration:line-through; opacity:0.5;">PKR ${t.price}</div><div style="color:var(--success-green); font-weight:bold; font-size:18px;">PKR ${activeVipOffers[t.id].discountPrice}</div>`;
@@ -1732,10 +1816,10 @@
                     <p class="tool-sub">${subText}</p>
                     ${priceHtml}
                 `;
-                if (isVipMode && activeVipOffers[t.id]) {
+                if (isVipTool && activeVipOffers[t.id]) {
                     card.style.borderLeft = "4px solid var(--success-green)";
                     card.style.boxShadow = "inset 0 0 20px rgba(0,255,0,0.1)";
-                } else if (isVipMode) {
+                } else if (isVipTool) {
                     card.style.borderLeft = "4px solid var(--vip-gold)";
                 }
                 card.onclick = () => { openToolModal(t); };
@@ -1743,22 +1827,44 @@
             });
         }
 
-        // Toggle mode via header button only (search tabs removed)
-        function toggleMode() {
-            isVipMode = !isVipMode;
+        // NEW: set tool mode via tabs
+        function setToolMode(mode) {
+            activeToolFilter = mode;
+            // Update mode buttons active state
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+            // Update header button accordingly
             const btn = document.getElementById('modeSwitchBtn');
-            const status = document.getElementById('headerStatus');
-            if(isVipMode) {
+            if(mode === 'free') {
+                isVipMode = false;
+                btn.innerHTML = '<i class="fa fa-crown" style="margin-right:8px"></i><span class="desktop-text">VIP HACK</span><span class="mobile-text">VIP</span>';
+                btn.classList.remove('active-vip');
+                document.getElementById('headerStatus').innerHTML = '<i class="fa fa-circle live-dot"></i> <span>PREMIUM TOOLKIT V14.0 ACTIVATED</span>';
+            } else if(mode === 'premium') {
+                isVipMode = true;
                 btn.innerHTML = '<i class="fa fa-gift" style="margin-right:8px"></i> <span class="desktop-text">FREE HACK</span><span class="mobile-text">FREE</span>';
                 btn.classList.add('active-vip');
-                status.innerHTML = '<i class="fa fa-crown" style="color:var(--vip-gold)"></i> <span>VIP SYSTEM ACCESS GRANTED</span>';
+                document.getElementById('headerStatus').innerHTML = '<i class="fa fa-crown" style="color:var(--vip-gold)"></i> <span>VIP SYSTEM ACCESS GRANTED</span>';
             } else {
-                btn.innerHTML = '<i class="fa fa-crown" style="margin-right:8px"></i> <span class="desktop-text">VIP HACK</span><span class="mobile-text">VIP</span>';
+                // all mode: keep header neutral (show VIP HACK but not active)
+                isVipMode = false;
+                btn.innerHTML = '<i class="fa fa-crown" style="margin-right:8px"></i><span class="desktop-text">VIP HACK</span><span class="mobile-text">VIP</span>';
                 btn.classList.remove('active-vip');
-                status.innerHTML = '<i class="fa fa-circle live-dot"></i> <span>PREMIUM TOOLKIT V14.0 ACTIVATED</span>';
+                document.getElementById('headerStatus').innerHTML = '<i class="fa fa-circle live-dot"></i> <span>ALL TOOLS ACTIVE</span>';
             }
             updateDynamicGridStyle();
             renderTools();
+        }
+
+        // Override header toggleMode to cycle between free and premium
+        function toggleMode() {
+            if(activeToolFilter === 'free') {
+                setToolMode('premium');
+            } else if(activeToolFilter === 'premium') {
+                setToolMode('free');
+            } else {
+                setToolMode('free'); // all → free
+            }
         }
 
         function searchTools() {
@@ -1837,8 +1943,9 @@
             }
         }
 
+        // ... (rest of the original code for tool modals, upload, purchases remains unchanged) ...
         // ============================================================================
-        // 10. TOOL MODALS & PURCHASES
+        // 10. TOOL MODALS & PURCHASES (unchanged)
         // ============================================================================
         function getVideoEmbedHtml(videoUrl) {
             if (!videoUrl) return '';
@@ -1892,7 +1999,6 @@
                     priceDisplayHtml = `<div class="tool-price-tag" style="background:var(--primary); color:black; font-size:18px; padding:5px 15px; margin-top:0; display:inline-block; font-weight:bold;">PRICE: PKR ${t.price}</div>`;
                 }
             }
-            // Video container only if video URL exists
             const videoBlock = t.video ? `<div class="video-container" style="aspect-ratio: ${t.videoRatio || '9/16'};">${getVideoEmbedHtml(t.video)}</div>` : '';
             document.getElementById('modalContentInner').innerHTML = `
                 <i class="fa fa-times" onclick="closeModal()" style="position:absolute; right:25px; top:25px; color:#666; cursor:pointer; font-size:24px;"></i>
@@ -1948,7 +2054,15 @@
                 document.getElementById('modalContentInner').innerHTML = `<i class="fa fa-times" onclick="closeModal()" style="position:absolute; right:25px; top:25px; color:#666; cursor:pointer; font-size:24px;"></i><i class="fa fa-exclamation-triangle" style="font-size:70px; color:var(--primary); margin-bottom:20px;"></i><h3 style="color:white; margin-bottom:15px; font-family:'Rajdhani'; font-size:32px; font-weight:900;">MAINTENANCE</h3><p style="color:#aaa; font-size:14px; line-height:1.6;">This tool is currently being updated.<br>Please try again later.</p>`;
                 return;
             }
-            if (isVipMode) { openVipToolModal(t); } else { openFreeToolModal(t); }
+            // Determine if the tool is vip or free based on active filter or tool presence in arrays
+            const isVip = allVipTools.some(v => v.id === t.id) && !allFreeTools.some(f => f.id === t.id);
+            if (activeToolFilter === 'all' && isVip) {
+                openVipToolModal(t);
+            } else if (activeToolFilter === 'premium' || isVip) {
+                openVipToolModal(t);
+            } else {
+                openFreeToolModal(t);
+            }
         }
 
         function nextStep(n) { document.querySelectorAll('.step').forEach(s => s.classList.remove('active')); const target = document.getElementById('step'+n); if(target) target.classList.add('active'); }
@@ -2093,7 +2207,7 @@
         }
 
         // ============================================================================
-        // 12. REPORTS, NOTIFICATIONS & CHAT
+        // 12. REPORTS, NOTIFICATIONS & CHAT (unchanged)
         // ============================================================================
         async function submitReport(type, event) {
             const btn = event.currentTarget;
@@ -2243,7 +2357,7 @@
         }
 
         // ============================================================================
-        // 13. ADMIN MESSAGES (POP-UP WITH TIMER)
+        // 13. ADMIN MESSAGES (unchanged)
         // ============================================================================
         let messageQueue = [];
         let currentMessageId = null;
@@ -2305,19 +2419,25 @@
         }
 
         // ============================================================================
-        // 14. UNREAD SUMMARY MODAL (UPDATED: includes chat, marks seen only on click)
+        // 14. UNREAD SUMMARY MODAL (ENHANCED with section updates)
         // ============================================================================
         let summaryTimer = null;
 
+        // Store last time user closed the summary (localStorage)
+        function getLastReadTimestamp() {
+            return parseInt(localStorage.getItem('mh_lastReadTimestamp') || '0');
+        }
+        function setLastReadTimestamp(ts) {
+            localStorage.setItem('mh_lastReadTimestamp', ts);
+        }
+
         async function checkAndShowUnreadSummary(uid) {
-            // Fetch all notifications where target matches, then filter out those with seen === true
+            const lastRead = getLastReadTimestamp();
+            // Existing notifications and admin messages
             const notifSnapshot = await db.collection('notifications').where('target', 'in', [uid, 'ALL']).get();
             const unseenNotifications = notifSnapshot.docs.filter(doc => doc.data().seen !== true);
-            
-            // Fetch all admin messages for this user, then filter out those already seen
             const adminMsgSnapshot = await db.collection('admin_user_messages').where('userId', '==', uid).get();
             const unseenAdminMessages = adminMsgSnapshot.docs.filter(doc => doc.data().seen !== true);
-            
             const chatSnap = await db.collection('chats').doc(uid).collection('messages')
                 .where('sender', '==', 'admin')
                 .where('isAutoReply', '==', false)
@@ -2326,11 +2446,11 @@
             const items = [];
             unseenNotifications.forEach(doc => {
                 const d = doc.data();
-                items.push({ type: 'notification', title: d.title, body: d.body, id: doc.id, docRef: doc.ref });
+                items.push({ type: 'notification', title: d.title, body: d.body, id: doc.id, docRef: doc.ref, navigateTo: null });
             });
             unseenAdminMessages.forEach(doc => {
                 const d = doc.data();
-                items.push({ type: 'admin_message', title: d.title || '📢 Admin Message', body: d.body, id: doc.id, docRef: doc.ref });
+                items.push({ type: 'admin_message', title: d.title || '📢 Admin Message', body: d.body, id: doc.id, docRef: doc.ref, navigateTo: null });
             });
             if (!chatSnap.empty) {
                 const unreadChats = [];
@@ -2340,9 +2460,59 @@
                     }
                 });
                 if (unreadChats.length > 0) {
-                    items.push({ type: 'chat', title: `Unread Messages (${unreadChats.length})`, body: unreadChats.join('\n'), id: 'chat_summary' });
+                    items.push({ type: 'chat', title: `Unread Messages (${unreadChats.length})`, body: unreadChats.join('\n'), id: 'chat_summary', navigateTo: () => toggleChat() });
                 }
             }
+
+            // NEW: Check sections for new content since lastRead
+            try {
+                // Daily news
+                const newsSnap = await db.collection('daily_news').orderBy('timestamp', 'desc').limit(5).get();
+                let newNewsCount = 0;
+                newsSnap.forEach(doc => {
+                    if (doc.data().timestamp > lastRead) newNewsCount++;
+                });
+                if (newNewsCount > 0) {
+                    items.push({ type: 'section', title: '📰 Daily News', body: `${newNewsCount} new article(s)`, navigateTo: () => showSection('news', document.getElementById('navNews')) });
+                }
+
+                // App settings / links changed
+                const appMainDoc = await db.collection('app_settings').doc('main').get();
+                if (appMainDoc.exists) {
+                    const updateTime = appMainDoc.updateTime ? appMainDoc.updateTime.toMillis() : 0;
+                    if (updateTime > lastRead) {
+                        items.push({ type: 'section', title: '⚙️ System Settings Updated', body: 'Admin changed links or system parameters.', navigateTo: () => showSection('status', document.querySelector('.btn-unified')) });
+                    }
+                }
+
+                // Toolkit items
+                const toolkitDoc = await db.collection('app_settings').doc('toolkit').get();
+                if (toolkitDoc.exists) {
+                    const updateTime = toolkitDoc.updateTime ? toolkitDoc.updateTime.toMillis() : 0;
+                    if (updateTime > lastRead) {
+                        items.push({ type: 'section', title: '🛠️ Toolkit Downloads Updated', body: 'New toolkit resources available.', navigateTo: () => showSection('toolkits', document.getElementById('navToolkits')) });
+                    }
+                }
+
+                // User reports with status changes
+                const reportsSnap = await db.collection('user_reports').where('userId', '==', uid).get();
+                let newReportUpdates = false;
+                reportsSnap.forEach(doc => {
+                    const d = doc.data();
+                    if (d.timestamp > lastRead && d.status !== 'Pending') newReportUpdates = true;
+                });
+                if (newReportUpdates) {
+                    items.push({ type: 'section', title: '📋 Reports/Requests Updates', body: 'Your reports or tool requests have been updated.', navigateTo: () => showSection('status', document.querySelectorAll('.btn-unified')[2]) });
+                }
+
+                // New tools (free/vip) added since lastRead
+                let newTools = 0;
+                allFreeTools.forEach(t => { if (t.timestamp && t.timestamp > lastRead) newTools++; });
+                allVipTools.forEach(t => { if (t.timestamp && t.timestamp > lastRead) newTools++; });
+                if (newTools > 0) {
+                    items.push({ type: 'section', title: '🚀 New Tools Added', body: `${newTools} new tool(s) available.`, navigateTo: () => showSection('home', document.querySelector('.btn-unified')) });
+                }
+            } catch(e) { console.warn("Unread summary section checks failed", e); }
 
             if (items.length === 0) return;
 
@@ -2351,13 +2521,14 @@
             items.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'unread-item';
-                let color = 'var(--primary)'; // default
+                let color = 'var(--primary)';
                 if (item.type === 'notification') color = 'var(--primary)';
                 else if (item.type === 'admin_message') color = 'var(--vip-gold)';
                 else if (item.type === 'chat') color = 'var(--primary)';
+                else if (item.type === 'section') color = '#00e5ff';
                 div.innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
                     <div style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; color:${color};">
-                        <i class="fa ${item.type==='notification'?'fa-bell':(item.type==='admin_message'?'fa-envelope':'fa-comments')}"></i>
+                        <i class="fa ${item.type==='notification'?'fa-bell': (item.type==='admin_message'?'fa-envelope': (item.type==='chat'?'fa-comments':'fa-info-circle'))}"></i>
                     </div>
                     <div style="flex:1;">
                         <div class="unread-title" style="color:${color}; font-size:16px;">${item.title}</div>
@@ -2366,12 +2537,15 @@
                 </div>`;
                 div.onclick = async (e) => {
                     e.stopPropagation();
-                    await markUnreadItemSeen(item);
-                    if (item.type === 'notification') {
-                        toggleNotifPanel();
+                    if (item.type === 'notification' || item.type === 'admin_message') {
+                        if (item.docRef) await item.docRef.update({ seen: true });
                     } else if (item.type === 'chat') {
-                        toggleChat();
+                        chatLastReadTime = Date.now();
+                        localStorage.setItem('mh_chatLastRead', chatLastReadTime);
+                        unreadChatCount = 0;
+                        updateChatBadge();
                     }
+                    if (item.navigateTo) item.navigateTo();
                     closeUnreadSummaryModal(false);
                 };
                 container.appendChild(div);
@@ -2397,29 +2571,18 @@
             }, 1000);
         }
 
-        async function markUnreadItemSeen(item) {
-            if (item.type === 'notification' || item.type === 'admin_message') {
-                if (item.docRef) {
-                    await item.docRef.update({ seen: true });
-                }
-            } else if (item.type === 'chat') {
-                chatLastReadTime = Date.now();
-                localStorage.setItem('mh_chatLastRead', chatLastReadTime);
-                unreadChatCount = 0;
-                updateChatBadge();
-            }
-        }
-
         async function closeUnreadSummaryModal(autoClosed = false) {
             if (summaryTimer) {
                 clearInterval(summaryTimer);
                 summaryTimer = null;
             }
             document.getElementById('unreadSummaryModal').style.display = 'none';
+            // Save current time as last read to track future new content
+            setLastReadTimestamp(Date.now());
         }
 
         // ============================================================================
-        // 15. UTILITIES (toast, modal, news, etc.)
+        // 15. UTILITIES (toast, modal, news, ads, demo, sounds)
         // ============================================================================
         function showToast(msg) {
             const toast = document.getElementById('toast');
