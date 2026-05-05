@@ -350,6 +350,10 @@
         .offer-active .badge-vip {
             z-index: 5;
         }
+        /* Explicitly adjust green dot position so it is never hidden (still applied but dot may be removed from DOM) */
+        .offer-active .status-dot {
+            top: 28px;
+        }
 
         .badge-free { position:absolute; top:10px; right:10px; background:var(--primary); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; letter-spacing:1px; }
         .badge-vip { position:absolute; top:10px; right:10px; background:var(--vip-gold); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; box-shadow:0 0 10px rgba(255,215,0,0.5); letter-spacing:1px; }
@@ -1818,9 +1822,15 @@
                     card.classList.add('offer-active');
                 }
 
+                // Build the card inner HTML – hide status dot if offer is active
+                let statusDotHtml = '';
+                if (!offerBannerHtml) {
+                    statusDotHtml = `<div class="status-dot" style="background:${statusColor}; box-shadow:0 0 10px ${statusColor}"></div>`;
+                }
+
                 card.innerHTML = `
                     ${offerBannerHtml}
-                    <div class="status-dot" style="background:${statusColor}; box-shadow:0 0 10px ${statusColor}"></div>
+                    ${statusDotHtml}
                     ${badgeHtml}
                     <img src="${t.icon}" class="tool-icon" loading="eager" decoding="sync" onload="this.style.opacity=1; this.style.animation='none'" style="opacity:0;" onerror="this.src='https://via.placeholder.com/70?text=MH'">
                     <h3 class="tool-title">${t.title}</h3>
@@ -1950,6 +1960,7 @@
             }
         }
 
+        // ... (remaining code unchanged, complete as before)
         // ============================================================================
         // 10. TOOL MODALS & PURCHASES (unchanged)
         // ============================================================================
