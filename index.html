@@ -318,6 +318,10 @@
         .tool-icon { width:70px; height:70px; border-radius:50%; border:2px solid #222; margin-bottom:12px; object-fit:cover; transition:all 0.4s ease; background:linear-gradient(90deg,#050a0a 25%,#112222 50%,#050a0a 75%); background-size:200% 100%; animation:skeletonLoading 1.5s infinite; }
         .tool-card:hover .tool-icon { border-color:var(--primary); box-shadow:var(--text-glow); transform:scale(1.05); }
 
+        /* ─────────── VIP CARD RESIZING (smaller like free tools) ─────────── */
+        .tool-card.vip-card { padding:15px 5px; }
+        .tool-card.vip-card .tool-icon { width:55px; height:55px; margin-bottom:10px; }
+
         /* ─────────────── ✦ OFFER BADGE (REDESIGNED AS FULL-WIDTH BANNER) ✦ ─────────────── */
         .offer-banner {
             position: absolute;
@@ -337,10 +341,8 @@
             border-radius: 0;
             border-bottom: none;
         }
-        /* For cards with offer, use special padding so icon appears below banner */
-        .tool-card.offer-active {
-            padding-top: 45px;
-        }
+        /* For cards with offer, push icon below banner */
+        .tool-card.vip-card.offer-active { padding-top: 35px; }
 
         .badge-free { position:absolute; top:10px; right:10px; background:var(--primary); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; letter-spacing:1px; }
         .badge-vip { position:absolute; top:10px; right:10px; background:var(--vip-gold); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; box-shadow:0 0 10px rgba(255,215,0,0.5); letter-spacing:1px; }
@@ -819,7 +821,7 @@
                                 <span style="color:var(--primary); font-size:28px; font-weight:900;" id="walletBalanceDisplay">PKR 0</span>
                             </div>
                         </div>
-                        <select id="walletToolSelect" class="input-box" style="margin-bottom:15px;"><option value="">Select VIP Tool</option></select>
+                        <select id="walletToolSelect" class="input-box" style="margin-bottom:15px;" onchange="updateSelectedToolPrice()"><option value="">Select VIP Tool</option></select>
                         <div id="selectedToolPrice" style="color:var(--primary); font-weight:bold; margin-bottom:15px; display:none;"></div>
                         <input type="text" id="walletUserName" class="input-box" placeholder="Your Full Name">
                         <input type="email" id="walletUserEmail" class="input-box" placeholder="Your Email">
@@ -1135,10 +1137,10 @@
                 window.adminIsOnline = data.adminOnline === true;
                 const adminStatusSpan = document.getElementById('adminOnlineStatusText');
                 if(window.adminIsOnline) {
-                    adminStatusSpan.innerHTML = `<i class="fa fa-circle" style="color:var(--success-green);"></i> ONLINE`;
+                    adminStatusSpan.innerHTML = '<i class="fa fa-circle" style="color:var(--success-green);"></i> ONLINE';
                     adminStatusSpan.className = "config-status status-enabled";
                 } else {
-                    adminStatusSpan.innerHTML = `<i class="fa fa-times-circle" style="color:var(--danger-red);"></i> OFFLINE`;
+                    adminStatusSpan.innerHTML = '<i class="fa fa-times-circle" style="color:var(--danger-red);"></i> OFFLINE';
                     adminStatusSpan.className = "config-status status-disabled";
                 }
                 if (!prevOnline && window.adminIsOnline) {
@@ -1205,7 +1207,7 @@
                 const container = document.getElementById('dynamicCustomSystems');
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const btnId = `btn_demo_${doc.id}`;
+                    const btnId = 'btn_demo_' + doc.id;
                     const existingBtn = document.getElementById(btnId);
                     if(d.enabled && !existingBtn) {
                         container.innerHTML += `<div class="btn-unified" id="${btnId}" onclick="openDemoSystem('${doc.id}', this)" style="border-color:var(--primary); box-shadow:0 0 10px rgba(0,242,255,0.2);"><i class="fa fa-play-circle" style="color:var(--primary);"></i> ${d.title.toUpperCase()}</div>`;
@@ -1219,8 +1221,8 @@
                 const container = document.getElementById('dynamicCustomSystems');
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const btnId = `btn_custom_${doc.id}`;
-                    const sectionId = `sect_custom_${doc.id}`;
+                    const btnId = 'btn_custom_' + doc.id;
+                    const sectionId = 'sect_custom_' + doc.id;
                     const existingBtn = document.getElementById(btnId);
                     if(d.enabled) {
                         if(!existingBtn) {
@@ -1239,7 +1241,7 @@
                             try {
                                 const customFunc = new Function(d.jsCode);
                                 customFunc();
-                            } catch(err) { console.error(`Injector Error on ${d.title}:`, err); }
+                            } catch(err) { console.error('Injector Error on ${d.title}:', err); }
                         }
                     } else {
                         if(existingBtn) existingBtn.remove();
@@ -1343,7 +1345,7 @@
         function generateSendId(name, uid) {
             const prefix = name.substring(0, 3).toUpperCase();
             const uidShort = uid.substring(0, 5).toUpperCase();
-            return `MH-${prefix}-${uidShort}`;
+            return 'MH-${prefix}-${uidShort}';
         }
 
         async function signup() {
@@ -1389,11 +1391,11 @@
                         }
                         await db.collection('transactions').add({
                             userId: referrer.id, type: 'referral', amount: window.REFERRAL_AMOUNT,
-                            description: `Referral bonus for ${n}`, timestamp: Date.now(), status: 'completed'
+                            description: 'Referral bonus for ${n}', timestamp: Date.now(), status: 'completed'
                         });
                         await db.collection('notifications').add({
                             target: referrer.id, title: '🎉 Referral Bonus!',
-                            body: `You earned PKR ${window.REFERRAL_AMOUNT} for referring ${n}!`, timestamp: Date.now(),
+                            body: 'You earned PKR ${window.REFERRAL_AMOUNT} for referring ${n}!', timestamp: Date.now(),
                             seen: false
                         });
                     }
@@ -1513,7 +1515,7 @@
                 document.getElementById('checkinStatus').innerHTML = '<i class="fa fa-check-circle" style="color:var(--success-green);"></i> You have already checked in today!';
             } else {
                 document.getElementById('checkinBtn').disabled = false;
-                document.getElementById('checkinStatus').innerHTML = 'You haven\'t checked in today';
+                document.getElementById('checkinStatus').innerHTML = "You haven't checked in today";
             }
         }
 
@@ -1560,8 +1562,8 @@
                     await walletRef.set({ balance: window.CHECKIN_AMOUNT, totalEarned: window.CHECKIN_AMOUNT, totalCheckins: 1, totalReferrals: 0, userId: uid });
                 }
                 await db.collection('transactions').add({ userId: uid, type: 'checkin', amount: window.CHECKIN_AMOUNT, description: 'Daily check-in bonus', timestamp: Date.now(), status: 'completed' });
-                document.getElementById('checkinStatus').innerHTML = '<i class="fa fa-check-circle" style="color:var(--success-green);"></i> Check-in successful! +PKR ' + window.CHECKIN_AMOUNT;
-                showTransactionSuccessModal(dialogTexts.dailyCheckin.title, dialogTexts.dailyCheckin.desc + ` (+PKR ${window.CHECKIN_AMOUNT})`);
+                document.getElementById('checkinStatus').innerHTML = '<i class="fa fa-check-circle" style="color:var(--success-green);"></i> Check-in successful! +PKR ${window.CHECKIN_AMOUNT}';
+                showTransactionSuccessModal(dialogTexts.dailyCheckin.title, dialogTexts.dailyCheckin.desc + ' (+PKR ${window.CHECKIN_AMOUNT})');
             } catch(err) {
                 showToast("ERROR: " + err.message);
                 btn.disabled = false;
@@ -1799,7 +1801,11 @@
                     }
                 }
 
-                // If offer exists, add offer-active class and use the new banner
+                // VIP cards get a smaller size class
+                if (isVipTool) {
+                    card.classList.add('vip-card');
+                }
+                // If offer exists, add offer-active class (for banner positioning)
                 if (offerBannerHtml) {
                     card.classList.add('offer-active');
                 }
@@ -1824,13 +1830,10 @@
             });
         }
 
-        // NEW: set tool mode via tabs
         function setToolMode(mode) {
             activeToolFilter = mode;
-            // Update mode buttons active state
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
-            // Update header button accordingly
             const btn = document.getElementById('modeSwitchBtn');
             if(mode === 'free') {
                 isVipMode = false;
@@ -1852,14 +1855,13 @@
             renderTools();
         }
 
-        // Override header toggleMode to cycle between free and premium
         function toggleMode() {
             if(activeToolFilter === 'free') {
                 setToolMode('premium');
             } else if(activeToolFilter === 'premium') {
                 setToolMode('free');
             } else {
-                setToolMode('free'); // all → free
+                setToolMode('free');
             }
         }
 
@@ -1873,6 +1875,7 @@
 
         function populateWalletToolSelect() {
             const select = document.getElementById('walletToolSelect');
+            if (!select) return;
             select.innerHTML = '<option value="">Select VIP Tool</option>';
             allVipTools.forEach(t => {
                 if(t.price) {
@@ -1889,6 +1892,7 @@
 
         function updateSelectedToolPrice() {
             const select = document.getElementById('walletToolSelect');
+            if (!select) return;
             const selected = select.options[select.selectedIndex];
             if(selected && selected.value) {
                 const price = selected.getAttribute('data-price');
@@ -1899,7 +1903,6 @@
                 document.getElementById('selectedToolPrice').style.display = 'none';
             }
         }
-        document.getElementById('walletToolSelect')?.addEventListener('change', updateSelectedToolPrice);
 
         async function buyVIPWithWallet(event) {
             const btn = event.currentTarget;
@@ -1958,7 +1961,7 @@
             if (!paymentMethods || paymentMethods.length === 0) return '<p style="color:#777; padding:20px; background:#111; border-radius:10px;">No payment methods defined.</p>';
             let html = '';
             paymentMethods.forEach(p => {
-                let imageBlock = (p.img && p.img.trim() !== '') ? `<div class="qr-image-box"><img src="${p.img}" alt="QR Code" onerror="this.parentElement.innerHTML='<div style=\'padding:20px; color:#ff4444;\'>Image failed to load.</div>'"></div>` : `<div class="qr-image-box" style="padding:20px; color:#555;">NO QR CODE PROVIDED</div>`;
+                let imageBlock = (p.img && p.img.trim() !== '') ? `<div class="qr-image-box"><img src="${p.img}" alt="QR Code" onerror="this.parentElement.innerHTML='<div style=\\'padding:20px; color:#ff4444;\\'>Image failed to load.</div>'"></div>` : `<div class="qr-image-box" style="padding:20px; color:#555;">NO QR CODE PROVIDED</div>`;
                 html += `<div class="pay-card-wrap"><h4 class="pay-header">${p.title || "PAYMENT METHOD"}</h4><div class="pay-desc pre-wrap-text" style="color:white; font-size:15px; font-family:'Rajdhani';">${p.name || "N/A"}</div>${imageBlock}</div>`;
             });
             return html;
@@ -2454,6 +2457,27 @@
                 }
             }
 
+            // +++ NEW: Check transactions (send money) since lastRead
+            const txSnap = await db.collection('transactions').where('userId', '==', uid).get();
+            const newTxCount = txSnap.docs.filter(doc => doc.data().timestamp > lastRead).length;
+            if (newTxCount > 0) {
+                items.push({ type: 'section', title: '💸 Transaction Update', body: `${newTxCount} new transaction(s).`, navigateTo: () => showSection('sendmoney', document.getElementById('navSendMoney')) });
+            }
+
+            // +++ NEW: Check new referrals since lastRead
+            const refSnap = await db.collection('referrals').where('referrerUid', '==', uid).get();
+            const newRefCount = refSnap.docs.filter(doc => doc.data().timestamp > lastRead).length;
+            if (newRefCount > 0) {
+                items.push({ type: 'section', title: '👥 New Referral Earned', body: `${newRefCount} referral(s) since your last visit.`, navigateTo: () => showSection('earn', document.getElementById('navEarn')) });
+            }
+
+            // +++ NEW: Check new check-ins since lastRead
+            const checkinSnap = await db.collection('checkins').where('userId', '==', uid).get();
+            const newCheckinCount = checkinSnap.docs.filter(doc => doc.data().timestamp > lastRead).length;
+            if (newCheckinCount > 0) {
+                items.push({ type: 'section', title: '📅 Daily Check-in', body: `${newCheckinCount} new check-in(s) recorded.`, navigateTo: () => showSection('earn', document.getElementById('navEarn')) });
+            }
+
             // Section updates since last read
             // Daily news
             const newsSnap = await db.collection('daily_news').orderBy('timestamp', 'desc').limit(5).get();
@@ -2684,6 +2708,7 @@
         window.playChatSound = playChatSound;
         window.closeUnreadSummaryModal = closeUnreadSummaryModal;
         window.toggleChat = toggleChat;
+        window.updateSelectedToolPrice = updateSelectedToolPrice;
     </script>
 </body>
 </html>
