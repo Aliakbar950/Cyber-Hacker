@@ -342,7 +342,14 @@
             border-bottom: none;
         }
         /* For VIP cards with offer, push icon below banner */
-        .tool-card.vip-card.offer-active { padding-top: 35px; }
+        .tool-card.vip-card.offer-active { padding-top: 50px; }
+
+        /* Ensure status dot and badges stay above banner */
+        .offer-active .status-dot,
+        .offer-active .badge-free,
+        .offer-active .badge-vip {
+            z-index: 5;
+        }
 
         .badge-free { position:absolute; top:10px; right:10px; background:var(--primary); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; letter-spacing:1px; }
         .badge-vip { position:absolute; top:10px; right:10px; background:var(--vip-gold); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; box-shadow:0 0 10px rgba(255,215,0,0.5); letter-spacing:1px; }
@@ -1334,9 +1341,10 @@
                 loadCheckinHistory(loggedInUser.uid);
                 loadTransactionHistory(loggedInUser.uid);
                 listenForAdminMessages(loggedInUser.uid);
+                // Delay unread summary check to allow tools/news to load
                 setTimeout(() => {
                     checkAndShowUnreadSummary(loggedInUser.uid);
-                }, 1000);
+                }, 2000);
             } else {
                 switchPage('login');
             }
@@ -1942,7 +1950,6 @@
             }
         }
 
-        // ... (rest of the original code for tool modals, upload, purchases remains unchanged) ...
         // ============================================================================
         // 10. TOOL MODALS & PURCHASES (unchanged)
         // ============================================================================
@@ -2621,9 +2628,11 @@
                 }
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const descText = d.description || '';
-                    const imgHtml = d.imageUrl 
-                        ? `<div class="news-img-wrap"><img src="${d.imageUrl}" class="news-img" alt="News Image" onerror="this.parentElement.style.display='none'"></div>` 
+                    // Accept multiple field names for description and image
+                    const descText = d.description || d.desc || d.body || '';
+                    const imgSrc = d.imageUrl || d.image || d.img || d.photo || '';
+                    const imgHtml = imgSrc
+                        ? `<div class="news-img-wrap"><img src="${imgSrc}" class="news-img" alt="News Image" onerror="this.parentElement.style.display='none'"></div>`
                         : '';
                     container.innerHTML += `
                         <div class="news-card">
