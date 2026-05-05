@@ -341,7 +341,7 @@
             border-radius: 0;
             border-bottom: none;
         }
-        /* For cards with offer, push icon below banner */
+        /* For VIP cards with offer, push icon below banner */
         .tool-card.vip-card.offer-active { padding-top: 35px; }
 
         .badge-free { position:absolute; top:10px; right:10px; background:var(--primary); color:black; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:800; letter-spacing:1px; }
@@ -2621,13 +2621,16 @@
                 }
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const imgHtml = d.imageUrl ? `<div class="news-img-wrap"><img src="${d.imageUrl}" class="news-img" alt="News Image"></div>` : '';
+                    const descText = d.description || '';
+                    const imgHtml = d.imageUrl 
+                        ? `<div class="news-img-wrap"><img src="${d.imageUrl}" class="news-img" alt="News Image" onerror="this.parentElement.style.display='none'"></div>` 
+                        : '';
                     container.innerHTML += `
                         <div class="news-card">
                             ${imgHtml}
                             <div class="news-body">
                                 <h3 class="news-title">${d.title}</h3>
-                                <div class="news-desc pre-wrap-text">${d.description}</div>
+                                <div class="news-desc pre-wrap-text">${descText}</div>
                                 <span class="news-date"><i class="fa fa-calendar-alt"></i> ${new Date(d.timestamp).toLocaleString()}</span>
                             </div>
                         </div>
