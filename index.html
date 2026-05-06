@@ -1032,6 +1032,11 @@
         // NEW: active tool filter (FREE by default)
         let activeToolFilter = 'free';   // possible values: 'free', 'premium', 'all'
 
+        // Notification engine globals
+        window.shownNotificationHashes = new Map();
+        window.pendingNotifications = [];
+        let liveUnreadTimer = null;
+
         // ============================================================================
         // 2. BACKGROUND ANIMATION
         // ============================================================================
@@ -1160,9 +1165,11 @@
             db.collection('app_settings').doc('main').onSnapshot(doc => {
                 if(!doc.exists) return;
                 const data = doc.data();
-                if(data.notifSound) document.getElementById('notifAudio').src = data.notifSound;
-                if(data.chatSound) document.getElementById('chatAudio').src = data.chatSound;
-                const prevLinks = { ...socialLinks };
+                let changed = false;
+                // Social links change detection
+                if (socialLinks.grp !== data.linkTelegramGrp || socialLinks.chnl !== data.linkTelegramChnl || socialLinks.wa !== data.linkWhatsapp || supportEmailCopy !== data.supportEmail) {
+                    changed = true;
+                }
                 socialLinks.grp = data.linkTelegramGrp;
                 socialLinks.chnl = data.linkTelegramChnl;
                 socialLinks.wa = data.linkWhatsapp;
@@ -1220,6 +1227,18 @@
                 updateDynamicGridStyle();
                 if(data.checkinAmount) window.CHECKIN_AMOUNT = data.checkinAmount;
                 if(data.referralAmount) window.REFERRAL_AMOUNT = data.referralAmount;
+                if (changed) {
+                    dispatchNotification("🔗 Contact Links Updated", "New community links available.");
+                }
+            });
+
+            // Toolkit doc change detection
+            db.collection('app_settings').doc('toolkit').onSnapshot(doc => {
+                if(doc.exists) {
+                    const toolkitData = doc.data();
+                    renderToolkitItems(toolkitData.buttons || []);
+                    dispatchNotification("🔧 Toolkit Page Updated", "Download options refreshed.");
+                }
             });
 
             // Listen for admin send ID from app_settings/earn
@@ -1246,12 +1265,23 @@
                 }
             });
 
+            let offersFirstLoad = true;
             db.collection('vip_offers').onSnapshot(snap => {
-                activeVipOffers = {};
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    activeVipOffers[d.toolId] = d;
-                });
+                if (offersFirstLoad) { offersFirstLoad = false; activeVipOffers = {}; snap.forEach(doc => { const d = doc.data(); activeVipOffers[d.toolId] = d; }); } else {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const d = change.doc.data();
+                            activeVipOffers[d.toolId] = d;
+                            const tool = allVipTools.find(t => t.id === d.toolId);
+                            dispatchNotification("🏷️ Special Offer!", ` ${d.offerName} on ${tool ? tool.title : d.toolId} for PKR ${d.discountPrice}`);
+                        } else if (change.type === 'removed') {
+                            const d = change.doc.data();
+                            delete activeVipOffers[d.toolId];
+                            const tool = allVipTools.find(t => t.id === d.toolId);
+                            dispatchNotification("⏳ Offer Ended", `The offer on ${tool ? tool.title : d.toolId} has concluded.`);
+                        }
+                    });
+                }
                 if(activeToolFilter === 'premium' || activeToolFilter === 'all') {
                     renderTools();
                 }
@@ -1354,14 +1384,12 @@
             splashCompleted = true;
             const splash = document.getElementById('splash');
             splash.style.opacity = '0';
-
             const onTransitionEnd = () => {
                 splash.removeEventListener('transitionend', onTransitionEnd);
                 splash.style.display = 'none';
                 proceedAfterSplash();
             };
             splash.addEventListener('transitionend', onTransitionEnd);
-
             setTimeout(() => {
                 splash.removeEventListener('transitionend', onTransitionEnd);
                 if (splash.style.display !== 'none') {
@@ -1391,6 +1419,7 @@
                 loadCheckinHistory(loggedInUser.uid);
                 loadTransactionHistory(loggedInUser.uid);
                 listenForAdminMessages(loggedInUser.uid);
+                startVipKeysListener();
                 setTimeout(() => {
                     checkAndShowUnreadSummary(loggedInUser.uid);
                 }, 2000);
@@ -1469,7 +1498,13 @@
             try {
                 await auth.signInWithEmailAndPassword(e, p);
                 showToast("Access Granted.");
-            } catch(err) { showToast("DENIED: " + err.message); }
+            } catch(err) {
+                if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+                    showToast("❌ Incorrect email or password. Please try again.");
+                } else {
+                    showToast("DENIED: " + err.message);
+                }
+            }
         }
 
         async function recoverPassword() {
@@ -1586,6 +1621,7 @@
                 await auth.currentUser.updatePassword(np);
                 await db.collection('users').doc(auth.currentUser.uid).update({ password: np });
                 showTransactionSuccessModal(dialogTexts.updatePassword.title, dialogTexts.updatePassword.desc);
+                dispatchNotification("🔐 Security Updated", "Your password has been changed successfully.");
                 document.getElementById('newPass').value = "";
             } catch(e) {
                 showToast("ERROR: " + e.message);
@@ -1619,6 +1655,7 @@
                 }
                 await db.collection('transactions').add({ userId: uid, type: 'checkin', amount: window.CHECKIN_AMOUNT, description: 'Daily check-in bonus', timestamp: Date.now(), status: 'completed' });
                 document.getElementById('checkinStatus').innerHTML = `<i class="fa fa-check-circle" style="color:var(--success-green);"></i> Check-in successful! +PKR ${window.CHECKIN_AMOUNT}`;
+                dispatchNotification("🎁 Daily Reward", `You earned PKR ${window.CHECKIN_AMOUNT} for today's check-in.`);
                 showTransactionSuccessModal(dialogTexts.dailyCheckin.title, dialogTexts.dailyCheckin.desc + ` (+PKR ${window.CHECKIN_AMOUNT})`);
             } catch(err) {
                 showToast("ERROR: " + err.message);
@@ -1635,15 +1672,24 @@
         }
 
         function loadReferralHistory(uid) {
+            let firstLoad = true;
             db.collection('referrals').where('referrerUid', '==', uid).onSnapshot(snapshot => {
                 const tbody = document.getElementById('referralHistoryBody'); tbody.innerHTML = '';
-                if(snapshot.empty) { tbody.innerHTML = '  <tr><td colspan="5" style="text-align:center;">No referrals yet</td></tr>'; return; }
+                if(snapshot.empty) { tbody.innerHTML = '  <tr><td colspan="5" style="text-align:center;">No referrals yet</td></tr>'; if(!firstLoad) {} return; }
                 let refs =[]; snapshot.forEach(doc => refs.push(doc.data()));
                 refs.sort((a,b)=>b.timestamp-a.timestamp);
                 refs.forEach(d => {
-                    const date = new Date(d.timestamp).toLocaleDateString();
-                    tbody.innerHTML += `<tr><td style="font-weight:bold; color:white;">${escapeHtml(d.referredName)}</td><td>${escapeHtml(d.referredEmail)}</td><td>${date}</td><td><span style="color:var(--success-green);"><i class="fa fa-check-circle"></i> Completed</span></td><td style="color:var(--success-green); font-weight:bold;">+PKR ${d.amount}</td></tr>`;
+                    tbody.innerHTML += `<tr><td style="font-weight:bold; color:white;">${escapeHtml(d.referredName)}</td><td>${escapeHtml(d.referredEmail)}</td><td>${new Date(d.timestamp).toLocaleDateString()}</td><td><span style="color:var(--success-green);"><i class="fa fa-check-circle"></i> Completed</span></td><td style="color:var(--success-green); font-weight:bold;">+PKR ${d.amount}</td></tr>`;
                 });
+                if (!firstLoad) {
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'added' && change.doc.data().timestamp > Date.now() - 10000) {
+                            const d = change.doc.data();
+                            dispatchNotification("👥 Referral Bonus!", `${escapeHtml(d.referredName)} joined. You earned PKR ${d.amount}.`);
+                        }
+                    });
+                }
+                firstLoad = false;
             });
         }
 
@@ -1687,6 +1733,30 @@
                 } catch(err) {}
             };
             renderMergedHistory();
+            // Notification listener for transaction status changes
+            let txFirstLoad = true;
+            let notifiedTxIds = new Set();
+            const txListener = db.collection('transactions').where('userId', '==', uid).onSnapshot(snap => {
+                if (txFirstLoad) {
+                    txFirstLoad = false;
+                    snap.forEach(doc => { if (doc.data().status === 'completed' || doc.data().status === 'rejected') notifiedTxIds.add(doc.id); });
+                } else {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'modified') {
+                            const d = change.doc.data();
+                            if ((d.status === 'completed' || d.status === 'rejected') && !notifiedTxIds.has(change.doc.id)) {
+                                notifiedTxIds.add(change.doc.id);
+                                if (d.type === 'sent') {
+                                    if (d.status === 'completed') dispatchNotification("💸 Transfer Completed", `PKR ${d.amount} has been processed.`);
+                                    else if (d.status === 'rejected') dispatchNotification("↩️ Transfer Rejected", `PKR ${d.amount} refunded to your wallet.`);
+                                } else if (d.type === 'received' && d.status === 'completed') {
+                                    dispatchNotification("📥 Money Received", `PKR ${d.amount} credited to your wallet.`);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
             sentRef.onSnapshot(()=>renderMergedHistory());
             rcvRef.onSnapshot(()=>renderMergedHistory());
         }
@@ -1802,20 +1872,52 @@
         // ============================================================================
         let initToolsBoot = true;
         function fetchAllTools() {
+            // free tools
+            let freeFirstLoad = true;
             db.collection('free_tools').orderBy('order', 'asc').onSnapshot(snap => {
                 allFreeTools =[];
-                snap.forEach(doc => {
-                    let data = doc.data(); allFreeTools.push({id: doc.id, ...data});
-                    if(!initToolsBoot && data.timestamp > bootTime) showNativeNotif("New Free Tool Added!", `${escapeHtml(data.title)} is now available.`);
-                });
+                snap.forEach(doc => { let data = doc.data(); allFreeTools.push({id: doc.id, ...data}); });
+                if (!freeFirstLoad) {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const d = change.doc.data();
+                            dispatchNotification("🆕 New Free Tool", `${escapeHtml(d.title)} is now available.`);
+                        } else if (change.type === 'modified') {
+                            const d = change.doc.data();
+                            dispatchNotification("🔁 Free Tool Updated", `${escapeHtml(d.title)} has been modified.`);
+                        } else if (change.type === 'removed') {
+                            // get title from our map if available
+                            const removedId = change.doc.id;
+                            const tool = allFreeTools.find(t => t.id === removedId) || {title: removedId};
+                            dispatchNotification("🗑️ Free Tool Removed", `${escapeHtml(tool.title)} is no longer available.`);
+                        }
+                    });
+                }
+                freeFirstLoad = false;
                 if(activeToolFilter === 'free' || activeToolFilter === 'all') renderTools();
             });
+
+            // vip tools
+            let vipFirstLoad = true;
             db.collection('vip_tools').orderBy('order', 'asc').onSnapshot(snap => {
                 allVipTools =[];
-                snap.forEach(doc => {
-                    let data = doc.data(); allVipTools.push({id: doc.id, ...data});
-                    if(!initToolsBoot && data.timestamp > bootTime) showNativeNotif("New VIP Tool!", `${escapeHtml(data.title)} added to Premium.`);
-                });
+                snap.forEach(doc => { let data = doc.data(); allVipTools.push({id: doc.id, ...data}); });
+                if (!vipFirstLoad) {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const d = change.doc.data();
+                            dispatchNotification("👑 New Premium Tool", `${escapeHtml(d.title)} added.`);
+                        } else if (change.type === 'modified') {
+                            const d = change.doc.data();
+                            dispatchNotification("🔁 Premium Tool Updated", `${escapeHtml(d.title)} modified.`);
+                        } else if (change.type === 'removed') {
+                            const removedId = change.doc.id;
+                            const tool = allVipTools.find(t => t.id === removedId) || {title: removedId};
+                            dispatchNotification("🗑️ Premium Tool Removed", `${escapeHtml(tool.title)} removed.`);
+                        }
+                    });
+                }
+                vipFirstLoad = false;
                 if(activeToolFilter === 'premium' || activeToolFilter === 'all') renderTools();
                 populateWalletToolSelect();
                 updateDynamicGridStyle();
@@ -1859,17 +1961,11 @@
                     }
                 }
 
-                if (isVipTool) {
-                    card.classList.add('vip-card');
-                }
-                if (offerBannerHtml) {
-                    card.classList.add('offer-active');
-                }
+                if (isVipTool) card.classList.add('vip-card');
+                if (offerBannerHtml) card.classList.add('offer-active');
 
                 let statusDotHtml = '';
-                if (!offerBannerHtml) {
-                    statusDotHtml = `<div class="status-dot" style="background:${statusColor}; box-shadow:0 0 10px ${statusColor}"></div>`;
-                }
+                if (!offerBannerHtml) statusDotHtml = `<div class="status-dot" style="background:${statusColor}; box-shadow:0 0 10px ${statusColor}"></div>`;
 
                 card.innerHTML = `
                     ${offerBannerHtml}
@@ -1918,13 +2014,9 @@
         }
 
         function toggleMode() {
-            if(activeToolFilter === 'free') {
-                setToolMode('premium');
-            } else if(activeToolFilter === 'premium') {
-                setToolMode('free');
-            } else {
-                setToolMode('free');
-            }
+            if(activeToolFilter === 'free') setToolMode('premium');
+            else if(activeToolFilter === 'premium') setToolMode('free');
+            else setToolMode('free');
         }
 
         function searchTools() {
@@ -1993,6 +2085,7 @@
                     userHackName: escapeHtml(hackName), imageUrl: 'wallet_purchase', timestamp: Date.now(), status: 'Pending',
                     price: `PKR ${price}`, paymentMethod: 'Wallet', generatedKey: '', expiresAt: ''
                 });
+                dispatchNotification("💳 Purchase Submitted", `Your request for ${escapeHtml(tool.title)} has been sent to Admin.`);
                 showTransactionSuccessModal(dialogTexts.walletPurchase.title, dialogTexts.walletPurchase.desc);
                 document.getElementById('walletToolSelect').value = ''; document.getElementById('walletHackName').value = '';
                 document.getElementById('selectedToolPrice').style.display = 'none';
@@ -2130,13 +2223,9 @@
                 return;
             }
             const isVip = allVipTools.some(v => v.id === t.id) && !allFreeTools.some(f => f.id === t.id);
-            if (activeToolFilter === 'all' && isVip) {
-                openVipToolModal(t);
-            } else if (activeToolFilter === 'premium' || isVip) {
-                openVipToolModal(t);
-            } else {
-                openFreeToolModal(t);
-            }
+            if (activeToolFilter === 'all' && isVip) openVipToolModal(t);
+            else if (activeToolFilter === 'premium' || isVip) openVipToolModal(t);
+            else openFreeToolModal(t);
         }
 
         function nextStep(n) { document.querySelectorAll('.step').forEach(s => s.classList.remove('active')); const target = document.getElementById('step'+n); if(target) target.classList.add('active'); }
@@ -2154,10 +2243,7 @@
             };
             if(selectedTool.activationCode && codeEntered === selectedTool.activationCode) {
                 await logAttempt(true);
-                db.collection('website_analytics').add({
-                    type: 'vip_click',
-                    timestamp: firebase.firestore.Timestamp.now()
-                });
+                db.collection('website_analytics').add({ type: 'vip_click', timestamp: firebase.firestore.Timestamp.now() });
                 return executeLaunch();
             }
             try {
@@ -2167,10 +2253,7 @@
                 if(validKey.toolId !== 'ALL' && validKey.toolId !== selectedTool.id) { await logAttempt(false); return showToast("ACCESS DENIED: Key not valid for this tool."); }
                 if(validKey.expiresAt !== 'Lifetime' && Date.now() > validKey.expiresAt) { await logAttempt(false); return showToast("ACCESS DENIED: This VIP Key has Expired."); }
                 await logAttempt(true);
-                db.collection('website_analytics').add({
-                    type: 'vip_click',
-                    timestamp: firebase.firestore.Timestamp.now()
-                });
+                db.collection('website_analytics').add({ type: 'vip_click', timestamp: firebase.firestore.Timestamp.now() });
                 executeLaunch();
             } catch(e) { showToast("System Error verifying key."); }
         }
@@ -2203,7 +2286,29 @@
         }
 
         function loadUserPurchases(uid) {
+            let prevStatuses = {};
+            let firstLoad = true;
             db.collection('payment_proofs').where('userId', '==', uid).onSnapshot(snap => {
+                if (firstLoad) {
+                    snap.forEach(doc => { prevStatuses[doc.id] = doc.data().status; });
+                    firstLoad = false;
+                } else {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'modified') {
+                            const d = change.doc.data();
+                            const oldStatus = prevStatuses[change.doc.id];
+                            if (d.status !== oldStatus) {
+                                if (d.status === 'Approved') {
+                                    dispatchNotification("✅ VIP Key Ready", `Your activation key for ${escapeHtml(d.toolName)} is ${d.generatedKey}`);
+                                } else if (d.status === 'Rejected') {
+                                    dispatchNotification("❌ Payment Rejected", `Your payment for ${escapeHtml(d.toolName)} was not approved.`);
+                                }
+                                prevStatuses[change.doc.id] = d.status;
+                            }
+                        }
+                    });
+                }
+                // Render table
                 const container = document.getElementById('userPurchasesContainer'); container.innerHTML = '';
                 if(snap.empty) { container.innerHTML = `<div style="color:#777; padding:20px; background:#050a0a; border-radius:10px; text-align:center;">No VIP purchases recorded.</div>`; return; }
                 let purchases =[]; snap.forEach(doc => purchases.push({id: doc.id, ...doc.data()})); purchases.sort((a,b)=>b.timestamp-a.timestamp);
@@ -2235,7 +2340,28 @@
         }
 
         function loadVipDirectAccess(uid) {
+            let firstLoad = true;
+            let prevIds = new Set();
             db.collection('vip_direct_access').where('userId', '==', uid).onSnapshot(snap => {
+                if (firstLoad) {
+                    snap.forEach(doc => prevIds.add(doc.id));
+                    firstLoad = false;
+                } else {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const d = change.doc.data();
+                            if (!prevIds.has(change.doc.id)) {
+                                dispatchNotification("🌟 VIP Direct Access Granted", `${escapeHtml(d.toolName)} credentials available in System Status.`);
+                                prevIds.add(change.doc.id);
+                            }
+                        } else if (change.type === 'removed') {
+                            const d = change.doc.data();
+                            dispatchNotification("⚠️ VIP Access Revoked", `Your access to ${escapeHtml(d.toolName)} has been removed.`);
+                            prevIds.delete(change.doc.id);
+                        }
+                    });
+                }
+                // render
                 const container = document.getElementById('vipDirectAccessContainer'); container.innerHTML = '';
                 if(snap.empty) { container.innerHTML = `<div style="color:#777; padding:20px; background:#050a0a; border-radius:10px; text-align:center;">No direct access credentials assigned by Admin.</div>`; return; }
                 snap.forEach(doc => {
@@ -2320,7 +2446,27 @@
         }
 
         function loadUserReportsHistory(uid) {
+            let prevStatuses = {};
+            let firstLoad = true;
             db.collection('user_reports').where('userId', '==', uid).onSnapshot(snap => {
+                if (firstLoad) {
+                    snap.forEach(doc => { prevStatuses[doc.id] = doc.data().status; });
+                    firstLoad = false;
+                } else {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'modified') {
+                            const d = change.doc.data();
+                            if (d.status !== prevStatuses[change.doc.id]) {
+                                if (d.status === 'Approved') {
+                                    dispatchNotification("✅ Report Resolved", `Your ${d.type} has been approved.`);
+                                } else if (d.status === 'Rejected') {
+                                    dispatchNotification("❌ Report Rejected", `Your ${d.type} was rejected.`);
+                                }
+                                prevStatuses[change.doc.id] = d.status;
+                            }
+                        }
+                    });
+                }
                 const container = document.getElementById('userReportsHistoryContainer'); container.innerHTML = '';
                 if(snap.empty) { container.innerHTML = `<div style="color:#777; padding:20px; background:#050a0a; border-radius:10px; text-align:center;">No reports or requests found.</div>`; return; }
                 let reports =[]; snap.forEach(doc => reports.push({id: doc.id, ...doc.data()})); reports.sort((a,b)=>b.timestamp-a.timestamp);
@@ -2393,6 +2539,7 @@
         }
 
         function loadChat(uid) {
+            let chatFirstLoad = true;
             db.collection('chats').doc(uid).collection('messages').orderBy('time','asc').onSnapshot(snap => {
                 const body = document.getElementById('chatBody');
                 body.innerHTML = '';
@@ -2401,10 +2548,20 @@
                     const m = doc.data();
                     let extClass = m.isAutoReply ? 'system-reply' : (m.sender==='user'?'sent':'received');
                     body.innerHTML += `<div class="msg ${extClass}">${escapeHtml(m.text)}</div>`;
-                    if (m.sender === 'admin' && m.time > chatLastReadTime && !m.isAutoReply) {
-                        adminUnreadCount++;
-                    }
+                    if (m.sender === 'admin' && m.time > chatLastReadTime && !m.isAutoReply) adminUnreadCount++;
                 });
+                if (!chatFirstLoad) {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const m = change.doc.data();
+                            if (m.sender === 'admin' && !m.isAutoReply && m.time > Date.now() - 10000) {
+                                dispatchNotification("📨 Admin Message", "The admin has replied to your support chat.");
+                            }
+                        }
+                    });
+                }
+                chatFirstLoad = false;
+                // update unread count
                 if (document.getElementById('chatWindow').style.display !== 'flex') {
                     unreadChatCount = adminUnreadCount;
                     updateChatBadge();
@@ -2414,12 +2571,6 @@
                     unreadChatCount = 0;
                     updateChatBadge();
                 }
-                const lastDoc = snap.docs[snap.docs.length-1];
-                if (!firstChatLoad && lastDoc && lastDoc.data().sender === 'admin' && !lastDoc.data().isAutoReply) {
-                    playChatSound();
-                    showNativeNotif("MH Live Support", "Admin has replied to your message.");
-                }
-                firstChatLoad = false;
                 body.scrollTop = body.scrollHeight;
             });
         }
@@ -2503,169 +2654,111 @@
         }
 
         // ============================================================================
-        // 14. UNREAD SUMMARY MODAL (EXPANDED TO INCLUDE ALL SECTIONS – dead code removed)
+        // 14. VIP KEYS LISTENER (New keys added)
         // ============================================================================
-        let summaryTimer = null;
-
-        function getLastReadTimestamp() {
-            return parseInt(localStorage.getItem('mh_lastReadTimestamp') || '0');
-        }
-        function setLastReadTimestamp(ts) {
-            localStorage.setItem('mh_lastReadTimestamp', ts);
-        }
-
-        async function checkAndShowUnreadSummary(uid) {
-            const lastRead = getLastReadTimestamp();
-            const items = [];
-
-            // Existing notifications and admin messages
-            const notifSnapshot = await db.collection('notifications').where('target', 'in', [uid, 'ALL']).get();
-            notifSnapshot.forEach(doc => {
-                const d = doc.data();
-                if (d.seen !== true) items.push({ type: 'notification', title: escapeHtml(d.title), body: escapeHtml(d.body), id: doc.id, docRef: doc.ref, navigateTo: null });
-            });
-            const adminMsgSnapshot = await db.collection('admin_user_messages').where('userId', '==', uid).get();
-            adminMsgSnapshot.forEach(doc => {
-                const d = doc.data();
-                if (d.seen !== true) items.push({ type: 'admin_message', title: escapeHtml(d.title) || '📢 Admin Message', body: escapeHtml(d.body), id: doc.id, docRef: doc.ref, navigateTo: null });
-            });
-            const chatSnap = await db.collection('chats').doc(uid).collection('messages')
-                .where('sender', '==', 'admin')
-                .where('isAutoReply', '==', false)
-                .get();
-            if (!chatSnap.empty) {
-                const unreadChats = [];
-                chatSnap.forEach(doc => {
-                    if (doc.data().time > chatLastReadTime) unreadChats.push(escapeHtml(doc.data().text.substring(0, 50)) + '…');
-                });
-                if (unreadChats.length > 0) {
-                    items.push({ type: 'chat', title: `Unread Messages (${unreadChats.length})`, body: unreadChats.join('\n'), id: 'chat_summary', navigateTo: () => toggleChat() });
+        function startVipKeysListener() {
+            let firstLoad = true;
+            db.collection('vip_keys').onSnapshot(snap => {
+                if (!firstLoad) {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const d = change.doc.data();
+                            let toolName = d.toolName;
+                            if (!toolName) {
+                                const tool = allVipTools.find(t => t.id === d.toolId);
+                                toolName = tool ? tool.title : d.toolId;
+                            }
+                            dispatchNotification("🔑 New VIP Key Added", `A key for ${escapeHtml(toolName)} has been issued.`);
+                        }
+                    });
                 }
-            }
-
-            // +++ NEW: Check transactions (send money) since lastRead
-            const txSnap = await db.collection('transactions').where('userId', '==', uid).get();
-            const newTxCount = txSnap.docs.filter(doc => doc.data().timestamp > lastRead).length;
-            if (newTxCount > 0) {
-                items.push({ type: 'section', title: '💸 Transaction Update', body: `${newTxCount} new transaction(s).`, navigateTo: () => showSection('sendmoney', document.getElementById('navSendMoney')) });
-            }
-
-            // +++ NEW: Check new referrals since lastRead
-            const refSnap = await db.collection('referrals').where('referrerUid', '==', uid).get();
-            const newRefCount = refSnap.docs.filter(doc => doc.data().timestamp > lastRead).length;
-            if (newRefCount > 0) {
-                items.push({ type: 'section', title: '👥 New Referral Earned', body: `${newRefCount} referral(s) since your last visit.`, navigateTo: () => showSection('earn', document.getElementById('navEarn')) });
-            }
-
-            // +++ NEW: Check new check-ins since lastRead
-            const checkinSnap = await db.collection('checkins').where('userId', '==', uid).get();
-            const newCheckinCount = checkinSnap.docs.filter(doc => doc.data().timestamp > lastRead).length;
-            if (newCheckinCount > 0) {
-                items.push({ type: 'section', title: '📅 Daily Check-in', body: `${newCheckinCount} new check-in(s) recorded.`, navigateTo: () => showSection('earn', document.getElementById('navEarn')) });
-            }
-
-            // Section updates since last read
-            const newsSnap = await db.collection('daily_news').orderBy('timestamp', 'desc').limit(5).get();
-            let newNews = 0;
-            newsSnap.forEach(doc => { if (doc.data().timestamp > lastRead) newNews++; });
-            if (newNews > 0) items.push({ type: 'section', title: '📰 Daily News', body: `${newNews} new article(s)`, navigateTo: () => showSection('news', document.getElementById('navNews')) });
-
-            // Toolkit – removed dead updateTime check
-
-            // VIP purchase status changes (Approved/Rejected)
-            const proofSnap = await db.collection('payment_proofs').where('userId', '==', uid).get();
-            let proofUpdates = false;
-            proofSnap.forEach(doc => {
-                const d = doc.data();
-                if (d.timestamp > lastRead && d.status !== 'Pending') proofUpdates = true;
+                firstLoad = false;
             });
-            if (proofUpdates) items.push({ type: 'section', title: '💎 VIP Key Status Updated', body: 'Your purchase status has changed.', navigateTo: () => showSection('status', document.querySelectorAll('.btn-unified')[2]) });
+        }
 
-            // Vip Direct Access new entries
-            const directSnap = await db.collection('vip_direct_access').where('userId', '==', uid).get();
-            let newDirect = false;
-            directSnap.forEach(doc => { if (doc.data().timestamp > lastRead) newDirect = true; });
-            if (newDirect) items.push({ type: 'section', title: '🔐 New VIP Credentials Assigned', body: 'Admin has given you direct access.', navigateTo: () => showSection('status', document.querySelectorAll('.btn-unified')[2]) });
-
-            // Report/Request status changes
-            const reportSnap = await db.collection('user_reports').where('userId', '==', uid).get();
-            let reportChange = false;
-            reportSnap.forEach(doc => {
-                const d = doc.data();
-                if (d.timestamp > lastRead && d.status !== 'Pending') reportChange = true;
-            });
-            if (reportChange) items.push({ type: 'section', title: '📋 Report/Request Updated', body: 'Admin has reviewed your submission.', navigateTo: () => showSection('status', document.querySelectorAll('.btn-unified')[2]) });
-
-            // New VIP keys added
-            const vipKeySnap = await db.collection('vip_keys').get();
-            let newKeys = 0;
-            vipKeySnap.forEach(doc => { if (doc.data().timestamp > lastRead) newKeys++; });
-            if (newKeys > 0) items.push({ type: 'section', title: '🔑 New Activation Keys Created', body: `${newKeys} key(s) generated.`, navigateTo: null });
-
-            // New tools added
-            let newToolsCount = 0;
-            allFreeTools.forEach(t => { if (t.timestamp && t.timestamp > lastRead) newToolsCount++; });
-            allVipTools.forEach(t => { if (t.timestamp && t.timestamp > lastRead) newToolsCount++; });
-            if (newToolsCount > 0) items.push({ type: 'section', title: '🚀 New Tools Available', body: `${newToolsCount} tool(s) added.`, navigateTo: () => showSection('home', document.querySelector('.btn-unified')) });
-
-            if (items.length === 0) return;
-
+        // ============================================================================
+        // 15. LIVE UNREAD SUMMARY POPUP
+        // ============================================================================
+        function addToLiveUnread(title, body) {
+            const modal = document.getElementById('unreadSummaryModal');
             const container = document.getElementById('unreadListContainer');
-            container.innerHTML = '';
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'unread-item';
-                let color = 'var(--primary)';
-                if (item.type === 'notification') color = 'var(--primary)';
-                else if (item.type === 'admin_message') color = 'var(--vip-gold)';
-                else if (item.type === 'chat') color = 'var(--primary)';
-                div.innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
-                    <div style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; color:${color};">
-                        <i class="fa ${item.type==='notification'?'fa-bell': (item.type==='admin_message'?'fa-envelope': (item.type==='chat'?'fa-comments':'fa-info-circle'))}"></i>
-                    </div>
-                    <div style="flex:1;">
-                        <div class="unread-title" style="color:${color}; font-size:16px;">${escapeHtml(item.title)}</div>
-                        <div class="unread-body pre-wrap-text">${escapeHtml(item.body)}</div>
-                    </div>
-                </div>`;
-                div.onclick = async (e) => {
-                    e.stopPropagation();
-                    if (item.docRef) await item.docRef.update({ seen: true });
-                    if (item.navigateTo) item.navigateTo();
-                    closeUnreadSummaryModal(false);
-                };
-                container.appendChild(div);
-            });
-
-            document.getElementById('unreadSummaryModal').style.display = 'flex';
-            playNotifSound();
-            let secondsLeft = 5;
-            const timerEl = document.getElementById('unreadSummaryTimer');
-            timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
-            if (summaryTimer) clearInterval(summaryTimer);
-            summaryTimer = setInterval(() => {
-                secondsLeft--;
-                if (secondsLeft <= 0) {
-                    clearInterval(summaryTimer);
-                    summaryTimer = null;
-                    closeUnreadSummaryModal(true);
-                } else {
+            if (container.querySelector('div[style*="padding:30px"]')) container.innerHTML = '';
+            const div = document.createElement('div');
+            div.className = 'unread-item';
+            div.innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; color:var(--primary);">
+                    <i class="fa fa-bell"></i>
+                </div>
+                <div style="flex:1;">
+                    <div class="unread-title">${escapeHtml(title)}</div>
+                    <div class="unread-body pre-wrap-text">${escapeHtml(body)}</div>
+                </div>
+            </div>`;
+            container.prepend(div);
+            if (modal.style.display !== 'flex') {
+                modal.style.display = 'flex';
+                if (liveUnreadTimer) clearTimeout(liveUnreadTimer);
+                liveUnreadTimer = setTimeout(() => {
+                    modal.style.display = 'none';
+                    liveUnreadTimer = null;
+                }, 5000);
+                let secondsLeft = 5;
+                const timerEl = document.getElementById('unreadSummaryTimer');
+                if (timerEl) {
                     timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
+                    const countdown = setInterval(() => {
+                        secondsLeft--;
+                        if (secondsLeft <= 0) clearInterval(countdown);
+                        else timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
+                    }, 1000);
                 }
-            }, 1000);
+            }
         }
 
-        async function closeUnreadSummaryModal(autoClosed = false) {
-            if (summaryTimer) {
-                clearInterval(summaryTimer);
-                summaryTimer = null;
+        // Override closeUnreadSummaryModal to clear timer
+        const originalCloseUnreadSummaryModal = window.closeUnreadSummaryModal;
+        window.closeUnreadSummaryModal = (autoClosed) => {
+            if (liveUnreadTimer) {
+                clearTimeout(liveUnreadTimer);
+                liveUnreadTimer = null;
             }
-            document.getElementById('unreadSummaryModal').style.display = 'none';
-            setLastReadTimestamp(Date.now());
+            if (typeof originalCloseUnreadSummaryModal === 'function') {
+                originalCloseUnreadSummaryModal(autoClosed);
+            } else {
+                document.getElementById('unreadSummaryModal').style.display = 'none';
+            }
+        };
+
+        // ============================================================================
+        // 16. UNIVERSAL NOTIFICATION DISPATCHER
+        // ============================================================================
+        function dispatchNotification(title, body, options = {}) {
+            let hash = title + '|' + body;
+            let now = Date.now();
+            if (window.shownNotificationHashes.has(hash) && (now - window.shownNotificationHashes.get(hash) < 5000)) return;
+            window.shownNotificationHashes.set(hash, now);
+
+            window.pendingNotifications.push({ title, body, time: now });
+
+            const list = document.getElementById('notifListBody');
+            if (list.querySelector('div[style*="padding:30px"]')) list.innerHTML = '';
+            const item = document.createElement('div');
+            item.className = 'notif-item';
+            item.innerHTML = `<div class="notif-title"><i class="fa fa-bell" style="margin-right:8px;"></i> ${escapeHtml(title)}</div><div class="notif-body pre-wrap-text">${escapeHtml(body)}</div><div style="font-size:10px; color:#666; margin-top:10px;">${new Date(now).toLocaleString()}</div>`;
+            list.prepend(item);
+
+            unreadNotifs++;
+            let badge = document.getElementById('notifBadge');
+            badge.style.display = 'flex';
+            badge.innerText = unreadNotifs > 9 ? '9+' : unreadNotifs;
+
+            playNotifSound();
+            showNativeNotif(title, body);
+            addToLiveUnread(title, body);
         }
 
         // ============================================================================
-        // 15. UTILITIES (toast, modal, news, ads, demo, sounds) – unchanged
+        // 17. REMAINING UTILITIES (toast, modal, news, ads, demo, sounds)
         // ============================================================================
         function showToast(msg) {
             const toast = document.getElementById('toast');
@@ -2687,7 +2780,17 @@
         }
 
         function loadDailyNews() {
+            let firstLoad = true;
             db.collection('daily_news').orderBy('timestamp', 'desc').onSnapshot(snap => {
+                if (!firstLoad) {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const d = change.doc.data();
+                            dispatchNotification("📢 Latest Update", `${escapeHtml(d.title)}`);
+                        }
+                    });
+                }
+                firstLoad = false;
                 const container = document.getElementById('newsContainer');
                 container.innerHTML = '';
                 if (snap.empty) {
@@ -2790,6 +2893,7 @@
         window.toggleChat = toggleChat;
         window.updateSelectedToolPrice = updateSelectedToolPrice;
         window.trackFreeDownload = trackFreeDownload;
+        window.dispatchNotification = dispatchNotification;
     </script>
 </body>
 </html>
