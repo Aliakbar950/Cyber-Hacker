@@ -596,7 +596,7 @@
     </style>
     <style id="dynamicGridStyle"></style>
 </head>
-<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;" onclick="requestPushPermission()">
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;" >
 
     <!-- BACKGROUND EFFECTS & NATIVE NOTIFICATION BANNER -->
     <canvas id="background-animation"></canvas>
@@ -816,7 +816,7 @@
                             </table>
                         <h3 style="color:white; font-size:18px; margin-bottom:15px; margin-top:40px; font-family:'Rajdhani'; font-weight:800;">UPDATE SECURITY KEY</h3>
                         <input type="password" id="newPass" class="input-box" placeholder="Enter New Password" style="margin-top:0; background:#000;">
-                        <button class="btn" onclick="updatePassword()" style="margin-top:15px;">UPDATE CREDENTIALS</button>
+                        <button class="btn" onclick="updatePassword(event)" style="margin-top:15px;">UPDATE CREDENTIALS</button>
                     </div>
                 </div>
 
@@ -956,7 +956,6 @@
                 }
             }
         }
-        window.addEventListener('load', requestPushPermission);
 
         const firebaseConfig = {
             apiKey: "AIzaSyBiDFZ4SiW6UJlnG7o6tmXl967GkrPSRmg",
@@ -970,6 +969,18 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
+
+        // XSS sanitizer
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text).replace(/[&<>"]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                if (m === '"') return '&quot;';
+                return m;
+            });
+        }
 
         // DEFAULT VALUES FOR EARN AMOUNTS (overwritten by Firestore if set)
         window.CHECKIN_AMOUNT = window.CHECKIN_AMOUNT || 5;
@@ -993,6 +1004,7 @@
         let referralCode = '';
         let userSendId = '';
         window.adminIsOnline = false;
+        window.ADMIN_SEND_ID = 'ADMIN_MH';
 
         let socialLinks = { grp: "", chnl: "", wa: "" };
         let supportEmailCopy = "mhhackshelpzone@gmail.com";
@@ -1104,11 +1116,15 @@
             setTimeout(() => banner.classList.remove('show'), 4000);
             if ("Notification" in window && Notification.permission === "granted") {
                 try {
-                    navigator.serviceWorker.ready.then((registration) => {
-                        registration.showNotification(title, { body: body, icon: document.getElementById('splashLogoImg').src });
-                    }).catch(() => {
+                    if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+                        navigator.serviceWorker.ready.then((registration) => {
+                            registration.showNotification(title, { body: body, icon: document.getElementById('splashLogoImg').src });
+                        }).catch(() => {
+                            new Notification(title, { body: body, icon: document.getElementById('splashLogoImg').src });
+                        });
+                    } else {
                         new Notification(title, { body: body, icon: document.getElementById('splashLogoImg').src });
-                    });
+                    }
                 } catch(e) {
                     new Notification(title, { body: body, icon: document.getElementById('splashLogoImg').src });
                 }
@@ -1122,8 +1138,7 @@
                 styleTag.id = 'dynamicGridStyle';
                 document.head.appendChild(styleTag);
             }
-            // Use 2 columns for mobile
-            let cols = "2";
+            let cols = (activeToolFilter === 'premium' ? gVipGridMobile : gFreeGridMobile) || "2";
             let iconSize, fontSize, subSize;
             if (cols === "1") { iconSize = "80px"; fontSize = "16px"; subSize = "11px"; }
             else if (cols === "2") { iconSize = "60px"; fontSize = "13px"; subSize = "9px"; }
@@ -1207,6 +1222,17 @@
                 if(data.referralAmount) window.REFERRAL_AMOUNT = data.referralAmount;
             });
 
+            // Listen for admin send ID from app_settings/earn
+            db.collection('app_settings').doc('earn').onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.adminId) {
+                        window.ADMIN_SEND_ID = data.adminId;
+                        document.getElementById('adminIdReadonly').value = data.adminId;
+                    }
+                }
+            });
+
             // Load custom dialog texts
             db.collection('app_settings').doc('dialog_texts').onSnapshot(doc => {
                 if(doc.exists) {
@@ -1239,7 +1265,7 @@
                     const btnId = 'btn_demo_' + doc.id;
                     const existingBtn = document.getElementById(btnId);
                     if(d.enabled && !existingBtn) {
-                        container.innerHTML += `<div class="btn-unified" id="${btnId}" onclick="openDemoSystem('${doc.id}', this)" style="border-color:var(--primary); box-shadow:0 0 10px rgba(0,242,255,0.2);"><i class="fa fa-play-circle" style="color:var(--primary);"></i> ${d.title.toUpperCase()}</div>`;
+                        container.innerHTML += `<div class="btn-unified" id="${btnId}" onclick="openDemoSystem('${doc.id}', this)" style="border-color:var(--primary); box-shadow:0 0 10px rgba(0,242,255,0.2);"><i class="fa fa-play-circle" style="color:var(--primary);"></i> ${escapeHtml(d.title).toUpperCase()}</div>`;
                     } else if (!d.enabled && existingBtn) {
                         existingBtn.remove();
                     }
@@ -1255,7 +1281,7 @@
                     const existingBtn = document.getElementById(btnId);
                     if(d.enabled) {
                         if(!existingBtn) {
-                            container.innerHTML += `<div class="btn-unified" id="${btnId}" onclick="showSection('custom_${doc.id}', this)"><i class="fa fa-code"></i> ${d.title.toUpperCase()}</div>`;
+                            container.innerHTML += `<div class="btn-unified" id="${btnId}" onclick="showSection('custom_${doc.id}', this)"><i class="fa fa-code"></i> ${escapeHtml(d.title).toUpperCase()}</div>`;
                         }
                         let sectionEl = document.getElementById(sectionId);
                         if(!sectionEl) {
@@ -1270,7 +1296,7 @@
                             try {
                                 const customFunc = new Function(d.jsCode);
                                 customFunc();
-                            } catch(err) { console.error('Injector Error on ${d.title}:', err); }
+                            } catch(err) { console.error('Injector Error on ${escapeHtml(d.title)}:', err); }
                         }
                     } else {
                         if(existingBtn) existingBtn.remove();
@@ -1298,7 +1324,6 @@
             const ref = urlParams.get('ref');
             if(ref) document.getElementById('regRef').value = ref;
             listenToAppConfig();
-            // Start fetching tools & news early (during splash) for instant dashboard
             fetchAllTools();
             loadDailyNews();
             let p = 0;
@@ -1322,7 +1347,6 @@
             checkAppReady();
         });
 
-        // Flag to prevent calling completion multiple times
         let splashCompleted = false;
 
         function checkAppReady() {
@@ -1338,7 +1362,6 @@
             };
             splash.addEventListener('transitionend', onTransitionEnd);
 
-            // Fallback if transitionend doesn't fire
             setTimeout(() => {
                 splash.removeEventListener('transitionend', onTransitionEnd);
                 if (splash.style.display !== 'none') {
@@ -1349,7 +1372,12 @@
         }
 
         function proceedAfterSplash() {
+            requestPushPermission();
             if (loggedInUser) {
+                db.collection('website_analytics').add({
+                    type: 'pageview',
+                    timestamp: firebase.firestore.Timestamp.now()
+                });
                 db.collection('users').doc(loggedInUser.uid).update({ status: 'online' }).catch(() => {});
                 loadData(loggedInUser.uid);
                 loadWalletData(loggedInUser.uid);
@@ -1363,7 +1391,6 @@
                 loadCheckinHistory(loggedInUser.uid);
                 loadTransactionHistory(loggedInUser.uid);
                 listenForAdminMessages(loggedInUser.uid);
-                // Delay unread summary check to allow tools/news to load
                 setTimeout(() => {
                     checkAndShowUnreadSummary(loggedInUser.uid);
                 }, 2000);
@@ -1375,7 +1402,7 @@
         function generateSendId(name, uid) {
             const prefix = name.substring(0, 3).toUpperCase();
             const uidShort = uid.substring(0, 5).toUpperCase();
-            return 'MH-${prefix}-${uidShort}';
+            return `MH-${prefix}-${uidShort}`;
         }
 
         async function signup() {
@@ -1392,7 +1419,7 @@
                 const refCode = n.substring(0,3).toUpperCase() + Math.random().toString(36).substr(2,5).toUpperCase();
                 const sendId = generateSendId(n, res.user.uid);
                 await db.collection('users').doc(res.user.uid).set({
-                    name: n, email: e, password: p, uid: res.user.uid,
+                    name: escapeHtml(n), email: e, password: p, uid: res.user.uid,
                     joined: new Date().toLocaleDateString(), status: 'online',
                     referralCode: refCode, sendMoneyId: sendId, referredBy: ref || null,
                     wallet: { balance: 0, totalEarned: 0, totalReferrals: 0, totalCheckins: 0 }
@@ -1402,7 +1429,7 @@
                     if(!referrerSnapshot.empty) {
                         const referrer = referrerSnapshot.docs[0];
                         await db.collection('referrals').add({
-                            referrerUid: referrer.id, referredUid: res.user.uid, referredName: n,
+                            referrerUid: referrer.id, referredUid: res.user.uid, referredName: escapeHtml(n),
                             referredEmail: e, timestamp: Date.now(), status: 'completed', amount: window.REFERRAL_AMOUNT
                         });
                         const referrerWalletRef = db.collection('wallets').doc(referrer.id);
@@ -1421,11 +1448,11 @@
                         }
                         await db.collection('transactions').add({
                             userId: referrer.id, type: 'referral', amount: window.REFERRAL_AMOUNT,
-                            description: 'Referral bonus for ${n}', timestamp: Date.now(), status: 'completed'
+                            description: `Referral bonus for ${escapeHtml(n)}`, timestamp: Date.now(), status: 'completed'
                         });
                         await db.collection('notifications').add({
                             target: referrer.id, title: '🎉 Referral Bonus!',
-                            body: 'You earned PKR ${window.REFERRAL_AMOUNT} for referring ${n}!', timestamp: Date.now(),
+                            body: `You earned PKR ${window.REFERRAL_AMOUNT} for referring ${escapeHtml(n)}!`, timestamp: Date.now(),
                             seen: false
                         });
                     }
@@ -1454,18 +1481,17 @@
                 else {
                     let pass = ""; let userName = "";
                     snapshot.forEach(doc => { pass = doc.data().password; userName = doc.data().name; });
+                    const maskedPass = '••••••••';
                     const forgotCard = document.getElementById('forgotPassCard');
                     forgotCard.innerHTML = `
                         <i class="fa fa-check-circle success-icon" style="font-size:80px; color:var(--success-green);"></i>
                         <h3 class="forgot-pass-title">KEY FOUND!</h3>
                         <p class="forgot-pass-subtitle">Your security key has been securely retrieved</p>
-                        <div class="key-display-box"><div class="key-label">ORIGINAL SECURITY KEY</div><div class="key-value">${pass}</div></div>
-                        <p style="color:#00f2ff; margin:20px 0 10px; font-size:13px;">User: <strong>${userName}</strong></p>
-                        <button class="btn" onclick="copyToClipboard('${pass}', 'Security Key Copied!')" style="background:linear-gradient(90deg,#004d00,var(--success-green)); color:black; font-weight:900;">COPY SECURE KEY</button>
+                        <p style="color:#00f2ff; margin:20px 0 10px; font-size:13px;">User: <strong>${escapeHtml(userName)}</strong></p>
+                        <div class="key-display-box"><div class="key-label">RECOVERED KEY</div><div class="key-value">${maskedPass}</div></div>
+                        <button class="btn" onclick="copyToClipboard('${pass.replace(/'/g, "\\'")}', 'Security Key Copied to Clipboard!')" style="background:linear-gradient(90deg,#004d00,var(--success-green)); color:black; font-weight:900;">COPY KEY TO CLIPBOARD</button>
                         <button class="btn" onclick="document.getElementById('forgotPassOverlay').style.display='none'" style="margin-top:10px; background:#111; border:1px solid #002233; color:#aaa;">CLOSE</button>
                     `;
-                    document.getElementById('logEmail').value = email;
-                    document.getElementById('logPass').value = pass;
                 }
             } catch(err) { showToast("SYSTEM ERROR: Database retrieval failed."); }
         }
@@ -1501,18 +1527,18 @@
                             currentUserData.sendMoneyId = sId; updateNeeded = true;
                         }
                         if(updateNeeded) db.collection('users').doc(uid).update({ referralCode: rCode, sendMoneyId: sId });
-                        document.getElementById('profNameDisplay').innerText = currentUserData.name || 'Unknown';
+                        document.getElementById('profNameDisplay').innerText = escapeHtml(currentUserData.name) || 'Unknown';
                         document.getElementById('profEmailDisplay').innerText = currentUserData.email || 'No Email';
-                        document.getElementById('profPassDisplay').innerText = currentUserData.password || '••••••••';
+                        document.getElementById('profPassDisplay').innerText = '••••••••';
                         referralCode = currentUserData.referralCode;
                         document.getElementById('profRefCode').innerText = referralCode;
                         userSendId = currentUserData.sendMoneyId;
                         document.getElementById('profSendId').innerText = userSendId;
                         document.getElementById('userSendId').innerText = userSendId;
-                        const refLink = `https://mhhacks.pages.dev/?ref=${referralCode}`;
+                        const refLink = `${window.location.origin}/?ref=${referralCode}`;
                         document.getElementById('profRefLink').innerHTML = `<a href="${refLink}" target="_blank" style="color:var(--primary); font-weight:bold;">${refLink}</a>`;
                         document.getElementById('referralLinkText').innerText = refLink;
-                        document.getElementById('sendName').value = currentUserData.name || '';
+                        document.getElementById('sendName').value = escapeHtml(currentUserData.name) || '';
                         document.getElementById('sendEmail').value = currentUserData.email || '';
                     }
                 });
@@ -1549,7 +1575,7 @@
             }
         }
 
-        async function updatePassword() {
+        async function updatePassword(event) {
             const btn = event.currentTarget;
             const np = document.getElementById('newPass').value;
             if(np.length < 6) return showToast("ERROR: Minimum 6 characters required.");
@@ -1592,8 +1618,8 @@
                     await walletRef.set({ balance: window.CHECKIN_AMOUNT, totalEarned: window.CHECKIN_AMOUNT, totalCheckins: 1, totalReferrals: 0, userId: uid });
                 }
                 await db.collection('transactions').add({ userId: uid, type: 'checkin', amount: window.CHECKIN_AMOUNT, description: 'Daily check-in bonus', timestamp: Date.now(), status: 'completed' });
-                document.getElementById('checkinStatus').innerHTML = '<i class="fa fa-check-circle" style="color:var(--success-green);"></i> Check-in successful! +PKR ${window.CHECKIN_AMOUNT}';
-                showTransactionSuccessModal(dialogTexts.dailyCheckin.title, dialogTexts.dailyCheckin.desc + ' (+PKR ${window.CHECKIN_AMOUNT})');
+                document.getElementById('checkinStatus').innerHTML = `<i class="fa fa-check-circle" style="color:var(--success-green);"></i> Check-in successful! +PKR ${window.CHECKIN_AMOUNT}`;
+                showTransactionSuccessModal(dialogTexts.dailyCheckin.title, dialogTexts.dailyCheckin.desc + ` (+PKR ${window.CHECKIN_AMOUNT})`);
             } catch(err) {
                 showToast("ERROR: " + err.message);
                 btn.disabled = false;
@@ -1616,7 +1642,7 @@
                 refs.sort((a,b)=>b.timestamp-a.timestamp);
                 refs.forEach(d => {
                     const date = new Date(d.timestamp).toLocaleDateString();
-                    tbody.innerHTML += `<tr><td style="font-weight:bold; color:white;">${d.referredName}</td><td>${d.referredEmail}</td><td>${date}</td><td><span style="color:var(--success-green);"><i class="fa fa-check-circle"></i> Completed</span></td><td style="color:var(--success-green); font-weight:bold;">+PKR ${d.amount}</td></tr>`;
+                    tbody.innerHTML += `<tr><td style="font-weight:bold; color:white;">${escapeHtml(d.referredName)}</td><td>${escapeHtml(d.referredEmail)}</td><td>${date}</td><td><span style="color:var(--success-green);"><i class="fa fa-check-circle"></i> Completed</span></td><td style="color:var(--success-green); font-weight:bold;">+PKR ${d.amount}</td></tr>`;
                 });
             });
         }
@@ -1656,7 +1682,7 @@
                         if(d.type === 'checkin') { recipient = 'System Reward'; type = 'CHECK-IN'; }
                         if(d.type === 'referral') { recipient = 'Referral Reward'; type = 'REFERRAL'; }
                         let statusColor = d.status === 'completed' ? 'var(--success-green)' : (d.status === 'rejected' ? 'var(--danger-red)' : 'var(--pending-orange)');
-                        tbody.innerHTML += `<tr><td>${date}</td><td style="font-weight:bold; color:white;">${recipient}</td><td><span style="color:${typeColor}; font-weight:bold;">${type}</span></td><td class="${amountClass}">${amountSign}PKR ${d.amount}</td><td><span class="st-badge ${d.status}" style="font-size:10px; padding:4px 10px;">${d.status.toUpperCase()}</span></td></tr>`;
+                        tbody.innerHTML += `<tr><td>${date}</td><td style="font-weight:bold; color:white;">${escapeHtml(recipient)}</td><td><span style="color:${typeColor}; font-weight:bold;">${type}</span></td><td class="${amountClass}">${amountSign}PKR ${d.amount}</td><td><span class="st-badge ${d.status}" style="font-size:10px; padding:4px 10px;">${d.status.toUpperCase()}</span></td></tr>`;
                     });
                 } catch(err) {}
             };
@@ -1682,8 +1708,9 @@
             btn.innerText = "PROCESSING...";
             btn.disabled = true;
             try {
+                const ADMIN_ID = window.ADMIN_SEND_ID || 'ADMIN_MH';
                 let recipientUid = null; let recipientName = "Admin";
-                if(recipientId === 'ADMIN_MH') {
+                if(recipientId === ADMIN_ID) {
                     recipientUid = 'ADMIN';
                 } else {
                     const userSnapshot = await db.collection('users').where('sendMoneyId', '==', recipientId).get();
@@ -1695,22 +1722,21 @@
                 await db.collection('wallets').doc(senderUid).update({ balance: firebase.firestore.FieldValue.increment(-amount) });
                 await db.collection('transactions').add({
                     userId: senderUid, type: 'sent', amount: amount, recipientId: recipientId, recipientUid: recipientUid,
-                    recipientName: recipientName, name: name, email: email, note: note, timestamp: Date.now(), status: 'pending'
+                    recipientName: escapeHtml(recipientName), name: escapeHtml(name), email: email, note: escapeHtml(note), timestamp: Date.now(), status: 'pending'
                 });
                 if(recipientUid && recipientUid !== 'ADMIN') {
-                    await db.collection('wallets').doc(recipientUid).update({ balance: firebase.firestore.FieldValue.increment(amount) });
                     await db.collection('transactions').add({
                         userId: recipientUid, type: 'received', amount: amount, senderId: userSendId, senderUid: senderUid,
-                        senderName: name, note: note, timestamp: Date.now(), status: 'pending'
+                        senderName: escapeHtml(name), note: escapeHtml(note), timestamp: Date.now(), status: 'pending'
                     });
                     await db.collection('notifications').add({
-                        target: recipientUid, title: '💰 Incoming Transfer Pending', body: `A transfer of PKR ${amount} from ${name} is processing.`, timestamp: Date.now(),
+                        target: recipientUid, title: '💰 Incoming Transfer Pending', body: `A transfer of PKR ${amount} from ${escapeHtml(name)} is processing.`, timestamp: Date.now(),
                         seen: false
                     });
-                    showTransactionSuccessModal(dialogTexts.sendMoney.title, `Sent to ${recipientName} (${recipientId}).\nStatus: PENDING ADMIN APPROVAL.`);
+                    showTransactionSuccessModal(dialogTexts.sendMoney.title, `Sent to ${escapeHtml(recipientName)} (${recipientId}).\nStatus: PENDING ADMIN APPROVAL.`);
                 } else {
                     await db.collection('admin_money_requests').add({
-                        userId: senderUid, userName: name, userEmail: email, amount: amount, note: note, timestamp: Date.now(), status: 'pending'
+                        userId: senderUid, userName: escapeHtml(name), userEmail: email, amount: amount, note: escapeHtml(note), timestamp: Date.now(), status: 'pending'
                     });
                     showTransactionSuccessModal(dialogTexts.sendMoney.title, dialogTexts.sendMoney.desc);
                 }
@@ -1724,7 +1750,10 @@
         }
 
         function copyReferralLink() { navigator.clipboard.writeText(document.getElementById('referralLinkText').innerText).then(() => showToast("Referral link securely copied!")); }
-        function copyUserSendId() { navigator.clipboard.writeText(userSendId).then(() => showToast("Your Send Money ID copied!")); }
+        function copyUserSendId() {
+            if (!userSendId) return showToast("Your ID is still loading...");
+            navigator.clipboard.writeText(userSendId).then(() => showToast("Your Send Money ID copied!"));
+        }
         function copyAdminId() { navigator.clipboard.writeText(document.getElementById('adminIdReadonly').value).then(() => showToast("Official Admin ID copied!")); }
 
         function shareReferral(platform) {
@@ -1777,7 +1806,7 @@
                 allFreeTools =[];
                 snap.forEach(doc => {
                     let data = doc.data(); allFreeTools.push({id: doc.id, ...data});
-                    if(!initToolsBoot && data.timestamp > bootTime) showNativeNotif("New Free Tool Added!", `${data.title} is now available.`);
+                    if(!initToolsBoot && data.timestamp > bootTime) showNativeNotif("New Free Tool Added!", `${escapeHtml(data.title)} is now available.`);
                 });
                 if(activeToolFilter === 'free' || activeToolFilter === 'all') renderTools();
             });
@@ -1785,7 +1814,7 @@
                 allVipTools =[];
                 snap.forEach(doc => {
                     let data = doc.data(); allVipTools.push({id: doc.id, ...data});
-                    if(!initToolsBoot && data.timestamp > bootTime) showNativeNotif("New VIP Tool!", `${data.title} added to Premium.`);
+                    if(!initToolsBoot && data.timestamp > bootTime) showNativeNotif("New VIP Tool!", `${escapeHtml(data.title)} added to Premium.`);
                 });
                 if(activeToolFilter === 'premium' || activeToolFilter === 'all') renderTools();
                 populateWalletToolSelect();
@@ -1804,7 +1833,7 @@
             } else if(activeToolFilter === 'premium') {
                 toolsToRender = allVipTools;
                 cont.className = 'tools-grid';
-            } else { // all
+            } else {
                 toolsToRender = [...allFreeTools, ...allVipTools];
                 cont.className = 'tools-grid';
             }
@@ -1812,35 +1841,31 @@
             toolsToRender.forEach(t => {
                 const card = document.createElement('div');
                 card.className = 'tool-card';
-                // Determine if free or vip
                 const isVipTool = allVipTools.some(v => v.id === t.id) && !allFreeTools.some(f => f.id === t.id);
                 let badgeHtml = '';
                 if (!isVipTool) badgeHtml = `<div class="badge-free">FREE</div>`;
                 else badgeHtml = `<div class="badge-vip">VIP</div>`;
 
                 let statusColor = (t.isWorking !== false) ? 'var(--success-green)' : 'var(--danger-red)';
-                let subText = isVipTool ? (t.welcome || "MH VIP EXCLUSIVE") : "MH HACKS FREE TOOL";
+                let subText = isVipTool ? (escapeHtml(t.welcome) || "MH VIP EXCLUSIVE") : "MH HACKS FREE TOOL";
                 let offerBannerHtml = '';
                 let priceHtml = '';
                 if(isVipTool && t.price) {
                     if(activeVipOffers[t.id]) {
-                        offerBannerHtml = `<div class="offer-banner">${activeVipOffers[t.id].offerName}</div>`;
+                        offerBannerHtml = `<div class="offer-banner">${escapeHtml(activeVipOffers[t.id].offerName)}</div>`;
                         priceHtml = `<div style="color:var(--primary); font-weight:bold; text-decoration:line-through; opacity:0.5;">PKR ${t.price}</div><div style="color:var(--success-green); font-weight:bold; font-size:18px;">PKR ${activeVipOffers[t.id].discountPrice}</div>`;
                     } else {
                         priceHtml = `<div style="color:var(--primary); font-weight:bold;">PKR ${t.price}</div>`;
                     }
                 }
 
-                // VIP cards get a smaller size class
                 if (isVipTool) {
                     card.classList.add('vip-card');
                 }
-                // If offer exists, add offer-active class (for banner positioning)
                 if (offerBannerHtml) {
                     card.classList.add('offer-active');
                 }
 
-                // Build the card inner HTML – hide status dot if offer is active
                 let statusDotHtml = '';
                 if (!offerBannerHtml) {
                     statusDotHtml = `<div class="status-dot" style="background:${statusColor}; box-shadow:0 0 10px ${statusColor}"></div>`;
@@ -1851,7 +1876,7 @@
                     ${statusDotHtml}
                     ${badgeHtml}
                     <img src="${t.icon}" class="tool-icon" loading="eager" decoding="sync" onload="this.style.opacity=1; this.style.animation='none'" style="opacity:0;" onerror="this.src='https://via.placeholder.com/70?text=MH'">
-                    <h3 class="tool-title">${t.title}</h3>
+                    <h3 class="tool-title">${escapeHtml(t.title)}</h3>
                     <p class="tool-sub">${subText}</p>
                     ${priceHtml}
                 `;
@@ -1920,9 +1945,9 @@
                     let offerTag = "";
                     if(activeVipOffers[t.id]) {
                         finalPrice = activeVipOffers[t.id].discountPrice;
-                        offerTag = ` [${activeVipOffers[t.id].offerName}]`;
+                        offerTag = ` [${escapeHtml(activeVipOffers[t.id].offerName)}]`;
                     }
-                    select.innerHTML += `<option value="${t.id}" data-price="${finalPrice}">${t.title}${offerTag} - PKR ${finalPrice}</option>`;
+                    select.innerHTML += `<option value="${t.id}" data-price="${finalPrice}">${escapeHtml(t.title)}${offerTag} - PKR ${finalPrice}</option>`;
                 }
             });
         }
@@ -1955,16 +1980,17 @@
             if(!tool) return showToast("ERROR: Tool not found!");
             let price = parseInt(tool.price || 0);
             if(activeVipOffers[toolId]) { price = parseInt(activeVipOffers[toolId].discountPrice); }
+            if (price <= 0) return showToast("ERROR: Invalid tool price.");
             if(price > walletData.balance) return showToast("ERROR: Insufficient wallet balance!");
             const originalText = btn.innerText;
             btn.innerText = "PROCESSING...";
             btn.disabled = true;
             try {
                 await db.collection('wallets').doc(uid).update({ balance: firebase.firestore.FieldValue.increment(-price) });
-                await db.collection('transactions').add({ userId: uid, type: 'purchase', amount: price, toolId: toolId, toolName: tool.title, description: `Wallet Purchase Request: ${tool.title}`, timestamp: Date.now(), status: 'pending' });
+                await db.collection('transactions').add({ userId: uid, type: 'purchase', amount: price, toolId: toolId, toolName: escapeHtml(tool.title), description: `Wallet Purchase Request: ${escapeHtml(tool.title)}`, timestamp: Date.now(), status: 'pending' });
                 await db.collection('payment_proofs').add({
-                    userId: uid, userName: userName, userEmail: userEmail, toolName: tool.title, toolId: toolId,
-                    userHackName: hackName, imageUrl: 'wallet_purchase', timestamp: Date.now(), status: 'Pending',
+                    userId: uid, userName: escapeHtml(userName), userEmail: userEmail, toolName: escapeHtml(tool.title), toolId: toolId,
+                    userHackName: escapeHtml(hackName), imageUrl: 'wallet_purchase', timestamp: Date.now(), status: 'Pending',
                     price: `PKR ${price}`, paymentMethod: 'Wallet', generatedKey: '', expiresAt: ''
                 });
                 showTransactionSuccessModal(dialogTexts.walletPurchase.title, dialogTexts.walletPurchase.desc);
@@ -1989,6 +2015,12 @@
                 let vimeoId = '';
                 if (videoUrl.includes('vimeo.com/')) { vimeoId = videoUrl.split('vimeo.com/')[1].split('?')[0].split('/')[0]; }
                 if (vimeoId) { embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&loop=1&title=0&byline=0&portrait=0`; }
+            } else if (videoUrl.includes('youtube.com/watch?v=')) {
+                const vid = new URL(videoUrl).searchParams.get('v');
+                if (vid) embedUrl = `https://www.youtube.com/embed/${vid}?autoplay=1&mute=1`;
+            } else if (videoUrl.includes('youtu.be/')) {
+                const vid = videoUrl.split('youtu.be/')[1].split('?')[0];
+                if (vid) embedUrl = `https://www.youtube.com/embed/${vid}?autoplay=1&mute=1`;
             }
             return `<iframe src="${embedUrl}" style="width:100%; height:100%; border:none;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
         }
@@ -1998,30 +2030,38 @@
             let html = '';
             paymentMethods.forEach(p => {
                 let imageBlock = (p.img && p.img.trim() !== '') ? `<div class="qr-image-box"><img src="${p.img}" alt="QR Code" onerror="this.parentElement.innerHTML='<div style=\\'padding:20px; color:#ff4444;\\'>Image failed to load.</div>'"></div>` : `<div class="qr-image-box" style="padding:20px; color:#555;">NO QR CODE PROVIDED</div>`;
-                html += `<div class="pay-card-wrap"><h4 class="pay-header">${p.title || "PAYMENT METHOD"}</h4><div class="pay-desc pre-wrap-text" style="color:white; font-size:15px; font-family:'Rajdhani';">${p.name || "N/A"}</div>${imageBlock}</div>`;
+                html += `<div class="pay-card-wrap"><h4 class="pay-header">${escapeHtml(p.title) || "PAYMENT METHOD"}</h4><div class="pay-desc pre-wrap-text" style="color:white; font-size:15px; font-family:'Rajdhani';">${escapeHtml(p.name) || "N/A"}</div>${imageBlock}</div>`;
             });
             return html;
         }
 
         function openFreeToolModal(t) {
             const modal = document.getElementById('notifModal'); modal.style.display = 'flex';
-            let finalBtnText = t.btnText ? t.btnText : 'DOWNLOAD';
+            let finalBtnText = t.btnText ? escapeHtml(t.btnText) : 'DOWNLOAD';
             document.getElementById('modalContentInner').innerHTML = `
                 <i class="fa fa-times" onclick="closeModal()" style="position:absolute; right:25px; top:25px; color:#666; cursor:pointer; font-size:24px;"></i>
                 <div class="step active" id="freeStep1">
                     <img src="${t.icon}" style="width:100px; height:100px; border-radius:50%; border:4px solid var(--success-green); margin-bottom:20px; object-fit:cover;" loading="eager" decoding="sync">
-                    <h3 style="margin-bottom:5px; color:white; font-family:'Rajdhani'; font-size:32px; font-weight:900;">${t.welcomeMsg || 'WELCOME TO FREE TOOL!'}</h3>
-                    <p style="font-size:14px; color:#ccc; margin-bottom:30px;">You are about to access <br><strong style="color:var(--success-green);">${t.title}</strong></p>
+                    <h3 style="margin-bottom:5px; color:white; font-family:'Rajdhani'; font-size:32px; font-weight:900;">${escapeHtml(t.welcomeMsg) || 'WELCOME TO FREE TOOL!'}</h3>
+                    <p style="font-size:14px; color:#ccc; margin-bottom:30px;">You are about to access <br><strong style="color:var(--success-green);">${escapeHtml(t.title)}</strong></p>
                     <div class="btn-row"><button class="btn-modal btn-back" onclick="closeModal()">${gTxtCancel}</button><button class="btn-modal btn-next" onclick="nextFreeStep(2)">${gTxtNext}</button></div>
                 </div>
                 <div class="step" id="freeStep2">
                     <img src="${t.icon}" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--primary); margin-bottom:15px; object-fit:cover;" loading="eager" decoding="sync">
-                    <h3 style="color:white; font-family:'Rajdhani'; font-size:28px; font-weight:900; margin-bottom:10px;">${t.title}</h3>
+                    <h3 style="color:white; font-family:'Rajdhani'; font-size:28px; font-weight:900; margin-bottom:10px;">${escapeHtml(t.title)}</h3>
                     ${t.video ? `<div class="video-container" style="aspect-ratio: ${t.videoRatio || '9/16'};">${getVideoEmbedHtml(t.video)}</div>` : ''}
-                    <p class="pre-wrap-text" style="font-size:13px; color:#aaa; background:#111; padding:15px; border-radius:10px; margin-bottom:20px; text-align:left;">${t.desc || 'No description available.'}</p>
-                    <div class="btn-row"><button class="btn-modal btn-back" onclick="nextFreeStep(1)">BACK</button><button class="btn-modal btn-next" style="background:var(--success-green); color:black;" onclick="window.location.href='${t.link}'">${finalBtnText}</button></div>
+                    <p class="pre-wrap-text" style="font-size:13px; color:#aaa; background:#111; padding:15px; border-radius:10px; margin-bottom:20px; text-align:left;">${escapeHtml(t.desc) || 'No description available.'}</p>
+                    <div class="btn-row"><button class="btn-modal btn-back" onclick="nextFreeStep(1)">BACK</button><button class="btn-modal btn-next" style="background:var(--success-green); color:black;" onclick="trackFreeDownload('${t.link}')">${finalBtnText}</button></div>
                 </div>
             `;
+        }
+
+        function trackFreeDownload(link) {
+            db.collection('website_analytics').add({
+                type: 'free_click',
+                timestamp: firebase.firestore.Timestamp.now()
+            });
+            window.location.href = link;
         }
 
         function openVipToolModal(t) {
@@ -2029,7 +2069,7 @@
             let priceDisplayHtml = '';
             if(t.price) {
                 if(activeVipOffers[t.id]) {
-                    priceDisplayHtml = `<div class="tool-price-tag" style="background:var(--success-green); color:black; font-size:18px; padding:5px 15px; margin-top:0; display:inline-block; font-weight:bold;">${activeVipOffers[t.id].offerName}: PKR ${activeVipOffers[t.id].discountPrice}</div>`;
+                    priceDisplayHtml = `<div class="tool-price-tag" style="background:var(--success-green); color:black; font-size:18px; padding:5px 15px; margin-top:0; display:inline-block; font-weight:bold;">${escapeHtml(activeVipOffers[t.id].offerName)}: PKR ${activeVipOffers[t.id].discountPrice}</div>`;
                 } else {
                     priceDisplayHtml = `<div class="tool-price-tag" style="background:var(--primary); color:black; font-size:18px; padding:5px 15px; margin-top:0; display:inline-block; font-weight:bold;">PRICE: PKR ${t.price}</div>`;
                 }
@@ -2039,15 +2079,15 @@
                 <i class="fa fa-times" onclick="closeModal()" style="position:absolute; right:25px; top:25px; color:#666; cursor:pointer; font-size:24px;"></i>
                 <div class="step active" id="step1">
                     <img src="${t.icon}" style="width:100px; height:100px; border-radius:50%; border:4px solid var(--primary); margin-bottom:20px; object-fit:cover; box-shadow:var(--box-glow);" loading="eager" decoding="sync">
-                    <h3 style="color:white; font-family:'Rajdhani'; font-size:32px; font-weight:900; margin-bottom:5px;">${t.title}</h3>
-                    <p style="color:var(--primary); font-size:14px; font-weight:bold; margin-bottom:25px; text-transform:uppercase; letter-spacing:2px;">${t.welcome || "VIP Access Required"}</p>
+                    <h3 style="color:white; font-family:'Rajdhani'; font-size:32px; font-weight:900; margin-bottom:5px;">${escapeHtml(t.title)}</h3>
+                    <p style="color:var(--primary); font-size:14px; font-weight:bold; margin-bottom:25px; text-transform:uppercase; letter-spacing:2px;">${escapeHtml(t.welcome) || "VIP Access Required"}</p>
                     <div style="width:60px; height:4px; background:var(--primary); margin:0 auto 25px; border-radius:2px;"></div>
                     <div class="btn-row"><button class="btn-modal btn-back" onclick="closeModal()">${gTxtCancel}</button><button class="btn-modal btn-next" onclick="nextStep(2)">${gTxtNext}</button></div>
                 </div>
                 <div class="step" id="step2">
                     <h3 style="color:var(--primary); font-family:'Rajdhani'; font-size:26px; font-weight:900;">TOOL PREVIEW</h3>
                     ${videoBlock}
-                    <p class="pre-wrap-text" style="font-size:13px; color:#ddd; text-align:left; background:#111; padding:15px; border-radius:10px; border:1px solid #333; max-height:150px; overflow-y:auto; margin-bottom:20px; line-height:1.6;">${t.desc || "No description available."}</p>
+                    <p class="pre-wrap-text" style="font-size:13px; color:#ddd; text-align:left; background:#111; padding:15px; border-radius:10px; border:1px solid #333; max-height:150px; overflow-y:auto; margin-bottom:20px; line-height:1.6;">${escapeHtml(t.desc) || "No description available."}</p>
                     ${priceDisplayHtml}
                     <div id="activationArea">
                         <div style="border-top:1px solid #333; margin-top:20px; padding-top:20px;">
@@ -2066,9 +2106,9 @@
                 <div class="step" id="step4">
                     <h3 style="color:white; font-family:'Rajdhani'; font-size:26px; font-weight:900;">VERIFY PAYMENT</h3>
                     <p style="font-size:13px; color:#aaa; margin-top:8px;">Enter details and upload payment screenshot.</p>
-                    <input type="text" id="vipUserName" class="input-box" placeholder="Your Full Name" style="margin-top:25px; border-color:var(--primary);" value="${currentUserData ? currentUserData.name : ''}">
-                    <input type="email" id="vipUserEmail" class="input-box" placeholder="Your Email" style="margin-top:15px; border-color:var(--primary);" value="${currentUserData ? currentUserData.email : ''}">
-                    <input type="text" id="vipToolNameInput" class="input-box" placeholder="VIP Tool Name" readonly style="margin-top:15px; border-color:var(--primary); background:#001a22;" value="${t.title}">
+                    <input type="text" id="vipUserName" class="input-box" placeholder="Your Full Name" style="margin-top:25px; border-color:var(--primary);" value="${currentUserData ? escapeHtml(currentUserData.name) : ''}">
+                    <input type="email" id="vipUserEmail" class="input-box" placeholder="Your Email" style="margin-top:15px; border-color:var(--primary);" value="${currentUserData ? escapeHtml(currentUserData.email) : ''}">
+                    <input type="text" id="vipToolNameInput" class="input-box" placeholder="VIP Tool Name" readonly style="margin-top:15px; border-color:var(--primary); background:#001a22;" value="${escapeHtml(t.title)}">
                     <input type="text" id="vipHackNameInput" class="input-box" placeholder="Enter Hack / Game Name" style="margin-top:15px; border-color:var(--primary);">
                     <input type="file" id="ssInput" accept="image/*" style="margin-top:15px; padding:20px; border-width:2px; background:#000a0f;">
                     <div class="btn-row"><button class="btn-modal btn-back" onclick="nextStep(3)">BACK</button><button class="btn-modal btn-next" onclick="uploadSS()">${gTxtUpload}</button></div>
@@ -2113,7 +2153,12 @@
                 });
             };
             if(selectedTool.activationCode && codeEntered === selectedTool.activationCode) {
-                await logAttempt(true); return executeLaunch();
+                await logAttempt(true);
+                db.collection('website_analytics').add({
+                    type: 'vip_click',
+                    timestamp: firebase.firestore.Timestamp.now()
+                });
+                return executeLaunch();
             }
             try {
                 const snapshot = await db.collection('vip_keys').where('code', '==', codeEntered).get();
@@ -2121,7 +2166,12 @@
                 let validKey = null; snapshot.forEach(doc => { validKey = doc.data(); });
                 if(validKey.toolId !== 'ALL' && validKey.toolId !== selectedTool.id) { await logAttempt(false); return showToast("ACCESS DENIED: Key not valid for this tool."); }
                 if(validKey.expiresAt !== 'Lifetime' && Date.now() > validKey.expiresAt) { await logAttempt(false); return showToast("ACCESS DENIED: This VIP Key has Expired."); }
-                await logAttempt(true); executeLaunch();
+                await logAttempt(true);
+                db.collection('website_analytics').add({
+                    type: 'vip_click',
+                    timestamp: firebase.firestore.Timestamp.now()
+                });
+                executeLaunch();
             } catch(e) { showToast("System Error verifying key."); }
         }
 
@@ -2143,8 +2193,8 @@
                     let pValue = selectedTool.price ? parseInt(selectedTool.price) : 0;
                     if(activeVipOffers[selectedTool.id]) pValue = parseInt(activeVipOffers[selectedTool.id].discountPrice);
                     await db.collection('payment_proofs').add({
-                        userId: auth.currentUser.uid, userName: userName, userEmail: userEmail, toolName: toolName, toolId: selectedTool.id,
-                        userHackName: hackName, imageUrl: reader.result, timestamp: Date.now(), status: 'Pending',
+                        userId: auth.currentUser.uid, userName: escapeHtml(userName), userEmail: userEmail, toolName: escapeHtml(toolName), toolId: selectedTool.id,
+                        userHackName: escapeHtml(hackName), imageUrl: reader.result, timestamp: Date.now(), status: 'Pending',
                         price: `PKR ${pValue}`, paymentMethod: 'Manual Transfer', generatedKey: '', expiresAt: ''
                     });
                     nextStep(5); document.getElementById('vipUserName').value = ""; document.getElementById('vipUserEmail').value = ""; document.getElementById('vipHackNameInput').value = "";
@@ -2169,13 +2219,13 @@
                     let keyHtml = '';
                     if(d.status === 'Approved' && d.generatedKey) {
                         let finalKeyShow = isExpired ? "KEY_REVOKED" : d.generatedKey;
-                        keyHtml = `<div class="status-key-box"><div><div style="font-size:11px; color:#aaa; margin-bottom:4px;">Your Activation Key</div><div class="status-key-text" style="${isExpired ? 'color:#ff4444;' : ''}">${finalKeyShow}</div></div>${!isExpired ? `<button class="copy-btn" onclick="copyToClipboard('${d.generatedKey}', 'VIP Key Copied!')"><i class="fa fa-copy"></i> COPY</button>` : ''}</div>`;
+                        keyHtml = `<div class="status-key-box"><div><div style="font-size:11px; color:#aaa; margin-bottom:4px;">Your Activation Key</div><div class="status-key-text" style="${isExpired ? 'color:#ff4444;' : ''}">${finalKeyShow}</div></div>${!isExpired ? `<button class="copy-btn" onclick="copyToClipboard('${d.generatedKey.replace(/'/g, "\\'")}', 'VIP Key Copied!')"><i class="fa fa-copy"></i> COPY</button>` : ''}</div>`;
                     }
                     let paymentMethodHtml = d.paymentMethod === 'Wallet' ? '<span style="color:var(--wallet-blue); font-size:11px; margin-left:10px;"><i class="fa fa-wallet"></i> Wallet Purchase</span>' : '';
                     container.innerHTML += `
                         <div class="status-purchase-card" style="border-left-color: ${d.status === 'Rejected' ? 'var(--danger-red)' : (d.status === 'Approved' ? 'var(--success-green)' : 'var(--pending-orange)')}">
-                            <div class="status-header-row"><div class="status-tool-title"><i class="fa fa-gem" style="color:var(--vip-gold); margin-right:8px;"></i> ${d.toolName} ${paymentMethodHtml}</div><div class="st-badge ${badgeClass}">${badgeText}</div></div>
-                            <div style="color:#aaa; font-size:12px; margin-bottom:10px;">Hack: <strong style="color:#fff;">${d.userHackName}</strong></div>
+                            <div class="status-header-row"><div class="status-tool-title"><i class="fa fa-gem" style="color:var(--vip-gold); margin-right:8px;"></i> ${escapeHtml(d.toolName)} ${paymentMethodHtml}</div><div class="st-badge ${badgeClass}">${badgeText}</div></div>
+                            <div style="color:#aaa; font-size:12px; margin-bottom:10px;">Hack: <strong style="color:#fff;">${escapeHtml(d.userHackName)}</strong></div>
                             <div class="status-info-row"><div>Date: <strong>${new Date(d.timestamp).toLocaleDateString()}</strong></div><div>Time: <strong>${new Date(d.timestamp).toLocaleTimeString()}</strong></div><div>Price: <strong>${d.price || 'Pending'}</strong></div><div>Valid Until: <strong>${expiryTextHtml}</strong></div></div>
                             ${keyHtml}
                         </div>
@@ -2192,13 +2242,13 @@
                     const d = doc.data();
                     container.innerHTML += `
                         <div class="vip-direct-card">
-                            <div class="vd-title-row"><span class="vd-title"><i class="fa fa-crown"></i> ${d.toolName}</span><span style="color:var(--success-green); font-weight:bold; font-size:12px;"><i class="fa fa-check-circle"></i> ACTIVE</span></div>
+                            <div class="vd-title-row"><span class="vd-title"><i class="fa fa-crown"></i> ${escapeHtml(d.toolName)}</span><span style="color:var(--success-green); font-weight:bold; font-size:12px;"><i class="fa fa-check-circle"></i> ACTIVE</span></div>
                             <div class="vd-grid">
-                                <div class="vd-item"><span class="vd-label">Assigned To</span><span class="vd-value">${d.userName}</span></div>
-                                <div class="vd-item"><span class="vd-label">Login Email</span><span class="vd-value">${d.userEmail || 'N/A'}</span></div>
-                                <div class="vd-item"><span class="vd-label">Access Password / Key</span><span class="vd-value highlight">${d.accessKey}</span></div>
-                                <div class="vd-item"><span class="vd-label">Duration</span><span class="vd-value" style="color:var(--vip-gold);">${d.duration || 'Lifetime Access'}</span></div>
-                                <div class="vd-item"><span class="vd-label">Price Paid</span><span class="vd-value" style="color:var(--success-green);">${d.price || 'Admin Assigned'}</span></div>
+                                <div class="vd-item"><span class="vd-label">Assigned To</span><span class="vd-value">${escapeHtml(d.userName)}</span></div>
+                                <div class="vd-item"><span class="vd-label">Login Email</span><span class="vd-value">${escapeHtml(d.userEmail) || 'N/A'}</span></div>
+                                <div class="vd-item"><span class="vd-label">Access Password / Key</span><span class="vd-value highlight">${escapeHtml(d.accessKey)}</span></div>
+                                <div class="vd-item"><span class="vd-label">Duration</span><span class="vd-value" style="color:var(--vip-gold);">${escapeHtml(d.duration) || 'Lifetime Access'}</span></div>
+                                <div class="vd-item"><span class="vd-label">Price Paid</span><span class="vd-value" style="color:var(--success-green);">${escapeHtml(d.price) || 'Admin Assigned'}</span></div>
                                 <div class="vd-item"><span class="vd-label">Date Assigned</span><span class="vd-value">${new Date(d.timestamp).toLocaleDateString()}</span></div>
                             </div>
                             <button class="btn" style="margin-top:20px; padding:10px;" onclick="copyToClipboard('${d.accessKey}', 'Access Credential Copied!')"><i class="fa fa-copy"></i> COPY CREDENTIALS</button>
@@ -2223,7 +2273,7 @@
                 const imagesHtml = (item.images && item.images.length > 0) ? 
                     item.images.map(url => `<img src="${url}" alt="Toolkit Image" loading="eager" decoding="sync" onerror="this.style.display='none'">`).join('') 
                     : '';
-                const desc = item.description || 'No description provided.';
+                const desc = escapeHtml(item.description) || 'No description provided.';
                 const downloadUrl = item.fileUrl || item.link;
                 const isDownload = !!item.fileUrl;
                 const btnHtml = downloadUrl ? 
@@ -2231,7 +2281,7 @@
                     : '';
                 container.innerHTML += `
                     <div class="toolkit-item">
-                        <div class="toolkit-item-title">${item.name}</div>
+                        <div class="toolkit-item-title">${escapeHtml(item.name)}</div>
                         ${imagesHtml ? `<div class="toolkit-images">${imagesHtml}</div>` : ''}
                         <div class="toolkit-item-desc pre-wrap-text">${desc}</div>
                         ${btnHtml}
@@ -2256,7 +2306,7 @@
             btn.innerText = "PROCESSING...";
             btn.disabled = true;
             try {
-                await db.collection('user_reports').add({ userId: auth.currentUser.uid, type: colTitle, name: name, email: email, title: title, desc: desc, status: 'Pending', timestamp: Date.now(), read: false });
+                await db.collection('user_reports').add({ userId: auth.currentUser.uid, type: colTitle, name: escapeHtml(name), email: email, title: escapeHtml(title), desc: escapeHtml(desc), status: 'Pending', timestamp: Date.now(), read: false });
                 const modalText = type === 'bug' ? dialogTexts.bugReport : dialogTexts.toolRequest;
                 showTransactionSuccessModal(modalText.title, modalText.desc);
                 if(type === 'bug') { document.getElementById('bugTitle').value = ""; document.getElementById('bugDesc').value = ""; } else { document.getElementById('reqToolName').value = ""; document.getElementById('reqDesc').value = ""; }
@@ -2280,9 +2330,9 @@
                     let icon = d.type === 'Bug Report' ? '<i class="fa fa-bug" style="color:var(--danger-red);"></i>' : '<i class="fa fa-plus-circle" style="color:var(--success-green);"></i>';
                     container.innerHTML += `
                         <div class="status-purchase-card" style="border-left-color: ${d.type === 'Bug Report' ? 'var(--danger-red)' : 'var(--success-green)'};">
-                            <div class="status-header-row"><div class="status-tool-title">${icon} ${d.type}</div><div class="st-badge ${badgeClass}">${badgeText}</div></div>
-                            <div style="font-family:'Rajdhani'; font-size:18px; color:white; margin-bottom:5px;">${d.title}</div>
-                            <div class="pre-wrap-text" style="color:#aaa; font-size:13px; background:#000; padding:10px; border-radius:8px; margin-bottom:15px;">"${d.desc}"</div>
+                            <div class="status-header-row"><div class="status-tool-title">${icon} ${escapeHtml(d.type)}</div><div class="st-badge ${badgeClass}">${badgeText}</div></div>
+                            <div style="font-family:'Rajdhani'; font-size:18px; color:white; margin-bottom:5px;">${escapeHtml(d.title)}</div>
+                            <div class="pre-wrap-text" style="color:#aaa; font-size:13px; background:#000; padding:10px; border-radius:8px; margin-bottom:15px;">"${escapeHtml(d.desc)}"</div>
                             <div class="status-info-row"><div>Submitted: <strong>${new Date(d.timestamp).toLocaleDateString()}</strong></div><div>Time: <strong>${new Date(d.timestamp).toLocaleTimeString()}</strong></div></div>
                         </div>`;
                 });
@@ -2302,7 +2352,7 @@
                         hasItem = true;
                         if(!firstNotifLoad && Date.now() - d.timestamp < 10000) { showToast("ALERT: " + d.title); playNotifSound(); showNativeNotif(d.title, d.body); }
                         if(Date.now() - d.timestamp < 24*60*60*1000) count++;
-                        list.innerHTML += `<div class="notif-item"><div class="notif-title"><i class="fa fa-bell" style="margin-right:8px;"></i> ${d.title}</div><div class="notif-body pre-wrap-text">${d.body}</div><div style="font-size:10px; color:#666; margin-top:10px;">${new Date(d.timestamp).toLocaleString()}</div></div>`;
+                        list.innerHTML += `<div class="notif-item"><div class="notif-title"><i class="fa fa-bell" style="margin-right:8px;"></i> ${escapeHtml(d.title)}</div><div class="notif-body pre-wrap-text">${escapeHtml(d.body)}</div><div style="font-size:10px; color:#666; margin-top:10px;">${new Date(d.timestamp).toLocaleString()}</div></div>`;
                     }
                 });
                 firstNotifLoad = false;
@@ -2350,7 +2400,7 @@
                 snap.forEach(doc => {
                     const m = doc.data();
                     let extClass = m.isAutoReply ? 'system-reply' : (m.sender==='user'?'sent':'received');
-                    body.innerHTML += `<div class="msg ${extClass}">${m.text}</div>`;
+                    body.innerHTML += `<div class="msg ${extClass}">${escapeHtml(m.text)}</div>`;
                     if (m.sender === 'admin' && m.time > chatLastReadTime && !m.isAutoReply) {
                         adminUnreadCount++;
                     }
@@ -2377,8 +2427,8 @@
         async function sendMessage() {
             const input = document.getElementById('chatInput'); const msg = input.value.trim(); if(!msg) return; input.value = ''; const uid = auth.currentUser.uid;
             try {
-                await db.collection('chats').doc(uid).set({ lastActive: Date.now(), name: currentUserData ? currentUserData.name : "User", email: currentUserData ? currentUserData.email : "", readByAdmin: false }, { merge: true });
-                await db.collection('chats').doc(uid).collection('messages').add({ text: msg, sender: 'user', time: Date.now() });
+                await db.collection('chats').doc(uid).set({ lastActive: Date.now(), name: currentUserData ? escapeHtml(currentUserData.name) : "User", email: currentUserData ? currentUserData.email : "", readByAdmin: false }, { merge: true });
+                await db.collection('chats').doc(uid).collection('messages').add({ text: escapeHtml(msg), sender: 'user', time: Date.now() });
                 if(!window.adminIsOnline) {
                     setTimeout(async () => {
                         await db.collection('chats').doc(uid).collection('messages').add({
@@ -2417,8 +2467,8 @@
             if (messageQueue.length === 0) return;
             const msg = messageQueue.shift();
             currentMessageId = msg.id;
-            document.getElementById('adminMsgTitle').innerHTML = `<i class="fa fa-bell"></i> ${msg.title || '📢 ADMIN MESSAGE'}`;
-            document.getElementById('adminMsgBody').innerHTML = `<div class="pre-wrap-text">${msg.body}</div>`;
+            document.getElementById('adminMsgTitle').innerHTML = `<i class="fa fa-bell"></i> ${escapeHtml(msg.title) || '📢 ADMIN MESSAGE'}`;
+            document.getElementById('adminMsgBody').innerHTML = `<div class="pre-wrap-text">${escapeHtml(msg.body)}</div>`;
             document.getElementById('adminMessageModal').style.display = 'flex';
             playNotifSound();
             let secondsLeft = 5;
@@ -2453,7 +2503,7 @@
         }
 
         // ============================================================================
-        // 14. UNREAD SUMMARY MODAL (EXPANDED TO INCLUDE ALL SECTIONS)
+        // 14. UNREAD SUMMARY MODAL (EXPANDED TO INCLUDE ALL SECTIONS – dead code removed)
         // ============================================================================
         let summaryTimer = null;
 
@@ -2472,12 +2522,12 @@
             const notifSnapshot = await db.collection('notifications').where('target', 'in', [uid, 'ALL']).get();
             notifSnapshot.forEach(doc => {
                 const d = doc.data();
-                if (d.seen !== true) items.push({ type: 'notification', title: d.title, body: d.body, id: doc.id, docRef: doc.ref, navigateTo: null });
+                if (d.seen !== true) items.push({ type: 'notification', title: escapeHtml(d.title), body: escapeHtml(d.body), id: doc.id, docRef: doc.ref, navigateTo: null });
             });
             const adminMsgSnapshot = await db.collection('admin_user_messages').where('userId', '==', uid).get();
             adminMsgSnapshot.forEach(doc => {
                 const d = doc.data();
-                if (d.seen !== true) items.push({ type: 'admin_message', title: d.title || '📢 Admin Message', body: d.body, id: doc.id, docRef: doc.ref, navigateTo: null });
+                if (d.seen !== true) items.push({ type: 'admin_message', title: escapeHtml(d.title) || '📢 Admin Message', body: escapeHtml(d.body), id: doc.id, docRef: doc.ref, navigateTo: null });
             });
             const chatSnap = await db.collection('chats').doc(uid).collection('messages')
                 .where('sender', '==', 'admin')
@@ -2486,7 +2536,7 @@
             if (!chatSnap.empty) {
                 const unreadChats = [];
                 chatSnap.forEach(doc => {
-                    if (doc.data().time > chatLastReadTime) unreadChats.push(doc.data().text.substring(0, 50) + '…');
+                    if (doc.data().time > chatLastReadTime) unreadChats.push(escapeHtml(doc.data().text.substring(0, 50)) + '…');
                 });
                 if (unreadChats.length > 0) {
                     items.push({ type: 'chat', title: `Unread Messages (${unreadChats.length})`, body: unreadChats.join('\n'), id: 'chat_summary', navigateTo: () => toggleChat() });
@@ -2515,23 +2565,12 @@
             }
 
             // Section updates since last read
-            // Daily news
             const newsSnap = await db.collection('daily_news').orderBy('timestamp', 'desc').limit(5).get();
             let newNews = 0;
             newsSnap.forEach(doc => { if (doc.data().timestamp > lastRead) newNews++; });
             if (newNews > 0) items.push({ type: 'section', title: '📰 Daily News', body: `${newNews} new article(s)`, navigateTo: () => showSection('news', document.getElementById('navNews')) });
 
-            // App settings main changed
-            const mainDoc = await db.collection('app_settings').doc('main').get();
-            if (mainDoc.exists && mainDoc.updateTime && mainDoc.updateTime.toMillis() > lastRead) {
-                items.push({ type: 'section', title: '⚙️ System Settings Updated', body: 'Admin changed key configurations.', navigateTo: () => showSection('status', document.querySelector('.btn-unified')) });
-            }
-
-            // Toolkit
-            const toolkitDoc = await db.collection('app_settings').doc('toolkit').get();
-            if (toolkitDoc.exists && toolkitDoc.updateTime && toolkitDoc.updateTime.toMillis() > lastRead) {
-                items.push({ type: 'section', title: '🛠️ Toolkit Updated', body: 'New downloads available.', navigateTo: () => showSection('toolkits', document.getElementById('navToolkits')) });
-            }
+            // Toolkit – removed dead updateTime check
 
             // VIP purchase status changes (Approved/Rejected)
             const proofSnap = await db.collection('payment_proofs').where('userId', '==', uid).get();
@@ -2585,8 +2624,8 @@
                         <i class="fa ${item.type==='notification'?'fa-bell': (item.type==='admin_message'?'fa-envelope': (item.type==='chat'?'fa-comments':'fa-info-circle'))}"></i>
                     </div>
                     <div style="flex:1;">
-                        <div class="unread-title" style="color:${color}; font-size:16px;">${item.title}</div>
-                        <div class="unread-body pre-wrap-text">${item.body}</div>
+                        <div class="unread-title" style="color:${color}; font-size:16px;">${escapeHtml(item.title)}</div>
+                        <div class="unread-body pre-wrap-text">${escapeHtml(item.body)}</div>
                     </div>
                 </div>`;
                 div.onclick = async (e) => {
@@ -2630,15 +2669,15 @@
         // ============================================================================
         function showToast(msg) {
             const toast = document.getElementById('toast');
-            toast.innerText = msg;
+            toast.innerText = escapeHtml(msg);
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
         function showTransactionSuccessModal(amount, desc) {
             const modal = document.getElementById('transactionSuccessModal');
-            document.getElementById('tsAmountDisplay').innerHTML = amount;
-            document.getElementById('tsDescDisplay').innerHTML = desc;
+            document.getElementById('tsAmountDisplay').innerHTML = escapeHtml(amount);
+            document.getElementById('tsDescDisplay').innerHTML = escapeHtml(desc);
             modal.style.display = 'flex';
             setTimeout(() => { closeTransactionModal(); }, 5000);
         }
@@ -2657,8 +2696,7 @@
                 }
                 snap.forEach(doc => {
                     const d = doc.data();
-                    // Accept multiple field names for description and image
-                    const descText = d.description || d.desc || d.body || '';
+                    const descText = escapeHtml(d.description || d.desc || d.body || '');
                     const imgSrc = d.imageUrl || d.image || d.img || d.photo || '';
                     const imgHtml = imgSrc
                         ? `<div class="news-img-wrap"><img src="${imgSrc}" class="news-img" alt="News Image" onerror="this.parentElement.style.display='none'"></div>`
@@ -2667,7 +2705,7 @@
                         <div class="news-card">
                             ${imgHtml}
                             <div class="news-body">
-                                <h3 class="news-title">${d.title}</h3>
+                                <h3 class="news-title">${escapeHtml(d.title)}</h3>
                                 <div class="news-desc pre-wrap-text">${descText}</div>
                                 <span class="news-date"><i class="fa fa-calendar-alt"></i> ${new Date(d.timestamp).toLocaleString()}</span>
                             </div>
@@ -2679,8 +2717,8 @@
 
         function showGlobalAd(title, desc, img, link, timer) {
             const adDiv = document.getElementById('globalPopupAd');
-            document.getElementById('adTitle').innerText = title;
-            document.getElementById('adDesc').innerText = desc;
+            document.getElementById('adTitle').innerText = escapeHtml(title);
+            document.getElementById('adDesc').innerText = escapeHtml(desc);
             document.getElementById('adImg').src = img;
             window.adLink = link;
             let seconds = timer || 5;
@@ -2709,7 +2747,7 @@
             db.collection('demo_systems').doc(id).get().then(doc => {
                 if(doc.exists) {
                     const d = doc.data();
-                    document.getElementById('demoTitleDisplay').innerHTML = d.title;
+                    document.getElementById('demoTitleDisplay').innerHTML = escapeHtml(d.title);
                     const videoContainer = document.getElementById('demoVideoContainer');
                     if (d.videoUrl) {
                         if (d.description === undefined || d.description === null) d.description = '';
@@ -2717,7 +2755,8 @@
                     } else {
                         videoContainer.innerHTML = '<div style="display:flex; align-items:center; justify-content:center; height:100%; color:#555; background:#111;">No preview video</div>';
                     }
-                    document.getElementById('demoDescDisplay').innerHTML = (d.description || '').replace(/\n/g, '<br>');
+                    videoContainer.style.aspectRatio = d.videoRatio || '9/16';
+                    document.getElementById('demoDescDisplay').innerHTML = escapeHtml(d.description).replace(/\n/g, '<br>');
                     document.getElementById('demoSystemModal').style.display = 'flex';
                 }
             }).catch(err => console.error(err));
@@ -2750,6 +2789,7 @@
         window.closeUnreadSummaryModal = closeUnreadSummaryModal;
         window.toggleChat = toggleChat;
         window.updateSelectedToolPrice = updateSelectedToolPrice;
+        window.trackFreeDownload = trackFreeDownload;
     </script>
 </body>
 </html>
