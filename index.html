@@ -715,6 +715,18 @@
         </div>
     </div>
 
+    <!-- NEW ERROR INFO MODAL -->
+    <div id="errorInfoModal" class="transaction-modal-overlay">
+        <div class="transaction-modal-card" style="border:2px solid var(--danger-red); box-shadow:0 0 50px rgba(255,0,0,0.4);">
+            <i class="fa fa-times close-icon-abs" onclick="closeErrorModal()"></i>
+            <i class="fa fa-exclamation-triangle tm-icon" style="color:var(--danger-red); text-shadow:0 0 30px var(--danger-red); animation:none;"></i>
+            <h2 class="tm-title" id="errorTitle">ACCESS DENIED</h2>
+            <div class="tm-desc" id="errorDesc" style="color:#ff6666;"></div>
+            <div id="errorTimer" class="timer-text">Auto‑close in 5 seconds</div>
+            <button class="tm-btn" style="background:var(--danger-red); color:white;" onclick="closeErrorModal()">CLOSE</button>
+        </div>
+    </div>
+
     <!-- MAIN DASHBOARD -->
     <div id="dashboard">
         <!-- Sidebar Navigation (unchanged) -->
@@ -1036,6 +1048,8 @@
         window.shownNotificationHashes = new Map();
         window.pendingNotifications = [];
         let liveUnreadTimer = null;
+        window.liveSummaryInterval = null;
+        let summaryTimer = null;
 
         // ============================================================================
         // 2. BACKGROUND ANIMATION
@@ -1161,14 +1175,19 @@
         // ============================================================================
         // 4. REAL-TIME DATA SYNCHRONIZATION (INJECTOR & CONFIG)
         // ============================================================================
+        let configFirstLoad = true;
+        let toolkitFirstLoad = true;
+
         function listenToAppConfig() {
             db.collection('app_settings').doc('main').onSnapshot(doc => {
                 if(!doc.exists) return;
                 const data = doc.data();
                 let changed = false;
                 // Social links change detection
-                if (socialLinks.grp !== data.linkTelegramGrp || socialLinks.chnl !== data.linkTelegramChnl || socialLinks.wa !== data.linkWhatsapp || supportEmailCopy !== data.supportEmail) {
-                    changed = true;
+                if (!configFirstLoad) {
+                    if (socialLinks.grp !== data.linkTelegramGrp || socialLinks.chnl !== data.linkTelegramChnl || socialLinks.wa !== data.linkWhatsapp || supportEmailCopy !== data.supportEmail) {
+                        changed = true;
+                    }
                 }
                 socialLinks.grp = data.linkTelegramGrp;
                 socialLinks.chnl = data.linkTelegramChnl;
@@ -1227,9 +1246,10 @@
                 updateDynamicGridStyle();
                 if(data.checkinAmount) window.CHECKIN_AMOUNT = data.checkinAmount;
                 if(data.referralAmount) window.REFERRAL_AMOUNT = data.referralAmount;
-                if (changed) {
+                if (changed && !configFirstLoad) {
                     dispatchNotification("🔗 Contact Links Updated", "New community links available.");
                 }
+                configFirstLoad = false;
             });
 
             // Toolkit doc change detection
@@ -1237,7 +1257,10 @@
                 if(doc.exists) {
                     const toolkitData = doc.data();
                     renderToolkitItems(toolkitData.buttons || []);
-                    dispatchNotification("🔧 Toolkit Page Updated", "Download options refreshed.");
+                    if (!toolkitFirstLoad) {
+                        dispatchNotification("🔧 Toolkit Page Updated", "Download options refreshed.");
+                    }
+                    toolkitFirstLoad = false;
                 }
             });
 
@@ -1336,13 +1359,8 @@
                 });
             });
 
-            // Load dynamic Toolkit items
-            db.collection('app_settings').doc('toolkit').onSnapshot(doc => {
-                if(doc.exists) {
-                    const toolkitData = doc.data();
-                    renderToolkitItems(toolkitData.buttons || []);
-                }
-            });
+            // NOTE: The duplicate toolkit listener has been removed to avoid double rendering.
+            // The first listener (with toolkitFirstLoad) already handles both rendering and notifications.
         }
 
         // ============================================================================
@@ -1400,6 +1418,7 @@
         }
 
         function proceedAfterSplash() {
+            splashCompleted = true;
             requestPushPermission();
             if (loggedInUser) {
                 db.collection('website_analytics').add({
@@ -1488,6 +1507,8 @@
                 }
                 await db.collection('wallets').doc(res.user.uid).set({ balance: 0, totalEarned: 0, totalReferrals: 0, totalCheckins: 0, userId: res.user.uid });
                 showToast("Registration Successful!");
+                splashCompleted = false;
+                checkAppReady();
             } catch(err) { showToast("ERROR: " + err.message); }
         }
 
@@ -1498,11 +1519,13 @@
             try {
                 await auth.signInWithEmailAndPassword(e, p);
                 showToast("Access Granted.");
+                splashCompleted = false;
+                checkAppReady();
             } catch(err) {
                 if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
-                    showToast("❌ Incorrect email or password. Please try again.");
+                    showErrorModal("ACCESS DENIED", "❌ Incorrect email or password. Please try again.");
                 } else {
-                    showToast("DENIED: " + err.message);
+                    showErrorModal("ACCESS DENIED", err.message);
                 }
             }
         }
@@ -1810,6 +1833,7 @@
                     });
                     showTransactionSuccessModal(dialogTexts.sendMoney.title, dialogTexts.sendMoney.desc);
                 }
+                dispatchNotification("💸 Payment Initiated", `You sent PKR ${amount} to ${escapeHtml(recipientName)}. Pending admin approval.`);
                 document.getElementById('sendAmount').value = ''; document.getElementById('sendNote').value = ''; document.getElementById('recipientIdInput').value = '';
             } catch(err) {
                 showToast("ERROR: " + err.message);
@@ -2435,6 +2459,7 @@
                 await db.collection('user_reports').add({ userId: auth.currentUser.uid, type: colTitle, name: escapeHtml(name), email: email, title: escapeHtml(title), desc: escapeHtml(desc), status: 'Pending', timestamp: Date.now(), read: false });
                 const modalText = type === 'bug' ? dialogTexts.bugReport : dialogTexts.toolRequest;
                 showTransactionSuccessModal(modalText.title, modalText.desc);
+                dispatchNotification("📋 Report Submitted", `Your ${modalText.title} has been sent to Admin.`);
                 if(type === 'bug') { document.getElementById('bugTitle').value = ""; document.getElementById('bugDesc').value = ""; } else { document.getElementById('reqToolName').value = ""; document.getElementById('reqDesc').value = ""; }
                 showSection('status', document.querySelectorAll('.btn-unified')[2]);
             } catch (error) {
@@ -2475,7 +2500,7 @@
                     if(d.status === 'Approved') { badgeClass = 'approved'; badgeText = 'RESOLVED'; } else if(d.status === 'Rejected') { badgeClass = 'rejected'; badgeText = 'REJECTED'; }
                     let icon = d.type === 'Bug Report' ? '<i class="fa fa-bug" style="color:var(--danger-red);"></i>' : '<i class="fa fa-plus-circle" style="color:var(--success-green);"></i>';
                     container.innerHTML += `
-                        <div class="status-purchase-card" style="border-left-color: ${d.type === 'Bug Report' ? 'var(--danger-red)' : 'var(--success-green)'};">
+                        <div class="status-purchase-card" style="border-left-color: ${d.type === 'Bug Report' ? 'var(--danger-red)' : 'var(--success-green)'}">
                             <div class="status-header-row"><div class="status-tool-title">${icon} ${escapeHtml(d.type)}</div><div class="st-badge ${badgeClass}">${badgeText}</div></div>
                             <div style="font-family:'Rajdhani'; font-size:18px; color:white; margin-bottom:5px;">${escapeHtml(d.title)}</div>
                             <div class="pre-wrap-text" style="color:#aaa; font-size:13px; background:#000; padding:10px; border-radius:8px; margin-bottom:15px;">"${escapeHtml(d.desc)}"</div>
@@ -2677,7 +2702,156 @@
         }
 
         // ============================================================================
-        // 15. LIVE UNREAD SUMMARY POPUP
+        // 15. UNREAD SUMMARY FUNCTIONS
+        // ============================================================================
+        function getLastReadTimestamp() {
+            return parseInt(localStorage.getItem('mh_lastReadTimestamp') || '0');
+        }
+
+        function setLastReadTimestamp(ts) {
+            localStorage.setItem('mh_lastReadTimestamp', ts);
+        }
+
+        async function checkAndShowUnreadSummary(uid) {
+            const lastRead = getLastReadTimestamp();
+            const items = [];
+
+            // Existing notifications and admin messages
+            const notifSnapshot = await db.collection('notifications').where('target', 'in', [uid, 'ALL']).get();
+            notifSnapshot.forEach(doc => {
+                const d = doc.data();
+                if (d.seen !== true) items.push({ type: 'notification', title: escapeHtml(d.title), body: escapeHtml(d.body), id: doc.id, docRef: doc.ref, navigateTo: null });
+            });
+            const adminMsgSnapshot = await db.collection('admin_user_messages').where('userId', '==', uid).get();
+            adminMsgSnapshot.forEach(doc => {
+                const d = doc.data();
+                if (d.seen !== true) items.push({ type: 'admin_message', title: escapeHtml(d.title) || '📢 Admin Message', body: escapeHtml(d.body), id: doc.id, docRef: doc.ref, navigateTo: null });
+            });
+            const chatSnap = await db.collection('chats').doc(uid).collection('messages')
+                .where('sender', '==', 'admin')
+                .where('isAutoReply', '==', false)
+                .get();
+            if (!chatSnap.empty) {
+                const unreadChats = [];
+                chatSnap.forEach(doc => {
+                    if (doc.data().time > chatLastReadTime) unreadChats.push(escapeHtml(doc.data().text.substring(0, 50)) + '…');
+                });
+                if (unreadChats.length > 0) {
+                    items.push({ type: 'chat', title: `Unread Messages (${unreadChats.length})`, body: unreadChats.join('\n'), id: 'chat_summary', navigateTo: () => toggleChat() });
+                }
+            }
+
+            // Check transactions (send money) since lastRead
+            const txSnap = await db.collection('transactions').where('userId', '==', uid).get();
+            const newTxCount = txSnap.docs.filter(doc => doc.data().timestamp > lastRead).length;
+            if (newTxCount > 0) {
+                items.push({ type: 'section', title: '💸 Transaction Update', body: `${newTxCount} new transaction(s).`, navigateTo: () => showSection('sendmoney', document.getElementById('navSendMoney')) });
+            }
+
+            // Check new referrals since lastRead
+            const refSnap = await db.collection('referrals').where('referrerUid', '==', uid).get();
+            const newRefCount = refSnap.docs.filter(doc => doc.data().timestamp > lastRead).length;
+            if (newRefCount > 0) {
+                items.push({ type: 'section', title: '👥 New Referral Earned', body: `${newRefCount} referral(s) since your last visit.`, navigateTo: () => showSection('earn', document.getElementById('navEarn')) });
+            }
+
+            // Check new check-ins since lastRead
+            const checkinSnap = await db.collection('checkins').where('userId', '==', uid).get();
+            const newCheckinCount = checkinSnap.docs.filter(doc => doc.data().timestamp > lastRead).length;
+            if (newCheckinCount > 0) {
+                items.push({ type: 'section', title: '📅 Daily Check-in', body: `${newCheckinCount} new check-in(s) recorded.`, navigateTo: () => showSection('earn', document.getElementById('navEarn')) });
+            }
+
+            // Daily news
+            const newsSnap = await db.collection('daily_news').orderBy('timestamp', 'desc').limit(5).get();
+            let newNews = 0;
+            newsSnap.forEach(doc => { if (doc.data().timestamp > lastRead) newNews++; });
+            if (newNews > 0) items.push({ type: 'section', title: '📰 Daily News', body: `${newNews} new article(s)`, navigateTo: () => showSection('news', document.getElementById('navNews')) });
+
+            // VIP purchase status changes (Approved/Rejected)
+            const proofSnap = await db.collection('payment_proofs').where('userId', '==', uid).get();
+            let proofUpdates = false;
+            proofSnap.forEach(doc => {
+                const d = doc.data();
+                if (d.timestamp > lastRead && d.status !== 'Pending') proofUpdates = true;
+            });
+            if (proofUpdates) items.push({ type: 'section', title: '💎 VIP Key Status Updated', body: 'Your purchase status has changed.', navigateTo: () => showSection('status', document.querySelectorAll('.btn-unified')[2]) });
+
+            // Vip Direct Access new entries
+            const directSnap = await db.collection('vip_direct_access').where('userId', '==', uid).get();
+            let newDirect = false;
+            directSnap.forEach(doc => { if (doc.data().timestamp > lastRead) newDirect = true; });
+            if (newDirect) items.push({ type: 'section', title: '🔐 New VIP Credentials Assigned', body: 'Admin has given you direct access.', navigateTo: () => showSection('status', document.querySelectorAll('.btn-unified')[2]) });
+
+            // Report/Request status changes
+            const reportSnap = await db.collection('user_reports').where('userId', '==', uid).get();
+            let reportChange = false;
+            reportSnap.forEach(doc => {
+                const d = doc.data();
+                if (d.timestamp > lastRead && d.status !== 'Pending') reportChange = true;
+            });
+            if (reportChange) items.push({ type: 'section', title: '📋 Report/Request Updated', body: 'Admin has reviewed your submission.', navigateTo: () => showSection('status', document.querySelectorAll('.btn-unified')[2]) });
+
+            // New VIP keys added
+            const vipKeySnap = await db.collection('vip_keys').get();
+            let newKeys = 0;
+            vipKeySnap.forEach(doc => { if (doc.data().timestamp > lastRead) newKeys++; });
+            if (newKeys > 0) items.push({ type: 'section', title: '🔑 New Activation Keys Created', body: `${newKeys} key(s) generated.`, navigateTo: null });
+
+            // New tools added
+            let newToolsCount = 0;
+            allFreeTools.forEach(t => { if (t.timestamp && t.timestamp > lastRead) newToolsCount++; });
+            allVipTools.forEach(t => { if (t.timestamp && t.timestamp > lastRead) newToolsCount++; });
+            if (newToolsCount > 0) items.push({ type: 'section', title: '🚀 New Tools Available', body: `${newToolsCount} tool(s) added.`, navigateTo: () => showSection('home', document.querySelector('.btn-unified')) });
+
+            if (items.length === 0) return;
+
+            const container = document.getElementById('unreadListContainer');
+            container.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'unread-item';
+                let color = 'var(--primary)';
+                if (item.type === 'notification') color = 'var(--primary)';
+                else if (item.type === 'admin_message') color = 'var(--vip-gold)';
+                else if (item.type === 'chat') color = 'var(--primary)';
+                div.innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; color:${color};">
+                        <i class="fa ${item.type==='notification'?'fa-bell': (item.type==='admin_message'?'fa-envelope': (item.type==='chat'?'fa-comments':'fa-info-circle'))}"></i>
+                    </div>
+                    <div style="flex:1;">
+                        <div class="unread-title" style="color:${color}; font-size:16px;">${escapeHtml(item.title)}</div>
+                        <div class="unread-body pre-wrap-text">${escapeHtml(item.body)}</div>
+                    </div>
+                </div>`;
+                div.onclick = async (e) => {
+                    e.stopPropagation();
+                    if (item.docRef) await item.docRef.update({ seen: true });
+                    if (item.navigateTo) item.navigateTo();
+                    closeUnreadSummaryModal(false);
+                };
+                container.appendChild(div);
+            });
+
+            document.getElementById('unreadSummaryModal').style.display = 'flex';
+            playNotifSound();
+            let secondsLeft = 5;
+            const timerEl = document.getElementById('unreadSummaryTimer');
+            timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
+            if (summaryTimer) clearInterval(summaryTimer);
+            summaryTimer = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft <= 0) {
+                    clearInterval(summaryTimer);
+                    summaryTimer = null;
+                    closeUnreadSummaryModal(true);
+                } else {
+                    timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
+                }
+            }, 1000);
+        }
+        // ============================================================================
+        // 16. LIVE UNREAD SUMMARY POPUP
         // ============================================================================
         function addToLiveUnread(title, body) {
             const modal = document.getElementById('unreadSummaryModal');
@@ -2698,18 +2872,27 @@
             if (modal.style.display !== 'flex') {
                 modal.style.display = 'flex';
                 if (liveUnreadTimer) clearTimeout(liveUnreadTimer);
+                if (window.liveSummaryInterval) clearInterval(window.liveSummaryInterval);
                 liveUnreadTimer = setTimeout(() => {
                     modal.style.display = 'none';
                     liveUnreadTimer = null;
+                    if (window.liveSummaryInterval) {
+                        clearInterval(window.liveSummaryInterval);
+                        window.liveSummaryInterval = null;
+                    }
                 }, 5000);
                 let secondsLeft = 5;
                 const timerEl = document.getElementById('unreadSummaryTimer');
                 if (timerEl) {
                     timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
-                    const countdown = setInterval(() => {
+                    window.liveSummaryInterval = setInterval(() => {
                         secondsLeft--;
-                        if (secondsLeft <= 0) clearInterval(countdown);
-                        else timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
+                        if (secondsLeft <= 0) {
+                            clearInterval(window.liveSummaryInterval);
+                            window.liveSummaryInterval = null;
+                        } else {
+                            timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
+                        }
                     }, 1000);
                 }
             }
@@ -2722,6 +2905,14 @@
                 clearTimeout(liveUnreadTimer);
                 liveUnreadTimer = null;
             }
+            if (window.liveSummaryInterval) {
+                clearInterval(window.liveSummaryInterval);
+                window.liveSummaryInterval = null;
+            }
+            if (summaryTimer) {
+                clearInterval(summaryTimer);
+                summaryTimer = null;
+            }
             if (typeof originalCloseUnreadSummaryModal === 'function') {
                 originalCloseUnreadSummaryModal(autoClosed);
             } else {
@@ -2730,7 +2921,7 @@
         };
 
         // ============================================================================
-        // 16. UNIVERSAL NOTIFICATION DISPATCHER
+        // 17. UNIVERSAL NOTIFICATION DISPATCHER
         // ============================================================================
         function dispatchNotification(title, body, options = {}) {
             let hash = title + '|' + body;
@@ -2755,10 +2946,54 @@
             playNotifSound();
             showNativeNotif(title, body);
             addToLiveUnread(title, body);
+
+            // Persist to Firestore
+            const target = auth.currentUser ? auth.currentUser.uid : 'ALL';
+            db.collection('notifications').add({
+                target: target,
+                title: title,
+                body: body,
+                timestamp: Date.now(),
+                seen: false
+            }).catch(e => console.error);
         }
 
         // ============================================================================
-        // 17. REMAINING UTILITIES (toast, modal, news, ads, demo, sounds)
+        // 18. ERROR MODAL FUNCTIONS
+        // ============================================================================
+        let errorModalTimer = null;
+        function showErrorModal(title, message) {
+            const modal = document.getElementById('errorInfoModal');
+            document.getElementById('errorTitle').innerText = title;
+            document.getElementById('errorDesc').innerText = message;
+            modal.style.display = 'flex';
+            playNotifSound();
+            let secondsLeft = 5;
+            const timerEl = document.getElementById('errorTimer');
+            timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
+            if (errorModalTimer) clearInterval(errorModalTimer);
+            errorModalTimer = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft <= 0) {
+                    clearInterval(errorModalTimer);
+                    errorModalTimer = null;
+                    modal.style.display = 'none';
+                } else {
+                    timerEl.innerText = `Auto‑close in ${secondsLeft} seconds`;
+                }
+            }, 1000);
+        }
+
+        function closeErrorModal() {
+            if (errorModalTimer) {
+                clearInterval(errorModalTimer);
+                errorModalTimer = null;
+            }
+            document.getElementById('errorInfoModal').style.display = 'none';
+        }
+
+        // ============================================================================
+        // 19. REMAINING UTILITIES (toast, modal, news, ads, demo, sounds)
         // ============================================================================
         function showToast(msg) {
             const toast = document.getElementById('toast');
@@ -2894,6 +3129,8 @@
         window.updateSelectedToolPrice = updateSelectedToolPrice;
         window.trackFreeDownload = trackFreeDownload;
         window.dispatchNotification = dispatchNotification;
+        window.showErrorModal = showErrorModal;
+        window.closeErrorModal = closeErrorModal;
     </script>
 </body>
 </html>
