@@ -2427,23 +2427,23 @@
                 return;
             }
             items.forEach(item => {
-                // Limit images to first 3, using inline styles to ensure max-height:200px and object-fit:contain
+                // Images – unchanged logic, limited to 3, max-height:200px, object-fit:contain
                 const images = (item.images && Array.isArray(item.images)) ? item.images.slice(0, 3) : [];
-                const imagesHtml = images.length > 0 ? 
-                    images.map(url => `<img src="${url}" alt="Toolkit Image" loading="eager" decoding="sync" onerror="this.style.display='none'" style="max-height:200px; object-fit:contain;">`).join('') 
+                const imagesHtml = images.length > 0
+                    ? images.map(url => `<img src="${url}" alt="Image" loading="eager" decoding="sync" onerror="this.style.display='none'" style="max-height:200px; object-fit:contain;">`).join('')
                     : '';
+
+                // Description – ALWAYS shown, even if empty
                 const desc = escapeHtml(item.description) || 'No description provided.';
+
+                // Download button – uses fileUrl for uploaded files (download attribute), else link (opens in new tab)
                 let btnHtml = '';
-                const downloadUrl = item.fileUrl || item.link;
-                if (downloadUrl) {
-                    if (item.fileUrl) {
-                        // File download: use download attribute
-                        btnHtml = `<a href="${downloadUrl}" class="download-toolkit-btn" download>DOWNLOAD TOOLKIT</a>`;
-                    } else {
-                        // External link: open in new tab
-                        btnHtml = `<a href="${downloadUrl}" class="download-toolkit-btn" target="_blank" rel="noopener noreferrer">DOWNLOAD TOOLKIT</a>`;
-                    }
+                if (item.fileUrl && item.fileUrl.trim()) {
+                    btnHtml = `<a href="${item.fileUrl}" class="download-toolkit-btn" download>DOWNLOAD TOOLKIT</a>`;
+                } else if (item.link && item.link.trim()) {
+                    btnHtml = `<a href="${item.link}" class="download-toolkit-btn" target="_blank" rel="noopener noreferrer">DOWNLOAD TOOLKIT</a>`;
                 }
+
                 container.innerHTML += `
                     <div class="toolkit-item">
                         <div class="toolkit-item-title">${escapeHtml(item.name)}</div>
