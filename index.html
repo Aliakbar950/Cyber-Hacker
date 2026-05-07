@@ -2174,10 +2174,6 @@
         }
 
         function trackFreeDownload(link) {
-            db.collection('website_analytics').add({
-                type: 'free_click',
-                timestamp: firebase.firestore.Timestamp.now()
-            });
             window.location.href = link;
         }
 
@@ -2241,6 +2237,19 @@
         }
 
         function openToolModal(t) {
+            // Record analytics click immediately when any tool is opened
+            const toolId = t.id;
+            const isFreeTool = allFreeTools.some(f => f.id === toolId);
+            const isVipTool = allVipTools.some(v => v.id === toolId);
+            if (isVipTool && !isFreeTool) {
+                db.collection('website_analytics').add({ type: 'vip_click', timestamp: firebase.firestore.Timestamp.now() });
+            } else if (isFreeTool && !isVipTool) {
+                db.collection('website_analytics').add({ type: 'free_click', timestamp: firebase.firestore.Timestamp.now() });
+            } else if (isVipTool && isFreeTool) {
+                // Edge case: tool exists in both collections, treat as VIP click
+                db.collection('website_analytics').add({ type: 'vip_click', timestamp: firebase.firestore.Timestamp.now() });
+            }
+
             if (t.isWorking === false) {
                 const modal = document.getElementById('notifModal'); modal.style.display = 'flex';
                 document.getElementById('modalContentInner').innerHTML = `<i class="fa fa-times" onclick="closeModal()" style="position:absolute; right:25px; top:25px; color:#666; cursor:pointer; font-size:24px;"></i><i class="fa fa-exclamation-triangle" style="font-size:70px; color:var(--primary); margin-bottom:20px;"></i><h3 style="color:white; margin-bottom:15px; font-family:'Rajdhani'; font-size:32px; font-weight:900;">MAINTENANCE</h3><p style="color:#aaa; font-size:14px; line-height:1.6;">This tool is currently being updated.<br>Please try again later.</p>`;
@@ -2267,7 +2276,6 @@
             };
             if(selectedTool.activationCode && codeEntered === selectedTool.activationCode) {
                 await logAttempt(true);
-                db.collection('website_analytics').add({ type: 'vip_click', timestamp: firebase.firestore.Timestamp.now() });
                 return executeLaunch();
             }
             try {
@@ -2277,7 +2285,6 @@
                 if(validKey.toolId !== 'ALL' && validKey.toolId !== selectedTool.id) { await logAttempt(false); return showToast("ACCESS DENIED: Key not valid for this tool."); }
                 if(validKey.expiresAt !== 'Lifetime' && Date.now() > validKey.expiresAt) { await logAttempt(false); return showToast("ACCESS DENIED: This VIP Key has Expired."); }
                 await logAttempt(true);
-                db.collection('website_analytics').add({ type: 'vip_click', timestamp: firebase.firestore.Timestamp.now() });
                 executeLaunch();
             } catch(e) { showToast("System Error verifying key."); }
         }
