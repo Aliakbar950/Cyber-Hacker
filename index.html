@@ -2427,15 +2427,23 @@
                 return;
             }
             items.forEach(item => {
-                const imagesHtml = (item.images && item.images.length > 0) ? 
-                    item.images.map(url => `<img src="${url}" alt="Toolkit Image" loading="eager" decoding="sync" onerror="this.style.display='none'">`).join('') 
+                // Limit images to first 3, using inline styles to ensure max-height:200px and object-fit:contain
+                const images = (item.images && Array.isArray(item.images)) ? item.images.slice(0, 3) : [];
+                const imagesHtml = images.length > 0 ? 
+                    images.map(url => `<img src="${url}" alt="Toolkit Image" loading="eager" decoding="sync" onerror="this.style.display='none'" style="max-height:200px; object-fit:contain;">`).join('') 
                     : '';
                 const desc = escapeHtml(item.description) || 'No description provided.';
+                let btnHtml = '';
                 const downloadUrl = item.fileUrl || item.link;
-                const isDownload = !!item.fileUrl;
-                const btnHtml = downloadUrl ? 
-                    `<a href="${downloadUrl}" class="download-toolkit-btn" ${isDownload ? 'download' : ''} ${!isDownload ? `onclick="event.preventDefault(); window.location.href='${downloadUrl}'; return false;"` : ''}>DOWNLOAD TOOLKIT</a>` 
-                    : '';
+                if (downloadUrl) {
+                    if (item.fileUrl) {
+                        // File download: use download attribute
+                        btnHtml = `<a href="${downloadUrl}" class="download-toolkit-btn" download>DOWNLOAD TOOLKIT</a>`;
+                    } else {
+                        // External link: open in new tab
+                        btnHtml = `<a href="${downloadUrl}" class="download-toolkit-btn" target="_blank" rel="noopener noreferrer">DOWNLOAD TOOLKIT</a>`;
+                    }
+                }
                 container.innerHTML += `
                     <div class="toolkit-item">
                         <div class="toolkit-item-title">${escapeHtml(item.name)}</div>
