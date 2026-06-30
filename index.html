@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MH HACKS — Premium Digital Marketplace</title>
-    <meta name="description" content="MH Health — Premium digital tools, courses, methods, and verified accounts. Unlock the tools the top 1% are using." />
-    <meta property="og:title" content="MH Health — Premium Digital Marketplace" />
+    <title>MH Hacks — Premium Digital Marketplace</title>
+    <meta name="description" content="MH Hacks — Premium digital tools, courses, methods, and verified accounts. Unlock the tools the top 1% are using." />
+    <meta property="og:title" content="MH Hacks — Premium Digital Marketplace" />
     <meta property="og:description" content="Premium digital tools, courses, methods, and verified accounts. Instant delivery, 30-day money-back guarantee." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://mhhealth.store" />
+    <meta property="og:url" content="https://mhhacks.com" />
     <meta name="theme-color" content="#7B2CBF" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,7 +20,7 @@
 
     <style>
         /* ================================================================
-           CSS VARIABLES — HEALTH THEME (WHITE, PURPLE, BLACK)
+           CSS VARIABLES — STRICT WHITE, BLACK, PURPLE
            ================================================================ */
         :root {
             --primary: #7B2CBF;
@@ -33,7 +33,7 @@
             --bg-dark: #0A0A0A;
             --bg-card: rgba(20, 20, 30, 0.85);
             --text-light: #FFFFFF;
-            --text-muted: #A8A0B8;
+            --text-muted: #B0A8C0;
             --glass-bg: rgba(123, 44, 191, 0.20);
             --glass-border: rgba(157, 78, 221, 0.18);
             --glass-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
@@ -162,7 +162,7 @@
         }
 
         /* ================================================================
-           BACKGROUND — ANIMATED MESH (adjusted colors)
+           BACKGROUND — ANIMATED MESH (purple tones only)
            ================================================================ */
         .bg-mesh {
             position: fixed;
@@ -243,15 +243,15 @@
             align-items: center;
             gap: 10px;
             font-family: var(--font-heading);
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: var(--text-light);
             letter-spacing: 0.5px;
         }
-        .navbar .logo svg {
-            width: 38px;
-            height: 38px;
-            filter: drop-shadow(0 0 20px rgba(123, 44, 191, 0.25));
+        .navbar .logo img {
+            height: 40px;
+            width: auto;
+            filter: drop-shadow(0 0 20px rgba(123, 44, 191, 0.15));
         }
         .navbar .logo .highlight {
             color: var(--purple);
@@ -344,7 +344,6 @@
             transform: scale(1.6);
         }
 
-        /* Notification Bell */
         .notif-badge {
             position: relative;
         }
@@ -352,8 +351,8 @@
             position: absolute;
             top: -4px;
             right: -6px;
-            background: #ef4444;
-            color: #fff;
+            background: var(--purple);
+            color: #0a0a0a;
             font-size: 0.55rem;
             font-weight: 800;
             width: 18px;
@@ -362,7 +361,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 16px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 16px var(--primary-glow);
             transition: transform 0.3s;
         }
 
@@ -449,7 +448,7 @@
         }
 
         /* ================================================================
-           SEARCH DROPDOWN OVERLAY
+           SEARCH OVERLAY — compact & no X icon
            ================================================================ */
         .search-overlay {
             position: fixed;
@@ -457,11 +456,11 @@
             left: 0;
             right: 0;
             z-index: 1001;
-            background: rgba(10, 10, 10, 0.92);
+            background: rgba(10, 10, 10, 0.94);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border-bottom: 1px solid rgba(123, 44, 191, 0.06);
-            padding: 24px 28px 32px;
+            padding: 16px 28px 20px;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-12px);
@@ -474,17 +473,17 @@
             transform: translateY(0);
         }
         .search-overlay .search-box {
-            max-width: 780px;
+            max-width: 720px;
             margin: 0 auto;
             position: relative;
         }
         .search-overlay .search-box input {
             width: 100%;
-            padding: 16px 24px;
-            font-size: 1.1rem;
+            padding: 12px 18px;
+            font-size: 0.95rem;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(123, 44, 191, 0.12);
-            border-radius: 16px;
+            border-radius: 14px;
             color: var(--text-light);
             transition: var(--transition);
             font-weight: 400;
@@ -496,37 +495,23 @@
         .search-overlay .search-box input::placeholder {
             color: var(--text-muted);
         }
-        .search-overlay .search-box .close-search {
-            position: absolute;
-            top: 50%;
-            right: 16px;
-            transform: translateY(-50%);
-            font-size: 1.3rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 8px;
-            transition: var(--transition);
-        }
-        .search-overlay .search-box .close-search:hover {
-            color: var(--text-light);
-            background: rgba(255, 255, 255, 0.04);
-        }
+        /* No close (X) button — removed */
+
         .search-results {
-            margin-top: 16px;
-            max-height: 420px;
+            margin-top: 12px;
+            max-height: 340px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
         }
         .search-results .result-item {
-            padding: 10px 14px;
-            border-radius: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
             background: rgba(255, 255, 255, 0.02);
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             transition: var(--transition);
             cursor: pointer;
             border: 1px solid transparent;
@@ -536,9 +521,9 @@
             border-color: rgba(123, 44, 191, 0.08);
         }
         .search-results .result-item img {
-            width: 42px;
-            height: 42px;
-            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
             object-fit: cover;
             flex-shrink: 0;
         }
@@ -547,29 +532,29 @@
         }
         .search-results .result-item .info .name {
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .search-results .result-item .info .cat {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
         }
         .search-results .result-item .price {
             font-weight: 600;
             color: var(--purple);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         .search-results .result-item .price.free {
-            color: #4ade80;
+            color: var(--purple);
         }
         .search-results .trending-label,
         .search-results .recent-label {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--text-muted);
-            padding: 10px 0 6px;
+            padding: 8px 0 4px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            margin-top: 4px;
+            margin-top: 2px;
         }
         .search-results .trending-label i,
         .search-results .recent-label i {
@@ -578,7 +563,7 @@
         }
 
         /* ================================================================
-           NOTIFICATION PANEL (Dropdown)
+           NOTIFICATION PANEL
            ================================================================ */
         .notif-panel {
             position: fixed;
@@ -666,66 +651,7 @@
         }
 
         /* ================================================================
-           DASHBOARD SECTION (NEW)
-           ================================================================ */
-        .dashboard-section {
-            padding: 40px 0 20px;
-            position: relative;
-            z-index: 1;
-            display: none;
-        }
-        .dashboard-section.visible {
-            display: block;
-            animation: fadeUp 0.6s ease;
-        }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-top: 16px;
-        }
-        .dashboard-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--card-radius);
-            padding: 28px 32px;
-            text-align: center;
-            transition: var(--transition);
-        }
-        .dashboard-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--purple);
-        }
-        .dashboard-card h3 {
-            font-family: var(--font-heading);
-            font-size: 1.4rem;
-            margin-bottom: 8px;
-        }
-        .dashboard-card p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
-        .dashboard-card .btn-dash {
-            padding: 12px 32px;
-            border-radius: 50px;
-            background: var(--purple);
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            display: inline-block;
-            box-shadow: 0 0 30px var(--primary-glow);
-        }
-        .dashboard-card .btn-dash:hover {
-            transform: scale(1.04);
-            box-shadow: 0 0 50px var(--primary-glow);
-        }
-
-        /* ================================================================
-           HERO SECTION (adjusted colors)
+           HERO SECTION
            ================================================================ */
         .hero {
             min-height: 100vh;
@@ -878,7 +804,7 @@
             color: var(--purple);
         }
         .hero-visual .floating-card .card-row .value.free {
-            color: #4ade80;
+            color: var(--purple);
         }
         .hero-visual .floating-badge {
             position: absolute;
@@ -914,7 +840,7 @@
         }
 
         /* ================================================================
-           HERO CAROUSEL (Automatic Slider)
+           HERO CAROUSEL
            ================================================================ */
         .hero-carousel-section {
             padding: 40px 0 20px;
@@ -1244,15 +1170,15 @@
             letter-spacing: 0.5px;
         }
         .product-card .badges .free-badge {
-            background: #4ade80;
-            color: #0a0a0a;
+            background: var(--purple);
+            color: #fff;
         }
         .product-card .badges .premium-badge {
             background: var(--purple);
             color: #fff;
         }
         .product-card .badges .best-badge {
-            background: #f97316;
+            background: var(--purple);
             color: #fff;
         }
         .product-card .body {
@@ -1299,7 +1225,7 @@
             color: var(--purple);
         }
         .product-card .body .price-row .price.free {
-            color: #4ade80;
+            color: var(--purple);
         }
         .product-card .body .price-row .original {
             font-size: 0.75rem;
@@ -1308,7 +1234,7 @@
         }
         .product-card .body .price-row .discount {
             font-size: 0.65rem;
-            color: #f97316;
+            color: var(--purple);
             font-weight: 600;
         }
         .product-card .body .actions {
@@ -1348,19 +1274,19 @@
             flex: 1;
             padding: 8px 12px;
             border-radius: 10px;
-            background: #4ade80;
-            color: #0a0a0a;
+            background: var(--purple);
+            color: #fff;
             font-weight: 700;
             font-size: 0.8rem;
             transition: var(--transition);
         }
         .product-card .body .actions .btn-download:hover {
-            background: #22c55e;
+            background: var(--primary-light);
             transform: scale(1.02);
         }
 
         /* ================================================================
-           PRODUCT DETAIL PAGE (PDP)
+           PRODUCT DETAIL OVERLAY (PDP)
            ================================================================ */
         .detail-overlay {
             position: fixed;
@@ -1520,7 +1446,7 @@
             color: var(--purple);
         }
         .detail-overlay .info .price-wrap .current.free {
-            color: #4ade80;
+            color: var(--purple);
         }
         .detail-overlay .info .price-wrap .original {
             font-size: 1.1rem;
@@ -1528,7 +1454,7 @@
             text-decoration: line-through;
         }
         .detail-overlay .info .price-wrap .discount {
-            color: #f97316;
+            color: var(--purple);
             font-weight: 600;
             font-size: 0.9rem;
         }
@@ -1557,8 +1483,8 @@
         .detail-overlay .info .detail-actions .btn-download-now {
             padding: 14px 40px;
             border-radius: 14px;
-            background: #4ade80;
-            color: #0a0a0a;
+            background: var(--purple);
+            color: #fff;
             font-weight: 700;
             font-size: 1rem;
             transition: var(--transition);
@@ -1566,7 +1492,7 @@
             min-width: 160px;
         }
         .detail-overlay .info .detail-actions .btn-download-now:hover {
-            background: #22c55e;
+            background: var(--primary-light);
             transform: translateY(-2px);
         }
         .detail-overlay .info .detail-actions .qty-selector {
@@ -1840,14 +1766,14 @@
             width: 100%;
             padding: 12px;
             border-radius: 12px;
-            border: 1px solid rgba(239, 68, 68, 0.15);
-            color: #ef4444;
+            border: 1px solid rgba(123, 44, 191, 0.15);
+            color: var(--purple);
             font-weight: 600;
             margin-top: 16px;
             transition: var(--transition);
         }
         .profile-overlay .profile-card .logout-btn:hover {
-            background: rgba(239, 68, 68, 0.06);
+            background: rgba(123, 44, 191, 0.06);
         }
         .profile-overlay .profile-card .change-pwd-btn {
             width: 100%;
@@ -1888,7 +1814,7 @@
             color: var(--text-light);
         }
         .profile-overlay .history-list .entry .status {
-            color: #4ade80;
+            color: var(--purple);
         }
         .profile-overlay .history-list .entry .status.pending {
             color: var(--purple);
@@ -2032,7 +1958,7 @@
             font-size: 0.9rem;
         }
         .cart-item .remove:hover {
-            color: #ef4444;
+            color: var(--purple);
         }
         .cart-sidebar .footer {
             padding: 20px 24px;
@@ -2461,7 +2387,7 @@
             width: 0%;
         }
         .auth-modal .auth-content .password-strength .bar.weak {
-            background: #ef4444;
+            background: var(--purple);
             width: 25%;
         }
         .auth-modal .auth-content .password-strength .bar.medium {
@@ -2469,7 +2395,7 @@
             width: 50%;
         }
         .auth-modal .auth-content .password-strength .bar.strong {
-            background: #4ade80;
+            background: var(--purple);
             width: 100%;
         }
 
@@ -2563,88 +2489,6 @@
         }
 
         /* ================================================================
-           ADD TO CART MODAL
-           ================================================================ */
-        .add-cart-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 3000;
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-        }
-        .add-cart-modal.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .add-cart-modal .add-cart-content {
-            background: var(--bg-dark);
-            border-radius: var(--card-radius);
-            max-width: 460px;
-            width: 100%;
-            padding: 40px 32px;
-            text-align: center;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            transform: scale(0.95) translateY(20px);
-            transition: var(--transition);
-        }
-        .add-cart-modal.open .add-cart-content {
-            transform: scale(1) translateY(0);
-        }
-        .add-cart-modal .check-icon {
-            font-size: 3.6rem;
-            color: var(--purple);
-            margin-bottom: 12px;
-            display: block;
-            text-shadow: 0 0 60px var(--primary-glow);
-        }
-        .add-cart-modal h3 {
-            font-family: var(--font-heading);
-            font-size: 1.4rem;
-            margin-bottom: 4px;
-        }
-        .add-cart-modal p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
-        .add-cart-modal .btn-proceed-checkout {
-            padding: 14px 40px;
-            border-radius: 14px;
-            background: var(--purple);
-            color: #fff;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: var(--transition);
-            box-shadow: 0 0 40px var(--primary-glow);
-            width: 100%;
-            margin-top: 8px;
-        }
-        .add-cart-modal .btn-proceed-checkout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 70px rgba(123, 44, 191, 0.20);
-        }
-        .add-cart-modal .btn-continue-shopping {
-            padding: 12px 20px;
-            color: var(--text-muted);
-            font-weight: 500;
-            transition: var(--transition);
-            margin-top: 12px;
-            display: inline-block;
-        }
-        .add-cart-modal .btn-continue-shopping:hover {
-            color: var(--text-light);
-        }
-
-        /* ================================================================
            DAILY CHECK-IN MODAL
            ================================================================ */
         .checkin-modal {
@@ -2733,12 +2577,97 @@
             color: var(--text-muted);
         }
         .checkin-modal .checkin-content .history .day.checked {
-            background: rgba(74, 222, 128, 0.06);
-            border-color: rgba(74, 222, 128, 0.10);
-            color: #4ade80;
+            background: rgba(123, 44, 191, 0.06);
+            border-color: rgba(123, 44, 191, 0.10);
+            color: var(--purple);
         }
         .checkin-modal .checkin-content .history .day.today {
             border-color: var(--purple);
+            color: var(--text-light);
+        }
+
+        /* ================================================================
+           POLICY MODALS (NEW)
+           ================================================================ */
+        .policy-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            background: rgba(10, 10, 10, 0.94);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        .policy-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .policy-modal .policy-content {
+            background: var(--bg-dark);
+            border-radius: var(--card-radius);
+            max-width: 780px;
+            width: 100%;
+            max-height: 88vh;
+            overflow-y: auto;
+            padding: 40px 44px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            transform: scale(0.95) translateY(20px);
+            transition: var(--transition);
+            position: relative;
+        }
+        .policy-modal.open .policy-content {
+            transform: scale(1) translateY(0);
+        }
+        .policy-modal .close-policy {
+            position: absolute;
+            top: 18px;
+            right: 24px;
+            font-size: 1.6rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            z-index: 5;
+        }
+        .policy-modal .close-policy:hover {
+            color: var(--text-light);
+        }
+        .policy-modal h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: var(--purple);
+        }
+        .policy-modal .policy-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        .policy-modal h3 {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            margin: 20px 0 6px;
+            color: var(--text-light);
+        }
+        .policy-modal p,
+        .policy-modal li {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 0.92rem;
+        }
+        .policy-modal ul {
+            padding-left: 20px;
+            list-style: disc;
+        }
+        .policy-modal ul li {
+            margin-bottom: 4px;
+        }
+        .policy-modal strong {
             color: var(--text-light);
         }
 
@@ -2781,10 +2710,10 @@
             flex-shrink: 0;
         }
         .toast.success .icon {
-            color: #4ade80;
+            color: var(--purple);
         }
         .toast.error .icon {
-            color: #ef4444;
+            color: var(--purple);
         }
         .toast.info .icon {
             color: var(--purple);
@@ -2925,9 +2854,9 @@
             font-weight: 800;
             margin-bottom: 12px;
         }
-        .footer .grid .brand .logo svg {
-            width: 32px;
+        .footer .grid .brand .logo img {
             height: 32px;
+            width: auto;
             filter: drop-shadow(0 0 20px var(--primary-glow));
         }
         .footer .grid .brand p {
@@ -2940,6 +2869,7 @@
             display: flex;
             gap: 12px;
             margin-top: 16px;
+            flex-wrap: wrap;
         }
         .footer .grid .brand .socials a {
             width: 40px;
@@ -2971,6 +2901,7 @@
             font-size: 0.85rem;
             padding: 4px 0;
             transition: var(--transition);
+            cursor: pointer;
         }
         .footer .grid .col a:hover {
             color: var(--purple);
@@ -3009,6 +2940,7 @@
         .footer .bottom .links a {
             color: var(--text-muted);
             transition: var(--transition);
+            cursor: pointer;
         }
         .footer .bottom .links a:hover {
             color: var(--purple);
@@ -3083,7 +3015,7 @@
             position: absolute;
             top: -4px;
             right: -4px;
-            background: #ef4444;
+            background: var(--purple);
             color: #fff;
             font-size: 0.6rem;
             font-weight: 700;
@@ -3144,10 +3076,10 @@
             display: inline-block;
         }
         .chat-panel .header .title .status.online {
-            background: #4ade80;
+            background: var(--purple);
         }
         .chat-panel .header .title .status.offline {
-            background: #ef4444;
+            background: var(--text-muted);
         }
         .chat-panel .header .close-chat {
             color: var(--text-muted);
@@ -3240,7 +3172,7 @@
             color: var(--purple);
         }
         .chat-panel .input-area .media-btn.recording {
-            color: #ef4444;
+            color: var(--purple);
             animation: pulse 1s infinite;
         }
         @keyframes pulse {
@@ -3367,9 +3299,6 @@
             .hero-carousel .slide .slide-overlay h2 {
                 font-size: clamp(1.2rem, 2.5vw, 2rem);
             }
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
         @media (max-width: 768px) {
@@ -3440,11 +3369,11 @@
                 padding-bottom: 4px;
             }
             .search-overlay {
-                padding: 16px 20px 24px;
+                padding: 12px 20px 16px;
             }
             .search-overlay .search-box input {
-                font-size: 0.95rem;
-                padding: 14px 18px;
+                font-size: 0.9rem;
+                padding: 10px 16px;
             }
             .auth-modal .auth-content {
                 padding: 28px 20px;
@@ -3535,6 +3464,18 @@
                 width: 92vw;
                 max-width: 92vw;
             }
+            .policy-modal .policy-content {
+                padding: 28px 20px;
+            }
+            .policy-modal h2 {
+                font-size: 1.4rem;
+            }
+            .navbar .logo img {
+                height: 32px;
+            }
+            .navbar .logo {
+                font-size: 1.1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -3606,11 +3547,10 @@
                 height: 44px;
             }
             .navbar .logo {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
-            .navbar .logo svg {
-                width: 30px;
-                height: 30px;
+            .navbar .logo img {
+                height: 28px;
             }
             .search-results .result-item .info .name {
                 font-size: 0.8rem;
@@ -3618,15 +3558,6 @@
             .search-results .result-item img {
                 width: 34px;
                 height: 34px;
-            }
-            .add-cart-modal .add-cart-content {
-                padding: 28px 20px;
-            }
-            .add-cart-modal .check-icon {
-                font-size: 2.8rem;
-            }
-            .add-cart-modal h3 {
-                font-size: 1.2rem;
             }
             .notif-panel {
                 right: 5px;
@@ -3735,7 +3666,7 @@
     ================================================================ -->
     <div id="loader">
         <div class="loader-ring"></div>
-        <div class="loader-text">MH HACKS</div>
+        <div class="loader-text">MH Hacks</div>
     </div>
 
     <!-- ================================================================
@@ -3753,18 +3684,8 @@
     ================================================================ -->
     <nav class="navbar" id="navbar">
         <a href="#" class="logo" id="logoLink">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="#7B2CBF"/>
-                        <stop offset="100%" stop-color="#9D4EDD"/>
-                    </linearGradient>
-                </defs>
-                <polygon points="50,10 90,30 90,70 50,90 10,70 10,30" fill="rgba(123,44,191,0.06)" stroke="url(#logoGrad)" stroke-width="4"/>
-                <path d="M50 25 L65 45 L55 45 L55 75 L45 75 L45 45 L35 45 L50 25Z" fill="url(#logoGrad)"/>
-                <circle cx="50" cy="50" r="8" fill="url(#logoGrad)" opacity="0.5"/>
-            </svg>
-            MH <span class="highlight">Health</span>
+            <img src="https://i.ibb.co/wN77dfzw/logo.png" alt="MH Hacks Logo" loading="lazy" />
+            MH <span class="highlight">Hacks</span>
         </a>
         <div class="nav-links">
             <a href="#home" data-nav class="active-link">Home</a>
@@ -3796,7 +3717,7 @@
     </nav>
 
     <!-- ================================================================
-    NOTIFICATION PANEL (Dropdown)
+    NOTIFICATION PANEL
     ================================================================ -->
     <div class="notif-panel" id="notifPanel">
         <div class="notif-header">
@@ -3823,12 +3744,11 @@
     </div>
 
     <!-- ================================================================
-    SEARCH DROPDOWN
+    SEARCH OVERLAY — no X icon, compact
     ================================================================ -->
     <div class="search-overlay" id="searchOverlay">
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="Search tools, courses, methods..." autofocus>
-            <button class="close-search" id="closeSearch"><i class="fas fa-times"></i></button>
             <div class="search-results" id="searchResults"></div>
         </div>
     </div>
@@ -3857,26 +3777,6 @@
     </div>
 
     <!-- ================================================================
-    DASHBOARD SECTION (NEW)
-    ================================================================ -->
-    <section class="dashboard-section" id="dashboardSection">
-        <div class="container">
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3>💰 Create Accounts with Bonus</h3>
-                    <p>Earn rewards when you sign up and refer friends.</p>
-                    <a href="#" class="btn-dash" id="dashSignupBtn">Sign Up Now</a>
-                </div>
-                <div class="dashboard-card">
-                    <h3>🛒 Explore Products</h3>
-                    <p>Discover premium tools, courses, and methods.</p>
-                    <a href="#products" class="btn-dash" id="dashShopBtn">Explore Products</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ================================================================
     HERO
     ================================================================ -->
     <section class="hero" id="home">
@@ -3884,7 +3784,7 @@
             <div class="hero-content">
                 <div class="badge"><i class="fas fa-bolt" style="margin-right:6px;"></i>Premium Digital Marketplace</div>
                 <h1>Unlock the tools <br><span class="highlight">the top 1%</span> are using.</h1>
-                <p>MH HHACKS curates premium and free tools, methods, tricks, courses and verified digital accounts — everything you need to grow faster, earn more and ship smarter. Instant delivery. No fluff. 30-day money-back guarantee.</p>
+                <p>MH Hacks curates premium and free tools, methods, tricks, courses and verified digital accounts — everything you need to grow faster, earn more and ship smarter. Instant delivery. No fluff. 30-day money-back guarantee.</p>
                 <div class="hero-actions">
                     <a href="#products" class="btn-primary"><i class="fas fa-rocket"></i> Explore Products</a>
                     <a href="#free-tools" class="btn-secondary"><i class="fas fa-gift"></i> Free Tools</a>
@@ -4060,24 +3960,11 @@
                         <a href="https://youtube.com/@mhhacks" target="_blank" class="youtube"><i class="fab fa-youtube"></i></a>
                         <a href="https://facebook.com/mhhacks" target="_blank"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://instagram.com/mhhacks" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://wa.me/923001234567" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
-                        <span style="margin-left:12px;font-size:0.75rem;color:var(--text-muted);">| support@mhhealth.store</span>
+                        <a href="https://wa.me/971562100607" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                        <span style="margin-left:12px;font-size:0.75rem;color:var(--text-muted);">| mhhackshelpzone@gmail.com</span>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- ================================================================
-    ADD TO CART MODAL
-    ================================================================ -->
-    <div class="add-cart-modal" id="addCartModal">
-        <div class="add-cart-content">
-            <span class="check-icon"><i class="fas fa-check-circle"></i></span>
-            <h3>Added to Cart! 🛒</h3>
-            <p id="addCartMsg">Product has been added to your cart.</p>
-            <button class="btn-proceed-checkout" id="addCartProceed"><i class="fas fa-arrow-right"></i> Proceed to Checkout</button>
-            <button class="btn-continue-shopping" id="addCartContinue">Continue Shopping</button>
         </div>
     </div>
 
@@ -4118,7 +4005,6 @@
                             <div class="pm-option" data-method="Bank Transfer"><span class="pm-icon"><i class="fas fa-university"></i></span>Bank Transfer</div>
                             <div class="pm-option" data-method="PayPal"><span class="pm-icon"><i class="fab fa-paypal"></i></span>PayPal</div>
                             <div class="pm-option" data-method="Binance Pay"><span class="pm-icon"><i class="fab fa-bitcoin"></i></span>Binance Pay</div>
-                            <!-- Added Wallet option -->
                             <div class="pm-option" data-method="Wallet"><span class="pm-icon"><i class="fas fa-wallet"></i></span>Wallet Balance</div>
                         </div>
                         <div class="payment-detail" id="paymentDetail">Select a payment method above.</div>
@@ -4175,7 +4061,7 @@
         <div class="auth-content">
             <button class="close-auth" id="closeAuth"><i class="fas fa-times"></i></button>
             <h2 id="authTitle">Sign In</h2>
-            <p class="sub" id="authSub">Welcome back to MH Health.</p>
+            <p class="sub" id="authSub">Welcome back to MH Hacks.</p>
             <form id="authForm">
                 <div id="authFields">
                     <div class="form-group" id="authNameGroup" style="display:none;">
@@ -4277,9 +4163,9 @@
                     <h3><i class="fas fa-comment-dots" style="color:var(--purple);margin-right:10px;"></i>Talk to us</h3>
                     <p>Our team is online 24/7 across email, WhatsApp, and live chat.</p>
                     <ul>
-                        <li><i class="fas fa-envelope"></i> support@mhhealth.store</li>
+                        <li><i class="fas fa-envelope"></i> mhhackshelpzone@gmail.com</li>
                         <li><i class="fas fa-clock"></i> Under 15 minutes response</li>
-                        <li><i class="fab fa-whatsapp"></i> +1 (555) 010-0042</li>
+                        <li><i class="fab fa-whatsapp"></i> +971 562 100 607</li>
                         <li><i class="fas fa-comment"></i> Live chat bottom‑right</li>
                     </ul>
                 </div>
@@ -4304,13 +4190,8 @@
             <div class="grid">
                 <div class="brand">
                     <div class="logo">
-                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;">
-                            <polygon points="50,10 90,30 90,70 50,90 10,70 10,30" fill="rgba(123,44,191,0.06)" stroke="url(#logoGrad)" stroke-width="4"/>
-                            <path d="M50 25 L65 45 L55 45 L55 75 L45 75 L45 45 L35 45 L50 25Z" fill="url(#logoGrad)"/>
-                            <circle cx="50" cy="50" r="8" fill="url(#logoGrad)" opacity="0.5"/>
-                            <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7B2CBF"/><stop offset="100%" stop-color="#9D4EDD"/></linearGradient></defs>
-                        </svg>
-                        MH <span style="color:var(--purple);">Health</span>
+                        <img src="https://i.ibb.co/wN77dfzw/logo.png" alt="MH Hacks Logo" style="height:32px;width:auto;" />
+                        MH <span style="color:var(--purple);">Hacks</span>
                     </div>
                     <p>Premium digital marketplace for tools, courses, methods and verified accounts. Built for builders.</p>
                     <div class="socials">
@@ -4318,7 +4199,8 @@
                         <a href="https://youtube.com/@mhhacks" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                         <a href="https://facebook.com/mhhacks" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://instagram.com/mhhacks" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://wa.me/923001234567" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://wa.me/971562100607" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://t.me/MH_HACKS_OWNER" target="_blank" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
                     </div>
                 </div>
                 <div class="col">
@@ -4330,10 +4212,10 @@
                 </div>
                 <div class="col">
                     <h4>Support</h4>
-                    <a href="#contact">Contact</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Refund Policy</a>
-                    <a href="#">Terms & Conditions</a>
+                    <a href="#" class="policy-link" data-policy="privacy">Privacy Policy</a>
+                    <a href="#" class="policy-link" data-policy="refund">Refund Policy</a>
+                    <a href="#" class="policy-link" data-policy="terms">Terms & Conditions</a>
+                    <a href="#quickMessage">Contact</a>
                 </div>
                 <div class="col">
                     <h4>Products</h4>
@@ -4345,19 +4227,211 @@
                 <div class="col">
                     <h4>Contact</h4>
                     <div class="contact-info">
-                        <div><i class="fas fa-envelope"></i> support@mhhealth.store</div>
-                        <div><i class="fab fa-whatsapp" style="color:#25D366;"></i> +92 300 1234567</div>
-                        <div><i class="fas fa-phone"></i> +92 312 3456789</div>
-                        <div><i class="fas fa-map-marker-alt"></i> 123, Main Street, Lahore, Pakistan</div>
+                        <div><i class="fas fa-envelope"></i> mhhackshelpzone@gmail.com</div>
+                        <div><i class="fab fa-whatsapp" style="color:#25D366;"></i> +971 562 100 607</div>
+                        <div><i class="fas fa-phone"></i> +92 300 762 4789</div>
+                        <div><i class="fab fa-telegram" style="color:var(--purple);"></i> @MH_HACKS_OWNER</div>
+                        <div><i class="fas fa-map-marker-alt"></i> Pakistan, Multan International</div>
                     </div>
                 </div>
             </div>
             <div class="bottom">
-                <span>&copy; 2026 MH Health. All rights reserved.</span>
-                <div class="links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Refunds</a><a href="#home">Contact</a></div>
+                <span>&copy; 2026 MH Hacks. All rights reserved.</span>
+                <div class="links">
+                    <a href="#" class="policy-link" data-policy="privacy">Privacy</a>
+                    <a href="#" class="policy-link" data-policy="refund">Refunds</a>
+                    <a href="#" class="policy-link" data-policy="terms">Terms</a>
+                    <a href="#quickMessage">Contact</a>
+                </div>
             </div>
         </div>
     </footer>
+
+    <!-- ================================================================
+    POLICY MODALS (Privacy, Refund, Terms)
+    ================================================================ -->
+    <!-- Privacy Policy Modal -->
+    <div class="policy-modal" id="privacyPolicyModal">
+        <div class="policy-content">
+            <button class="close-policy" data-close="privacyPolicyModal"><i class="fas fa-times"></i></button>
+            <h2>Privacy Policy</h2>
+            <div class="policy-date">Last updated: June 30, 2026</div>
+            <p>At MH Hacks, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.</p>
+
+            <h3>1. Information We Collect</h3>
+            <p>We may collect personal information that you voluntarily provide to us when you:</p>
+            <ul>
+                <li>Create an account or sign up for our services</li>
+                <li>Place an order or make a purchase</li>
+                <li>Contact us via email, WhatsApp, or live chat</li>
+                <li>Subscribe to our newsletter or updates</li>
+            </ul>
+            <p>This information may include your name, email address, phone number, payment details, and any other information you choose to provide.</p>
+
+            <h3>2. How We Use Your Information</h3>
+            <p>We use the information we collect to:</p>
+            <ul>
+                <li>Process and fulfill your orders</li>
+                <li>Communicate with you about your orders, account, and inquiries</li>
+                <li>Improve our products, services, and website experience</li>
+                <li>Send you promotional offers and updates (with your consent)</li>
+                <li>Comply with legal and regulatory obligations</li>
+            </ul>
+
+            <h3>3. Information Sharing</h3>
+            <p>We do not sell, trade, or rent your personal information to third parties. We may share your information with:</p>
+            <ul>
+                <li>Service providers who assist us in operating our website and processing payments</li>
+                <li>Law enforcement or regulatory authorities when required by law</li>
+            </ul>
+
+            <h3>4. Data Security</h3>
+            <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
+
+            <h3>5. Your Rights</h3>
+            <p>You have the right to:</p>
+            <ul>
+                <li>Access, update, or delete your personal information</li>
+                <li>Opt out of marketing communications</li>
+                <li>Request a copy of the data we hold about you</li>
+                <li>Withdraw consent at any time (where applicable)</li>
+            </ul>
+            <p>To exercise any of these rights, please contact us at <strong>mhhackshelpzone@gmail.com</strong>.</p>
+
+            <h3>6. Cookies</h3>
+            <p>We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. You can control cookie preferences through your browser settings.</p>
+
+            <h3>7. Changes to This Policy</h3>
+            <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page with an updated date.</p>
+
+            <h3>8. Contact Us</h3>
+            <p>If you have any questions about this Privacy Policy, please contact us at <strong>mhhackshelpzone@gmail.com</strong> or via WhatsApp at <strong>+971 562 100 607</strong>.</p>
+        </div>
+    </div>
+
+    <!-- Refund Policy Modal -->
+    <div class="policy-modal" id="refundPolicyModal">
+        <div class="policy-content">
+            <button class="close-policy" data-close="refundPolicyModal"><i class="fas fa-times"></i></button>
+            <h2>Refund Policy</h2>
+            <div class="policy-date">Last updated: June 30, 2026</div>
+            <p>At MH Hacks, we stand behind the quality of our products and services. This Refund Policy outlines the terms and conditions under which refunds are issued.</p>
+
+            <h3>1. 30-Day Money-Back Guarantee</h3>
+            <p>We offer a <strong>30-day money-back guarantee</strong> on all paid digital products. If you are not satisfied with your purchase, you may request a refund within 30 days of the purchase date.</p>
+
+            <h3>2. Eligibility for Refunds</h3>
+            <p>To be eligible for a refund:</p>
+            <ul>
+                <li>You must have purchased the product directly from MH Hacks</li>
+                <li>The purchase must be within the last 30 days</li>
+                <li>You must provide a valid order ID and proof of purchase</li>
+                <li>The product must not have been substantially downloaded or used beyond reasonable trial</li>
+            </ul>
+
+            <h3>3. Non-Refundable Items</h3>
+            <p>The following items are not eligible for refunds:</p>
+            <ul>
+                <li>Free products and services</li>
+                <li>Digital accounts that have been transferred or modified by the user</li>
+                <li>Products that were purchased via third-party payment processors (subject to their own policies)</li>
+                <li>Custom or personalized services</li>
+            </ul>
+
+            <h3>4. How to Request a Refund</h3>
+            <p>To request a refund:</p>
+            <ul>
+                <li>Send an email to <strong>mhhackshelpzone@gmail.com</strong> with "Refund Request" in the subject line</li>
+                <li>Include your order ID, full name, and reason for the refund</li>
+                <li>Our team will review your request and respond within 2 business days</li>
+            </ul>
+
+            <h3>5. Refund Process</h3>
+            <p>If your refund is approved:</p>
+            <ul>
+                <li>Refunds are processed to the original payment method used at checkout</li>
+                <li>Please allow 5-10 business days for the refund to reflect in your account</li>
+                <li>You will receive a confirmation email once the refund has been processed</li>
+            </ul>
+
+            <h3>6. Late or Missing Refunds</h3>
+            <p>If you haven't received a refund within 10 business days:</p>
+            <ul>
+                <li>Check your bank or payment provider account again</li>
+                <li>Contact your credit card company or payment processor</li>
+                <li>Contact us at <strong>mhhackshelpzone@gmail.com</strong> for assistance</li>
+            </ul>
+
+            <h3>7. Contact Us</h3>
+            <p>For any refund-related questions, please contact us at <strong>mhhackshelpzone@gmail.com</strong> or via WhatsApp at <strong>+971 562 100 607</strong>.</p>
+        </div>
+    </div>
+
+    <!-- Terms & Conditions Modal -->
+    <div class="policy-modal" id="termsPolicyModal">
+        <div class="policy-content">
+            <button class="close-policy" data-close="termsPolicyModal"><i class="fas fa-times"></i></button>
+            <h2>Terms &amp; Conditions</h2>
+            <div class="policy-date">Last updated: June 30, 2026</div>
+            <p>Welcome to MH Hacks. By using our website and services, you agree to comply with and be bound by the following Terms &amp; Conditions. Please read them carefully.</p>
+
+            <h3>1. Acceptance of Terms</h3>
+            <p>By accessing or using the MH Hacks website and services, you agree to be bound by these Terms &amp; Conditions and our Privacy Policy. If you do not agree, please do not use our services.</p>
+
+            <h3>2. Description of Services</h3>
+            <p>MH Hacks provides a marketplace for digital products including tools, courses, methods, tricks, and verified digital accounts. All products are digital and delivered electronically unless otherwise stated.</p>
+
+            <h3>3. User Accounts</h3>
+            <p>To access certain features, you may be required to create an account. You are responsible for:</p>
+            <ul>
+                <li>Maintaining the confidentiality of your account credentials</li>
+                <li>All activities that occur under your account</li>
+                <li>Notifying us immediately of any unauthorized use</li>
+            </ul>
+
+            <h3>4. Purchases and Payments</h3>
+            <p>All purchases are subject to the following:</p>
+            <ul>
+                <li>Prices are listed in USD and are subject to change without notice</li>
+                <li>Payment must be made in full before delivery of digital products</li>
+                <li>We accept various payment methods as indicated at checkout</li>
+                <li>You agree to provide accurate and complete payment information</li>
+            </ul>
+
+            <h3>5. Digital Product Delivery</h3>
+            <p>Digital products are delivered electronically via download links or email. Delivery is typically instant but may take up to 24 hours for manual verification.</p>
+
+            <h3>6. Intellectual Property</h3>
+            <p>All content on the MH Hacks website, including text, graphics, logos, and software, is the property of MH Hacks or its licensors and is protected by copyright and intellectual property laws.</p>
+
+            <h3>7. User Conduct</h3>
+            <p>You agree not to:</p>
+            <ul>
+                <li>Use our services for any illegal or unauthorized purpose</li>
+                <li>Attempt to gain unauthorized access to our systems</li>
+                <li>Resell, redistribute, or share purchased digital products without authorization</li>
+                <li>Post or transmit any harmful, offensive, or malicious content</li>
+            </ul>
+
+            <h3>8. Disclaimer of Warranties</h3>
+            <p>All products and services are provided "as is" without warranties of any kind, either express or implied. We do not guarantee that our products will meet your specific requirements or that they will be error-free.</p>
+
+            <h3>9. Limitation of Liability</h3>
+            <p>To the fullest extent permitted by law, MH Hacks shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our services.</p>
+
+            <h3>10. Indemnification</h3>
+            <p>You agree to indemnify and hold MH Hacks harmless from any claims, damages, losses, and expenses arising from your use of our services or violation of these terms.</p>
+
+            <h3>11. Changes to Terms</h3>
+            <p>We reserve the right to modify these Terms &amp; Conditions at any time. Changes will be effective immediately upon posting. Your continued use of our services constitutes acceptance of the updated terms.</p>
+
+            <h3>12. Governing Law</h3>
+            <p>These Terms &amp; Conditions shall be governed by and construed in accordance with the laws of Pakistan, without regard to its conflict of law provisions.</p>
+
+            <h3>13. Contact Us</h3>
+            <p>If you have any questions about these Terms &amp; Conditions, please contact us at <strong>mhhackshelpzone@gmail.com</strong> or via WhatsApp at <strong>+971 562 100 607</strong>.</p>
+        </div>
+    </div>
 
     <!-- ================================================================
     CHAT WIDGET
@@ -4762,7 +4836,6 @@
         let couponApplied = false;
         let couponDiscount = 0;
         let couponCode = '';
-        let addCartProductId = null;
 
         // Notification state
         let notifications = JSON.parse(localStorage.getItem('mh_notifications')) || [];
@@ -4853,18 +4926,16 @@
         function addNotification(type, message, data) {
             var notif = {
                 id: Date.now(),
-                type: type, // 'product_added', 'admin_message', 'chat_message', 'order_confirmed', 'order_rejected', 'complaint'
+                type: type,
                 message: message,
                 data: data || {},
                 read: false,
                 timestamp: new Date().toISOString()
             };
             notifications.unshift(notif);
-            // Keep max 100
             if (notifications.length > 100) notifications.pop();
             saveNotifications();
             updateNotifBadge();
-            // Show toast for new notification
             toast('🔔 ' + message, 'info');
         }
 
@@ -4901,7 +4972,6 @@
                     '</div>' +
                     '</div>';
             }).join('');
-            // Click to mark as read
             list.querySelectorAll('.notif-item').forEach(function(el) {
                 el.addEventListener('click', function() {
                     var id = parseInt(el.dataset.id);
@@ -4926,14 +4996,12 @@
                     .password })); } else { localStorage.removeItem('mh_remembered'); }
             toast('Welcome back, ' + user.fullName + '!', 'success');
             updateAuthUI();
-            renderDashboard();
             return true;
         }
 
         function signupUser(fullName, email, password, refCode) {
             if (findUserByEmail(email)) { toast('Email already registered', 'error'); return false; }
             if (password.length < 6) { toast('Password must be at least 6 characters', 'error'); return false; }
-            // Create user
             var newUser = {
                 id: Date.now(),
                 fullName: fullName.trim(),
@@ -4941,7 +5009,7 @@
                 password: password,
                 referralCode: generateRefCode(),
                 referrerId: null,
-                walletBalance: 50, // 50 PKR sign-up bonus
+                walletBalance: 50,
                 totalReferrals: 0,
                 totalCheckins: 0,
                 totalPurchased: 0,
@@ -4949,12 +5017,10 @@
                 referralHistory: []
             };
 
-            // Handle referral
             if (refCode) {
                 var referrer = findUserByRefCode(refCode.trim().toUpperCase());
                 if (referrer) {
                     newUser.referrerId = referrer.id;
-                    // Give referrer 8 PKR
                     var uIdx = users.findIndex(function(u) { return u.id === referrer.id; });
                     if (uIdx !== -1) {
                         if (!users[uIdx].referralHistory) users[uIdx].referralHistory = [];
@@ -4963,7 +5029,6 @@
                         users[uIdx].referralHistory.push(refEntry);
                         users[uIdx].totalReferrals = (users[uIdx].totalReferrals || 0) + 1;
                         users[uIdx].walletBalance = (users[uIdx].walletBalance || 0) + 8;
-                        // Save users
                         saveUsers();
                         toast('Referrer earned 8 PKR!', 'success');
                     }
@@ -4976,9 +5041,7 @@
             saveCurrentUser();
             toast('Account created! You received 50 PKR bonus.', 'success');
             updateAuthUI();
-            renderDashboard();
-            // Add notification for new user
-            addNotification('admin_message', 'Welcome to MH Health! You have 50 PKR in your wallet.');
+            addNotification('admin_message', 'Welcome to MH Hacks! You have 50 PKR in your wallet.');
             return true;
         }
 
@@ -4992,7 +5055,6 @@
             closeDetailOverlay();
             hideAllToolsPages();
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-            renderDashboard();
         }
 
         function updateAuthUI() { updateMobileSignIn(); }
@@ -5009,7 +5071,7 @@
         }
 
         // ================================================================
-        // 6. CART FUNCTIONS (unchanged)
+        // 6. CART FUNCTIONS — opens sidebar instead of modal
         // ================================================================
         function updateCartUI() {
             var badge = document.getElementById('cartBadge');
@@ -5087,15 +5149,14 @@
             if (existing) { existing.qty += qty; } else { cart.push({ id: productId, qty: qty }); }
             saveCart();
             updateCartUI();
-            addCartProductId = productId;
-            var msg = p.name + ' (x' + qty + ') added to cart!';
-            document.getElementById('addCartMsg').textContent = msg;
-            document.getElementById('addCartModal').classList.add('open');
-            document.body.style.overflow = 'hidden';
+            // Open cart sidebar immediately
+            document.getElementById('cartSidebar').classList.add('open');
+            toast(p.name + ' added to cart!', 'success');
+            addNotification('product_added', p.name + ' added to cart (x' + qty + ')');
         }
 
         // ================================================================
-        // 7. RENDER PRODUCTS (unchanged)
+        // 7. RENDER PRODUCTS
         // ================================================================
         function getFilteredProducts(filter, category) {
             var result = products.slice();
@@ -5193,9 +5254,10 @@
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     var p = getProduct(parseInt(btn.dataset.id));
-                    if (p && p.downloadUrl) {
+                    if (p && p.downloadUrl && p.downloadUrl !== '#') {
+                        // Open in same tab
+                        window.location.href = p.downloadUrl;
                         toast('Downloading ' + p.name + '...', 'success');
-                        window.open(p.downloadUrl, '_blank'); // Open in new tab
                     } else { toast('Download link not available', 'error'); }
                 });
             });
@@ -5213,7 +5275,7 @@
         }
 
         // ================================================================
-        // 8. PRODUCT DETAIL OVERLAY (unchanged, except color changes)
+        // 8. PRODUCT DETAIL OVERLAY
         // ================================================================
         function openDetailOverlay(id) {
             var p = getProduct(id);
@@ -5229,7 +5291,7 @@
             document.getElementById('detailName').textContent = p.name;
             document.getElementById('detailRating').innerHTML =
                 '<span class="stars">' + starsHtml(p.rating) + '</span> ' + p.rating + ' (' + p.reviews +
-                ' reviews) <span style="color:var(--text-muted);font-size:0.75rem;margin-left:8px;"><i class="fas fa-check-circle" style="color:#4ade80;"></i> Verified</span>';
+                ' reviews) <span style="color:var(--text-muted);font-size:0.75rem;margin-left:8px;"><i class="fas fa-check-circle" style="color:var(--purple);"></i> Verified</span>';
             document.getElementById('detailDesc').textContent = p.description;
 
             var priceWrap = document.getElementById('detailPriceWrap');
@@ -5248,9 +5310,10 @@
                 actions.innerHTML =
                     '<button class="btn-download-now" id="detailDownloadBtn"><i class="fas fa-download"></i> Download Now</button>';
                 document.getElementById('detailDownloadBtn').addEventListener('click', function() {
-                    if (p.downloadUrl) { window.open(p.downloadUrl, '_blank');
-                        toast('Downloading ' + p.name + '...', 'success'); } else { toast(
-                            'Download not available', 'error'); }
+                    if (p.downloadUrl && p.downloadUrl !== '#') {
+                        window.location.href = p.downloadUrl;
+                        toast('Downloading ' + p.name + '...', 'success');
+                    } else { toast('Download not available', 'error'); }
                 });
             } else {
                 actions.innerHTML =
@@ -5414,7 +5477,7 @@
         }
 
         // ================================================================
-        // 10. DEDICATED PAID / FREE TOOLS PAGES (unchanged)
+        // 10. DEDICATED PAID / FREE TOOLS PAGES
         // ================================================================
         function renderPaidToolsPage(sort, query) {
             var grid = document.getElementById('paidToolsGrid');
@@ -5527,7 +5590,7 @@
         }, 300));
 
         // ================================================================
-        // 11. HERO CAROUSEL (unchanged)
+        // 11. HERO CAROUSEL
         // ================================================================
         const carouselSlides = [{
             image: 'https://picsum.photos/seed/banner1/1200/500',
@@ -5605,6 +5668,8 @@
             }
         });
         var carouselEl = document.getElementById('heroCarousel');
+        var touchStartX = 0,
+            touchEndX = 0;
         carouselEl.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; });
         carouselEl.addEventListener('touchend', function(e) {
             touchEndX = e.changedTouches[0].screenX;
@@ -5617,7 +5682,7 @@
         });
 
         // ================================================================
-        // 12. CHECKOUT (Modified: Wallet payment)
+        // 12. CHECKOUT
         // ================================================================
         function openCheckout() {
             if (!currentUser) { toast('Please sign in to checkout', 'error');
@@ -5640,7 +5705,6 @@
             document.getElementById('couponDiscountRow').style.display = 'none';
             document.getElementById('checkoutName').value = currentUser.fullName || '';
             document.getElementById('checkoutEmail').value = currentUser.email || '';
-            // Show wallet balance
             var walletRow = document.getElementById('walletRow');
             var walletDisplay = document.getElementById('walletDisplay');
             var bal = currentUser.walletBalance || 0;
@@ -5685,19 +5749,17 @@
                 selectedPayment = el.dataset.method;
 
                 if (selectedPayment === 'Wallet') {
-                    // Wallet payment: no QR
                     document.getElementById('qrSection').style.display = 'none';
                     document.getElementById('paymentDetail').innerHTML =
                         '<strong>Wallet</strong> — You have <strong>' + (currentUser.walletBalance || 0) +
                         ' PKR</strong> in your wallet.';
-                    // Optionally, we could check if balance covers total.
                 } else {
                     var details = {
                         'EasyPaisa': { acc: '03123456789', holder: 'Ali Abbas' },
                         'JazzCash': { acc: '03001234567', holder: 'Ali Abbas' },
                         'Bank Transfer': { acc: 'PK12ABCD1234567890', holder: 'Ali Abbas' },
-                        'PayPal': { acc: 'paypal@mhhealth.store', holder: 'MH Health' },
-                        'Binance Pay': { acc: '12345678', holder: 'MH Health' }
+                        'PayPal': { acc: 'paypal@mhhacks.com', holder: 'MH Hacks' },
+                        'Binance Pay': { acc: '12345678', holder: 'MH Hacks' }
                     };
                     var d = details[selectedPayment];
                     var qrData = selectedPayment + ': ' + d.acc + ' (' + d.holder + ')';
@@ -5776,24 +5838,20 @@
             if (couponApplied) total = total - couponDiscount;
             var finalTotal = Math.max(0, total);
 
-            // If payment method is Wallet
             if (selectedPayment === 'Wallet') {
                 if (!currentUser) { toast('Please sign in', 'error'); return; }
                 var balance = currentUser.walletBalance || 0;
-                // Convert total to PKR (assuming 1 USD = 280 PKR roughly)
                 var totalPKR = Math.round(finalTotal * 280);
                 if (balance < totalPKR) {
                     toast('Insufficient wallet balance. You need ' + totalPKR + ' PKR.', 'error');
                     return;
                 }
-                // Deduct from wallet
                 var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
                 if (uIdx !== -1) {
                     users[uIdx].walletBalance = balance - totalPKR;
                     currentUser = users[uIdx];
                     saveUsers();
                     saveCurrentUser();
-                    // Create order without screenshot
                     var orderId = generateOrderId();
                     var order = {
                         id: orderId,
@@ -5805,15 +5863,12 @@
                         paymentMethod: 'Wallet',
                         coupon: couponApplied ? couponCode : null,
                         date: new Date().toISOString(),
-                        status: 'Completed' // auto-complete for wallet
+                        status: 'Completed'
                     };
                     orders.push(order);
                     saveOrders();
-                    // Update user purchase count
                     users[uIdx].totalPurchased = (users[uIdx].totalPurchased || 0) + 1;
                     saveUsers();
-
-                    // Clear cart
                     cart = [];
                     saveCart();
                     updateCartUI();
@@ -5827,7 +5882,6 @@
                 }
             }
 
-            // For other payment methods, require screenshot
             if (selectedPayment !== 'Wallet' && !uploadFile) {
                 toast('Please upload a payment screenshot', 'error');
                 return;
@@ -5862,7 +5916,7 @@
                         if (refIdx !== -1) {
                             var commission = finalTotal * 0.10;
                             users[refIdx].walletBalance = (users[refIdx].walletBalance || 0) + (commission *
-                            280); // PKR
+                            280);
                             if (!users[refIdx].referralHistory) users[refIdx].referralHistory = [];
                             var refEntry = users[refIdx].referralHistory.find(function(r) { return r
                                     .userId === currentUser.id; });
@@ -5913,26 +5967,7 @@
         });
 
         // ================================================================
-        // 13. ADD TO CART MODAL
-        // ================================================================
-        document.getElementById('addCartProceed').addEventListener('click', function() {
-            document.getElementById('addCartModal').classList.remove('open');
-            document.body.style.overflow = '';
-            document.getElementById('cartSidebar').classList.add('open');
-        });
-        document.getElementById('addCartContinue').addEventListener('click', function() {
-            document.getElementById('addCartModal').classList.remove('open');
-            document.body.style.overflow = '';
-        });
-        document.getElementById('addCartModal').addEventListener('click', function(e) {
-            if (e.target === e.currentTarget) {
-                document.getElementById('addCartModal').classList.remove('open');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // ================================================================
-        // 14. DAILY CHECK-IN — updated with PKR (1-7 reset)
+        // 13. DAILY CHECK-IN
         // ================================================================
         function openCheckin() {
             if (!currentUser) { toast('Please sign in to check in', 'error');
@@ -5949,7 +5984,6 @@
             var streak = 0;
             var today = new Date();
             today.setHours(0, 0, 0, 0);
-            // Find consecutive days backwards from today
             for (var i = sorted.length - 1; i >= 0; i--) {
                 var d = new Date(sorted[i].date);
                 d.setHours(0, 0, 0, 0);
@@ -5970,8 +6004,7 @@
             var claimed = !!todayEntry;
 
             var streak = getCheckinStreak(checkins);
-            // Reward: 1,2,3,4,5,6,7 then reset after 7
-            var rewardAmount = (streak % 7) + 1; // 1-7
+            var rewardAmount = (streak % 7) + 1;
 
             document.getElementById('checkinStatus').textContent = claimed ?
                 '✅ You already checked in today! Come back tomorrow.' :
@@ -6008,7 +6041,7 @@
                 return;
             }
             var streak = getCheckinStreak(checkins);
-            var reward = (streak % 7) + 1; // 1-7
+            var reward = (streak % 7) + 1;
             checkins.push({ date: new Date().toISOString(), points: reward });
             saveCheckins(currentUser.id, checkins);
             var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
@@ -6040,7 +6073,7 @@
         });
 
         // ================================================================
-        // 15. PROFILE OVERLAY (updated wallet display in PKR)
+        // 14. PROFILE OVERLAY
         // ================================================================
         function openProfileOverlay() {
             if (!currentUser) { toast('Please sign in to view profile', 'error');
@@ -6061,7 +6094,6 @@
             document.getElementById('profileAvatar').textContent = getInitials(currentUser.fullName);
             document.getElementById('profileName').textContent = currentUser.fullName;
             document.getElementById('profileEmail').textContent = currentUser.email;
-            // Wallet in PKR
             document.getElementById('profileWallet').textContent = (currentUser.walletBalance || 0) + ' PKR';
             document.getElementById('profileRefs').textContent = currentUser.totalReferrals || 0;
             document.getElementById('profileCheckins').textContent = currentUser.totalCheckins || 0;
@@ -6094,7 +6126,7 @@
                 checkinList.innerHTML = sorted.slice(0, 10).map(function(c) {
                     return '<div class="entry">' +
                         '<span>' + new Date(c.date).toLocaleDateString() + '</span>' +
-                        '<span style="color:#4ade80;">+' + c.points + ' PKR</span>' +
+                        '<span style="color:var(--purple);">+' + c.points + ' PKR</span>' +
                         '</div>';
                 }).join('');
             }
@@ -6156,7 +6188,7 @@
         });
 
         // ================================================================
-        // 16. AUTH MODAL (unchanged)
+        // 15. AUTH MODAL
         // ================================================================
         function openAuth(mode) {
             if (typeof mode === 'undefined') mode = 'signin';
@@ -6182,7 +6214,7 @@
 
             if (mode === 'signin') {
                 title.textContent = 'Sign In';
-                sub.textContent = 'Welcome back to MH Health.';
+                sub.textContent = 'Welcome back to MH Hacks.';
                 submitBtn.textContent = 'Sign In';
                 switchText.textContent = "Don't have an account? ";
                 switchLink.textContent = 'Sign Up';
@@ -6195,7 +6227,7 @@
                 document.getElementById('authPassword').placeholder = '••••••••';
             } else if (mode === 'signup') {
                 title.textContent = 'Create Account';
-                sub.textContent = 'Join MH Health today. You get 50 PKR bonus!';
+                sub.textContent = 'Join MH Hacks today. You get 50 PKR bonus!';
                 submitBtn.textContent = 'Sign Up';
                 switchText.textContent = "Already have an account? ";
                 switchLink.textContent = 'Sign In';
@@ -6285,7 +6317,7 @@
         });
 
         // ================================================================
-        // 17. SEARCH (unchanged)
+        // 16. SEARCH — no X icon, compact
         // ================================================================
         var searchOverlay = document.getElementById('searchOverlay');
         var searchInput = document.getElementById('searchInput');
@@ -6297,9 +6329,6 @@
                 searchInput.focus();
                 showTrending();
             }
-        });
-        document.getElementById('closeSearch').addEventListener('click', function() {
-            searchOverlay.classList.remove('open');
         });
         searchOverlay.addEventListener('click', function(e) {
             if (e.target === e.currentTarget) searchOverlay.classList.remove('open');
@@ -6326,7 +6355,7 @@
                     '<div class="recent-label"><i class="fas fa-clock-rotate-left"></i> Recent Searches</div>' +
                     recent.slice(0, 5).map(function(q) {
                         return '<div class="result-item recent-item" data-query="' + q + '">' +
-                            '<i class="fas fa-search" style="color:var(--text-muted);width:42px;text-align:center;"></i>' +
+                            '<i class="fas fa-search" style="color:var(--text-muted);width:34px;text-align:center;"></i>' +
                             '<div class="info"><div class="name">' + q + '</div></div></div>';
                     }).join('');
             }
@@ -6392,7 +6421,7 @@
         });
 
         // ================================================================
-        // 18. FILTERS (unchanged)
+        // 17. FILTERS
         // ================================================================
         document.querySelectorAll('#filterButtons button').forEach(function(btn) {
             btn.addEventListener('click', function() {
@@ -6408,7 +6437,7 @@
         });
 
         // ================================================================
-        // 19. NAVBAR SCROLL (unchanged)
+        // 18. NAVBAR SCROLL
         // ================================================================
         window.addEventListener('scroll', function() {
             var nav = document.getElementById('navbar');
@@ -6424,7 +6453,7 @@
         });
 
         // ================================================================
-        // 20. MOBILE MENU (unchanged)
+        // 19. MOBILE MENU
         // ================================================================
         document.getElementById('hamburger').addEventListener('click', function() {
             document.getElementById('mobileMenu').classList.toggle('open');
@@ -6442,7 +6471,7 @@
         });
 
         // ================================================================
-        // 21. CART TOGGLE (unchanged)
+        // 20. CART TOGGLE
         // ================================================================
         document.getElementById('cartToggle').addEventListener('click', function() {
             document.getElementById('cartSidebar').classList.toggle('open');
@@ -6457,7 +6486,7 @@
         });
 
         // ================================================================
-        // 22. SCROLL REVEAL (unchanged)
+        // 21. SCROLL REVEAL
         // ================================================================
         var revealObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
@@ -6467,7 +6496,7 @@
         document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
 
         // ================================================================
-        // 23. PARTICLES (unchanged, but color updated to purple)
+        // 22. PARTICLES
         // ================================================================
         (function initParticles() {
             var canvas = document.getElementById('particles-canvas');
@@ -6525,7 +6554,7 @@
         })();
 
         // ================================================================
-        // 24. CHAT SYSTEM (unchanged, but added notification)
+        // 23. CHAT SYSTEM
         // ================================================================
         var chatFab = document.getElementById('chatFab');
         var chatPanel = document.getElementById('chatPanel');
@@ -6573,7 +6602,6 @@
                 chatUnread++;
                 document.getElementById('chatBadge').textContent = chatUnread;
                 document.getElementById('chatBadge').style.display = 'block';
-                // Add notification for new chat message
                 addNotification('chat_message', 'New message from Admin: ' + text.substring(0, 50) + '...');
             }
         }
@@ -6589,7 +6617,7 @@
             }
             if (lower.includes('contact') || lower.includes('support') || lower.includes('email') || lower.includes(
                     'whatsapp')) {
-                return '📧 Email: support@mhhealth.store | WhatsApp: +92 300 1234567 | We reply within 15 minutes!';
+                return '📧 Email: mhhackshelpzone@gmail.com | WhatsApp: +971 562 100 607 | We reply within 15 minutes!';
             }
             if (lower.includes('refund') || lower.includes('money back') || lower.includes('guarantee')) {
                 return '🔄 We offer a 30-day money-back guarantee on all paid products. Just email us with your order ID and we\'ll process it immediately.';
@@ -6608,7 +6636,7 @@
                 return '💰 Your wallet balance is ' + (currentUser ? currentUser.walletBalance || 0 : '0') +
                     ' PKR. You can earn more via daily check-in and referrals.';
             }
-            return '🤖 Thanks for your message! Our team is offline right now, but I\'m here to help. Check our product list or contact us at support@mhhealth.store for more info.';
+            return '🤖 Thanks for your message! Our team is offline right now, but I\'m here to help. Check our product list or contact us at mhhackshelpzone@gmail.com for more info.';
         }
 
         function sendChatMessage() {
@@ -6618,7 +6646,6 @@
                 openAuth('signin'); return; }
             addChatMessage('user', text);
             chatInput.value = '';
-            // Add notification for admin
             addNotification('admin_message', 'User sent a message: ' + text.substring(0, 50) + '...');
             if (!adminOnline) {
                 setTimeout(function() {
@@ -6719,44 +6746,59 @@
         });
 
         // ================================================================
-        // 25. DASHBOARD (NEW)
+        // 24. POLICY MODALS (NEW)
         // ================================================================
-        function renderDashboard() {
-            var section = document.getElementById('dashboardSection');
-            if (currentUser) {
-                section.classList.add('visible');
-                // Update button texts
-                document.getElementById('dashSignupBtn').textContent = 'Buy Now';
-                document.getElementById('dashSignupBtn').href = '#products'; // or go to checkout?
-                document.getElementById('dashShopBtn').textContent = 'Shop Now';
-                document.getElementById('dashShopBtn').href = '#products';
-            } else {
-                section.classList.remove('visible');
-                // Reset for non-logged-in view (but we hide it)
-            }
+        function openPolicyModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (!modal) return;
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
         }
 
-        // Handle dashboard buttons
-        document.getElementById('dashSignupBtn').addEventListener('click', function(e) {
-            if (!currentUser) {
+        function closePolicyModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (!modal) return;
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.policy-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
                 e.preventDefault();
-                openAuth('signup');
-            } else {
-                // Buy Now: maybe open checkout? but we'll go to products
-                // already set href to #products
-            }
+                var policy = this.dataset.policy;
+                var map = {
+                    'privacy': 'privacyPolicyModal',
+                    'refund': 'refundPolicyModal',
+                    'terms': 'termsPolicyModal'
+                };
+                var modalId = map[policy];
+                if (modalId) openPolicyModal(modalId);
+            });
+        });
+
+        document.querySelectorAll('.close-policy').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var modalId = this.dataset.close;
+                closePolicyModal(modalId);
+            });
+        });
+
+        document.querySelectorAll('.policy-modal').forEach(function(modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    var id = this.id;
+                    closePolicyModal(id);
+                }
+            });
         });
 
         // ================================================================
-        // 26. NOTIFICATION TOGGLE
+        // 25. NOTIFICATION TOGGLE
         // ================================================================
         document.getElementById('notifToggle').addEventListener('click', function(e) {
             e.stopPropagation();
             var panel = document.getElementById('notifPanel');
             panel.classList.toggle('open');
-            if (panel.classList.contains('open')) {
-                // Mark all as read? not automatically, user can click 'Mark all read'
-            }
         });
         document.getElementById('markAllRead').addEventListener('click', function() {
             notifications.forEach(function(n) { n.read = true; });
@@ -6764,7 +6806,6 @@
             updateNotifBadge();
             toast('All notifications marked as read', 'info');
         });
-        // Close panel on outside click
         document.addEventListener('click', function(e) {
             var panel = document.getElementById('notifPanel');
             var toggle = document.getElementById('notifToggle');
@@ -6774,7 +6815,7 @@
         });
 
         // ================================================================
-        // 27. NAVIGATION: Logo back to home
+        // 26. NAVIGATION: Logo back to home
         // ================================================================
         document.getElementById('logoLink').addEventListener('click', function(e) {
             e.preventDefault();
@@ -6785,7 +6826,7 @@
         });
 
         // ================================================================
-        // 28. QUICK MESSAGE FORM (unchanged)
+        // 27. QUICK MESSAGE FORM
         // ================================================================
         document.getElementById('quickMessageForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -6796,13 +6837,12 @@
             if (!name || !email || !message) { toast('Please fill in all required fields', 'error'); return; }
             if (!email.includes('@')) { toast('Please enter a valid email', 'error'); return; }
             toast('✅ Message sent! We\'ll reply within 15 minutes.', 'success');
-            // Add notification for complaint
             addNotification('complaint', 'New message from ' + name + ': ' + subject);
             this.reset();
         });
 
         // ================================================================
-        // 29. MOBILE SIGN IN LINK
+        // 28. MOBILE SIGN IN LINK
         // ================================================================
         var mobileMenu = document.getElementById('mobileMenu');
         var signInLink = document.createElement('a');
@@ -6828,7 +6868,7 @@
         }
 
         // ================================================================
-        // 30. INIT APP
+        // 29. INIT APP
         // ================================================================
         function initApp() {
             if (checkRemembered()) { updateAuthUI();
@@ -6843,11 +6883,9 @@
             updateCartUI();
             updateAuthUI();
             updateMobileSignIn();
-            renderDashboard();
             renderNotifications();
             updateNotifBadge();
 
-            // Check URL params for referral
             var params = new URLSearchParams(window.location.search);
             var ref = params.get('ref');
             if (ref && !currentUser) {
@@ -6868,12 +6906,12 @@
         }
 
         // ================================================================
-        // 31. ESCAPE CLOSE (unchanged)
+        // 30. ESCAPE CLOSE
         // ================================================================
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 document.querySelectorAll(
-                    '.modal.open, .checkout-modal.open, .auth-modal.open, .confirm-modal.open, .checkin-modal.open, .add-cart-modal.open'
+                    '.modal.open, .checkout-modal.open, .auth-modal.open, .confirm-modal.open, .checkin-modal.open, .policy-modal.open'
                     ).forEach(function(el) {
                     el.classList.remove('open');
                     document.body.style.overflow = '';
@@ -6888,7 +6926,7 @@
         });
 
         // ================================================================
-        // 32. FORCE HIDE LOADER SAFETY
+        // 31. FORCE HIDE LOADER SAFETY
         // ================================================================
         setTimeout(function() {
             var loader = document.getElementById('loader');
@@ -6898,15 +6936,17 @@
             }
         }, 8000);
 
-        console.log('🚀 MH Health — Premium Edition Loaded!');
+        console.log('🚀 MH Hacks — Premium Edition Loaded!');
         console.log('👤 Admin toggle: double-click "Offline" in chat header.');
         console.log('📱 All Paid / Free Tools pages are live.');
-        console.log('🔍 Search bar is a dropdown overlay.');
+        console.log('🔍 Search bar: no X icon, compact results.');
         console.log('🎠 Hero carousel is active with auto-slide.');
-        console.log('🛒 Add to Cart → Proceed to Checkout modal works.');
+        console.log('🛒 Add to Cart → opens Cart sidebar directly (no pop-up).');
         console.log('💰 Wallet system: PKR with daily check-in (1-7), referral (8 PKR), sign-up bonus (50 PKR).');
         console.log('🔔 Notification system: 5 types (product_added, admin_message, chat_message, order_confirmed, order_rejected, complaint).');
+        console.log('📄 Privacy / Refund / Terms pages in modals.');
         console.log('🎨 Color scheme: White, Purple (#7B2CBF), Black.');
+        console.log('📞 Contact: mhhackshelpzone@gmail.com | +971562100607 | +923007624789 | @MH_HACKS_OWNER');
     </script>
 </body>
 </html>
