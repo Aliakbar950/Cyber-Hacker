@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MH Hacks — Premium Digital Marketplace</title>
-    <meta name="description" content="MH Hacks — Premium digital tools, courses, methods, and verified accounts. Unlock the tools the top 1% are using." />
-    <meta property="og:title" content="MH Hacks — Premium Digital Marketplace" />
+    <title>MH HACKS — Premium Digital Marketplace</title>
+    <meta name="description" content="MH HACKS — Premium digital tools, courses, methods, and verified accounts. Unlock the tools the top 1% are using." />
+    <meta property="og:title" content="MH HACKS — Premium Digital Marketplace" />
     <meta property="og:description" content="Premium digital tools, courses, methods, and verified accounts. Instant delivery, 30-day money-back guarantee." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mhhacks.com" />
@@ -15,8 +15,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
-    </script>
 
     <style>
         /* ================================================================
@@ -261,8 +259,8 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 32px;
-            font-size: 0.85rem;
+            gap: 28px;
+            font-size: 0.82rem;
             font-weight: 500;
             color: var(--text-muted);
         }
@@ -270,6 +268,7 @@
             transition: var(--transition);
             position: relative;
             letter-spacing: 0.3px;
+            cursor: pointer;
         }
         .nav-links a:hover {
             color: var(--text-light);
@@ -298,14 +297,14 @@
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
         .nav-actions .search-toggle,
         .nav-actions .cart-toggle,
         .nav-actions .checkin-toggle,
         .nav-actions .profile-toggle,
         .nav-actions .notif-toggle {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--text-muted);
             transition: var(--transition);
             padding: 8px;
@@ -421,6 +420,7 @@
             transition: var(--transition);
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            cursor: pointer;
         }
         .mobile-menu a:hover {
             color: var(--purple);
@@ -448,7 +448,7 @@
         }
 
         /* ================================================================
-           SEARCH OVERLAY — compact & no X icon
+           SEARCH OVERLAY
            ================================================================ */
         .search-overlay {
             position: fixed;
@@ -495,8 +495,6 @@
         .search-overlay .search-box input::placeholder {
             color: var(--text-muted);
         }
-        /* No close (X) button — removed */
-
         .search-results {
             margin-top: 12px;
             max-height: 340px;
@@ -1252,6 +1250,7 @@
             font-weight: 600;
             font-size: 0.8rem;
             transition: var(--transition);
+            cursor: pointer;
         }
         .product-card .body .actions .btn-add:hover {
             background: var(--purple);
@@ -1265,6 +1264,7 @@
             border: 1px solid rgba(255, 255, 255, 0.04);
             color: var(--text-muted);
             transition: var(--transition);
+            cursor: pointer;
         }
         .product-card .body .actions .btn-detail:hover {
             background: rgba(255, 255, 255, 0.06);
@@ -1279,6 +1279,7 @@
             font-weight: 700;
             font-size: 0.8rem;
             transition: var(--transition);
+            cursor: pointer;
         }
         .product-card .body .actions .btn-download:hover {
             background: var(--primary-light);
@@ -1475,6 +1476,7 @@
             flex: 1;
             min-width: 160px;
             box-shadow: 0 0 40px var(--primary-glow);
+            cursor: pointer;
         }
         .detail-overlay .info .detail-actions .btn-add-cart:hover {
             transform: translateY(-2px);
@@ -1490,6 +1492,7 @@
             transition: var(--transition);
             flex: 1;
             min-width: 160px;
+            cursor: pointer;
         }
         .detail-overlay .info .detail-actions .btn-download-now:hover {
             background: var(--primary-light);
@@ -1512,6 +1515,7 @@
             font-size: 1.1rem;
             color: var(--text-muted);
             transition: var(--transition);
+            cursor: pointer;
         }
         .detail-overlay .info .detail-actions .qty-selector button:hover {
             color: var(--text-light);
@@ -1613,7 +1617,11 @@
             color: var(--text-muted);
             margin-top: 2px;
         }
-        .detail-overlay .social-row {
+
+        /* ================================================================
+           SOCIAL SHARING ON PRODUCT DETAIL
+           ================================================================ */
+        .detail-overlay .social-share-row {
             margin-top: 24px;
             padding-top: 16px;
             border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -1622,27 +1630,556 @@
             flex-wrap: wrap;
             align-items: center;
         }
-        .detail-overlay .social-row .label {
+        .detail-overlay .social-share-row .label {
             font-size: 0.8rem;
             color: var(--text-muted);
+            font-weight: 500;
         }
-        .detail-overlay .social-row a {
+        .detail-overlay .social-share-row a {
             color: var(--text-muted);
             transition: var(--transition);
             font-size: 1.2rem;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .detail-overlay .social-row a:hover {
+        .detail-overlay .social-share-row a:hover {
             color: var(--purple);
             transform: translateY(-2px);
+            border-color: var(--purple);
+            background: rgba(123, 44, 191, 0.06);
         }
-        .detail-overlay .social-row a.whatsapp:hover {
+        .detail-overlay .social-share-row a.whatsapp:hover {
             color: #25D366;
+            border-color: #25D366;
+            background: rgba(37, 211, 102, 0.06);
         }
-        .detail-overlay .social-row a.youtube:hover {
+        .detail-overlay .social-share-row a.youtube:hover {
             color: #FF0000;
+            border-color: #FF0000;
+            background: rgba(255, 0, 0, 0.06);
         }
-        .detail-overlay .social-row a.tiktok:hover {
+        .detail-overlay .social-share-row a.tiktok:hover {
             color: #00f2ea;
+            border-color: #00f2ea;
+            background: rgba(0, 242, 234, 0.06);
+        }
+        .detail-overlay .social-share-row a.telegram:hover {
+            color: #0088cc;
+            border-color: #0088cc;
+            background: rgba(0, 136, 204, 0.06);
+        }
+
+        /* ================================================================
+           CONTACT / TALK TO US SECTION
+           ================================================================ */
+        .contact-section {
+            padding: 60px 0 80px;
+            position: relative;
+            z-index: 1;
+            background: rgba(10, 10, 10, 0.30);
+        }
+        .contact-section .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 32px;
+        }
+        .contact-section .contact-info-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--card-radius);
+            padding: 36px 32px;
+        }
+        .contact-section .contact-info-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+        }
+        .contact-section .contact-info-card .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            transition: var(--transition);
+        }
+        .contact-section .contact-info-card .contact-item:last-child {
+            border-bottom: none;
+        }
+        .contact-section .contact-info-card .contact-item .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(123, 44, 191, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--purple);
+            flex-shrink: 0;
+        }
+        .contact-section .contact-info-card .contact-item .details {
+            flex: 1;
+        }
+        .contact-section .contact-info-card .contact-item .details .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .contact-section .contact-info-card .contact-item .details .value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        .contact-section .contact-info-card .contact-item .details .value a {
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+        .contact-section .contact-info-card .contact-item .details .value a:hover {
+            color: var(--purple);
+        }
+        .contact-section .contact-form-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--card-radius);
+            padding: 36px 32px;
+        }
+        .contact-section .contact-form-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+        .contact-section .contact-form-card .sub {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .contact-section .contact-form-card .form-group {
+            margin-bottom: 16px;
+        }
+        .contact-section .contact-form-card .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .contact-section .contact-form-card .form-group input,
+        .contact-section .contact-form-card .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-light);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .contact-section .contact-form-card .form-group input:focus,
+        .contact-section .contact-form-card .form-group textarea:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 30px rgba(123, 44, 191, 0.02);
+        }
+        .contact-section .contact-form-card .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .contact-section .contact-form-card .btn-primary {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ================================================================
+           PRICING PLANS MODAL
+           ================================================================ */
+        .pricing-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 8000;
+            background: rgba(10, 10, 10, 0.94);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        .pricing-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .pricing-modal .pricing-content {
+            background: var(--bg-dark);
+            border-radius: var(--card-radius);
+            max-width: 1140px;
+            width: 100%;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 40px 44px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            transform: scale(0.95) translateY(20px);
+            transition: var(--transition);
+            position: relative;
+        }
+        .pricing-modal.open .pricing-content {
+            transform: scale(1) translateY(0);
+        }
+        .pricing-modal .close-pricing {
+            position: absolute;
+            top: 18px;
+            right: 24px;
+            font-size: 1.6rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            z-index: 5;
+            transition: var(--transition);
+        }
+        .pricing-modal .close-pricing:hover {
+            color: var(--text-light);
+            transform: rotate(90deg);
+        }
+        .pricing-modal h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .pricing-modal h2 .highlight {
+            color: var(--purple);
+        }
+        .pricing-modal .pricing-sub {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 32px;
+        }
+        .pricing-modal .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .pricing-modal .plan-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--card-radius);
+            padding: 28px 24px 32px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .pricing-modal .plan-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--purple);
+            box-shadow: 0 8px 60px rgba(123, 44, 191, 0.04);
+        }
+        .pricing-modal .plan-card.popular {
+            border-color: var(--purple);
+            box-shadow: 0 0 60px rgba(123, 44, 191, 0.04);
+        }
+        .pricing-modal .plan-card .popular-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--purple);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pricing-modal .plan-card .plan-name {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .pricing-modal .plan-card .plan-name .highlight {
+            color: var(--purple);
+        }
+        .pricing-modal .plan-card .plan-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+        .pricing-modal .plan-card .plan-price {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+        .pricing-modal .plan-card .plan-price .currency {
+            font-size: 1.2rem;
+        }
+        .pricing-modal .plan-card .plan-price .period {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        .pricing-modal .plan-card .plan-original {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            margin-bottom: 12px;
+        }
+        .pricing-modal .plan-card .plan-savings {
+            font-size: 0.75rem;
+            color: var(--purple);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .pricing-modal .plan-card .plan-features {
+            flex: 1;
+            margin: 12px 0 16px;
+        }
+        .pricing-modal .plan-card .plan-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .pricing-modal .plan-card .plan-features li i {
+            color: var(--purple);
+            font-size: 0.8rem;
+            width: 18px;
+            text-align: center;
+        }
+        .pricing-modal .plan-card .plan-features li .tool-list {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: block;
+            padding-left: 28px;
+        }
+        .pricing-modal .plan-card .btn-select-plan {
+            padding: 12px 24px;
+            border-radius: 50px;
+            background: var(--purple);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 30px var(--primary-glow);
+            cursor: pointer;
+        }
+        .pricing-modal .plan-card .btn-select-plan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 50px rgba(123, 44, 191, 0.15);
+        }
+        .pricing-modal .plan-card .btn-select-plan.outline {
+            background: transparent;
+            border: 1px solid rgba(123, 44, 191, 0.20);
+            box-shadow: none;
+            color: var(--text-light);
+        }
+        .pricing-modal .plan-card .btn-select-plan.outline:hover {
+            background: rgba(123, 44, 191, 0.06);
+            border-color: var(--purple);
+        }
+
+        /* ================================================================
+           CART SIDEBAR — PERSISTENT SLIDE-IN
+           ================================================================ */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -480px;
+            width: 440px;
+            max-width: 92vw;
+            height: 100vh;
+            z-index: 2000;
+            background: rgba(10, 10, 10, 0.97);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-left: 1px solid rgba(123, 44, 191, 0.04);
+            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -8px 0 80px rgba(0, 0, 0, 0.7);
+        }
+        .cart-sidebar.open {
+            right: 0;
+        }
+        .cart-sidebar .header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .cart-sidebar .header h3 {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+        }
+        .cart-sidebar .header h3 i {
+            color: var(--purple);
+            margin-right: 10px;
+        }
+        .cart-sidebar .header .close-cart {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 4px;
+        }
+        .cart-sidebar .header .close-cart:hover {
+            color: var(--text-light);
+            transform: rotate(90deg);
+        }
+        .cart-sidebar .items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .cart-sidebar .items .empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px 0;
+        }
+        .cart-sidebar .items .empty i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.2;
+            color: var(--purple);
+        }
+        .cart-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            align-items: center;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .cart-item img {
+            width: 54px;
+            height: 54px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .cart-item .info {
+            flex: 1;
+        }
+        .cart-item .info .name {
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        .cart-item .info .price {
+            font-size: 0.8rem;
+            color: var(--purple);
+        }
+        .cart-item .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .cart-item .qty-control button {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .cart-item .qty-control button:hover {
+            background: rgba(123, 44, 191, 0.10);
+            color: var(--purple);
+        }
+        .cart-item .qty-control span {
+            min-width: 26px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .cart-item .remove {
+            color: var(--text-muted);
+            transition: var(--transition);
+            padding: 4px 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .cart-item .remove:hover {
+            color: var(--purple);
+        }
+        .cart-sidebar .footer {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            flex-shrink: 0;
+        }
+        .cart-sidebar .footer .total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .cart-sidebar .footer .total .amount {
+            color: var(--purple);
+        }
+        .cart-sidebar .footer .btn-checkout {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            background: var(--purple);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: var(--transition);
+            box-shadow: 0 0 40px var(--primary-glow);
+            cursor: pointer;
+        }
+        .cart-sidebar .footer .btn-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 70px rgba(123, 44, 191, 0.20);
+        }
+        .cart-sidebar .footer .btn-checkout:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         /* ================================================================
@@ -1758,9 +2295,14 @@
             color: var(--purple);
             font-size: 0.85rem;
             transition: var(--transition);
+            cursor: pointer;
+            background: rgba(123, 44, 191, 0.08);
+            padding: 6px 14px;
+            border-radius: 8px;
         }
         .profile-overlay .profile-card .referral-box button:hover {
             color: var(--text-light);
+            background: rgba(123, 44, 191, 0.15);
         }
         .profile-overlay .profile-card .logout-btn {
             width: 100%;
@@ -1771,6 +2313,7 @@
             font-weight: 600;
             margin-top: 16px;
             transition: var(--transition);
+            cursor: pointer;
         }
         .profile-overlay .profile-card .logout-btn:hover {
             background: rgba(123, 44, 191, 0.06);
@@ -1784,6 +2327,7 @@
             font-weight: 500;
             margin-top: 8px;
             transition: var(--transition);
+            cursor: pointer;
         }
         .profile-overlay .profile-card .change-pwd-btn:hover {
             border-color: var(--purple);
@@ -1823,177 +2367,6 @@
             text-align: center;
             color: var(--text-muted);
             padding: 20px 0;
-        }
-
-        /* ================================================================
-           CART SIDEBAR
-           ================================================================ */
-        .cart-sidebar {
-            position: fixed;
-            top: 0;
-            right: -500px;
-            width: 440px;
-            max-width: 92vw;
-            height: 100vh;
-            z-index: 2000;
-            background: rgba(10, 10, 10, 0.97);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border-left: 1px solid rgba(123, 44, 191, 0.04);
-            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            display: flex;
-            flex-direction: column;
-            box-shadow: -8px 0 80px rgba(0, 0, 0, 0.7);
-        }
-        .cart-sidebar.open {
-            right: 0;
-        }
-        .cart-sidebar .header {
-            padding: 20px 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .cart-sidebar .header h3 {
-            font-family: var(--font-heading);
-            font-size: 1.3rem;
-        }
-        .cart-sidebar .header h3 i {
-            color: var(--purple);
-            margin-right: 10px;
-        }
-        .cart-sidebar .header .close-cart {
-            font-size: 1.4rem;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-        .cart-sidebar .items {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .cart-sidebar .items .empty {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 40px 0;
-        }
-        .cart-sidebar .items .empty i {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            opacity: 0.2;
-            color: var(--purple);
-        }
-        .cart-item {
-            display: flex;
-            gap: 14px;
-            padding: 12px 14px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            align-items: center;
-            animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        .cart-item img {
-            width: 54px;
-            height: 54px;
-            border-radius: 10px;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-        .cart-item .info {
-            flex: 1;
-        }
-        .cart-item .info .name {
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-        .cart-item .info .price {
-            font-size: 0.8rem;
-            color: var(--purple);
-        }
-        .cart-item .qty-control {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 4px;
-        }
-        .cart-item .qty-control button {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-muted);
-            font-weight: 600;
-            transition: var(--transition);
-            font-size: 0.8rem;
-        }
-        .cart-item .qty-control button:hover {
-            background: rgba(123, 44, 191, 0.10);
-            color: var(--purple);
-        }
-        .cart-item .qty-control span {
-            min-width: 26px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-        .cart-item .remove {
-            color: var(--text-muted);
-            transition: var(--transition);
-            padding: 4px 8px;
-            font-size: 0.9rem;
-        }
-        .cart-item .remove:hover {
-            color: var(--purple);
-        }
-        .cart-sidebar .footer {
-            padding: 20px 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .cart-sidebar .footer .total {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-        .cart-sidebar .footer .total .amount {
-            color: var(--purple);
-        }
-        .cart-sidebar .footer .btn-checkout {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            background: var(--purple);
-            color: #fff;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: var(--transition);
-            box-shadow: 0 0 40px var(--primary-glow);
-        }
-        .cart-sidebar .footer .btn-checkout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 70px rgba(123, 44, 191, 0.20);
-        }
-        .cart-sidebar .footer .btn-checkout:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
         /* ================================================================
@@ -2043,9 +2416,11 @@
             color: var(--text-muted);
             cursor: pointer;
             z-index: 5;
+            transition: var(--transition);
         }
         .checkout-modal .close-checkout:hover {
             color: var(--text-light);
+            transform: rotate(90deg);
         }
         .checkout-modal h2 {
             font-family: var(--font-heading);
@@ -2222,6 +2597,7 @@
             transition: var(--transition);
             margin-top: 12px;
             box-shadow: 0 0 40px var(--primary-glow);
+            cursor: pointer;
         }
         .checkout-modal .btn-place-order:hover {
             transform: translateY(-2px);
@@ -2257,6 +2633,7 @@
             font-size: 0.85rem;
             transition: var(--transition);
             white-space: nowrap;
+            cursor: pointer;
         }
         .checkout-modal .coupon-section button:hover {
             background: var(--purple);
@@ -2307,9 +2684,11 @@
             font-size: 1.4rem;
             color: var(--text-muted);
             cursor: pointer;
+            transition: var(--transition);
         }
         .auth-modal .close-auth:hover {
             color: var(--text-light);
+            transform: rotate(90deg);
         }
         .auth-modal .auth-content h2 {
             font-family: var(--font-heading);
@@ -2354,6 +2733,7 @@
             margin-top: 8px;
             transition: var(--transition);
             box-shadow: 0 0 30px var(--primary-glow);
+            cursor: pointer;
         }
         .auth-modal .auth-content .btn-auth:hover {
             transform: translateY(-2px);
@@ -2482,6 +2862,10 @@
             font-weight: 700;
             margin-top: 16px;
             transition: var(--transition);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         .confirm-modal .btn-continue:hover {
             transform: translateY(-2px);
@@ -2548,6 +2932,7 @@
             margin-top: 20px;
             transition: var(--transition);
             box-shadow: 0 0 30px var(--primary-glow);
+            cursor: pointer;
         }
         .checkin-modal .checkin-content .btn-claim:hover {
             transform: translateY(-2px);
@@ -2587,7 +2972,7 @@
         }
 
         /* ================================================================
-           POLICY MODALS (NEW)
+           POLICY MODALS
            ================================================================ */
         .policy-modal {
             position: fixed;
@@ -2633,9 +3018,11 @@
             color: var(--text-muted);
             cursor: pointer;
             z-index: 5;
+            transition: var(--transition);
         }
         .policy-modal .close-policy:hover {
             color: var(--text-light);
+            transform: rotate(90deg);
         }
         .policy-modal h2 {
             font-family: var(--font-heading);
@@ -2738,95 +3125,212 @@
         }
 
         /* ================================================================
-           QUICK MESSAGE SECTION
+           CHAT WIDGET
            ================================================================ */
-        .quick-message-section {
-            padding: 60px 0 80px;
-            position: relative;
-            z-index: 1;
-        }
-        .quick-message-section .message-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 40px;
-            margin-top: 32px;
-        }
-        .quick-message-section .message-info {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--card-radius);
-            padding: 32px;
-        }
-        .quick-message-section .message-info h3 {
-            font-family: var(--font-heading);
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-        }
-        .quick-message-section .message-info p {
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-        .quick-message-section .message-info ul {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .quick-message-section .message-info ul li {
+        .chat-fab {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 8000;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: #fff;
+            font-size: 1.6rem;
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
+            justify-content: center;
+            box-shadow: 0 4px 40px var(--primary-glow);
+            transition: var(--transition);
+            cursor: pointer;
         }
-        .quick-message-section .message-info ul li i {
-            width: 24px;
-            color: var(--purple);
-            font-size: 1.2rem;
+        .chat-fab:hover {
+            transform: scale(1.06);
+            box-shadow: 0 4px 60px rgba(123, 44, 191, 0.25);
         }
-        .quick-message-section .message-form {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
+        .chat-fab .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--purple);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 700;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 28px;
+            z-index: 7999;
+            width: 400px;
+            max-width: 92vw;
+            height: 520px;
+            max-height: 70vh;
+            background: var(--bg-dark);
             border-radius: var(--card-radius);
-            padding: 32px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            transform-origin: bottom right;
+            overflow: hidden;
         }
-        .quick-message-section .message-form .form-group {
-            margin-bottom: 16px;
+        .chat-panel.open {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            visibility: visible;
         }
-        .quick-message-section .message-form .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 500;
+        .chat-panel .header {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chat-panel .header .title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chat-panel .header .title .status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .chat-panel .header .title .status.online {
+            background: var(--purple);
+        }
+        .chat-panel .header .title .status.offline {
+            background: var(--text-muted);
+        }
+        .chat-panel .header .close-chat {
             color: var(--text-muted);
-            margin-bottom: 4px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
         }
-        .quick-message-section .message-form .form-group input,
-        .quick-message-section .message-form .form-group textarea {
-            width: 100%;
+        .chat-panel .header .close-chat:hover {
+            color: var(--text-light);
+            transform: rotate(90deg);
+        }
+        .chat-panel .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-panel .messages .msg {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            animation: fadeUp 0.3s ease;
+        }
+        .chat-panel .messages .msg.user {
+            align-self: flex-end;
+            background: var(--purple);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-panel .messages .msg.bot {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-bottom-left-radius: 4px;
+        }
+        .chat-panel .messages .msg .time {
+            font-size: 0.6rem;
+            opacity: 0.5;
+            margin-top: 4px;
+            display: block;
+        }
+        .chat-panel .messages .msg img {
+            max-width: 160px;
+            border-radius: 8px;
+            margin-top: 4px;
+        }
+        .chat-panel .messages .msg audio {
+            max-width: 180px;
+            margin-top: 4px;
+        }
+        .chat-panel .input-area {
             padding: 12px 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .chat-panel .input-area input[type="text"] {
+            flex: 1;
+            padding: 10px 14px;
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.04);
             color: var(--text-light);
-            font-size: 0.9rem;
-            transition: var(--transition);
+            font-size: 0.85rem;
+            min-width: 120px;
         }
-        .quick-message-section .message-form .form-group input:focus,
-        .quick-message-section .message-form .form-group textarea:focus {
+        .chat-panel .input-area input[type="text"]:focus {
             border-color: var(--purple);
-            box-shadow: 0 0 30px rgba(123, 44, 191, 0.02);
         }
-        .quick-message-section .message-form .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
+        .chat-panel .input-area .btn-send {
+            padding: 10px 18px;
+            border-radius: 12px;
+            background: var(--purple);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
         }
-        .quick-message-section .message-form .btn-primary {
-            width: 100%;
-            justify-content: center;
+        .chat-panel .input-area .btn-send:hover {
+            transform: scale(1.02);
+        }
+        .chat-panel .input-area .media-btn {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            padding: 6px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .chat-panel .input-area .media-btn:hover {
+            color: var(--purple);
+        }
+        .chat-panel .input-area .media-btn.recording {
+            color: var(--purple);
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+        .chat-panel .input-area .file-input {
+            display: none;
         }
 
         /* ================================================================
@@ -2947,249 +3451,41 @@
         }
 
         /* ================================================================
-           SKELETON LOADING
+           BACK TO TOP
            ================================================================ */
-        .skeleton {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: var(--card-radius);
-            overflow: hidden;
-            animation: shimmer 1.5s ease-in-out infinite;
-        }
-        .skeleton .s-img {
-            aspect-ratio: 1/1;
-            background: rgba(255, 255, 255, 0.04);
-        }
-        .skeleton .s-body {
-            padding: 16px 18px;
-        }
-        .skeleton .s-body .s-line {
-            height: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 6px;
-            margin-bottom: 8px;
-        }
-        .skeleton .s-body .s-line.short {
-            width: 60%;
-        }
-        .skeleton .s-body .s-line.med {
-            width: 80%;
-        }
-        @keyframes shimmer {
-            0% {
-                opacity: 0.4;
-            }
-            50% {
-                opacity: 0.8;
-            }
-            100% {
-                opacity: 0.4;
-            }
-        }
-
-        /* ================================================================
-           CHAT WIDGET
-           ================================================================ */
-        .chat-fab {
-            position: fixed;
-            bottom: 28px;
-            right: 28px;
-            z-index: 8000;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--purple);
-            color: #fff;
-            font-size: 1.6rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 40px var(--primary-glow);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-        .chat-fab:hover {
-            transform: scale(1.06);
-            box-shadow: 0 4px 60px rgba(123, 44, 191, 0.25);
-        }
-        .chat-fab .badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            background: var(--purple);
-            color: #fff;
-            font-size: 0.6rem;
-            font-weight: 700;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .chat-panel {
+        .back-to-top {
             position: fixed;
             bottom: 100px;
             right: 28px;
-            z-index: 7999;
-            width: 400px;
-            max-width: 92vw;
-            height: 520px;
-            max-height: 70vh;
-            background: var(--bg-dark);
-            border-radius: var(--card-radius);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
+            z-index: 50;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(123, 44, 191, 0.10);
+            border: 1px solid rgba(123, 44, 191, 0.10);
+            color: var(--purple);
+            font-size: 1.1rem;
             display: flex;
-            flex-direction: column;
-            transform: scale(0.9) translateY(20px);
+            align-items: center;
+            justify-content: center;
             opacity: 0;
             visibility: hidden;
             transition: var(--transition);
-            transform-origin: bottom right;
-            overflow: hidden;
+            backdrop-filter: blur(12px);
+            cursor: pointer;
         }
-        .chat-panel.open {
-            transform: scale(1) translateY(0);
+        .back-to-top.visible {
             opacity: 1;
             visibility: visible;
         }
-        .chat-panel .header {
-            padding: 14px 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .chat-panel .header .title {
-            font-weight: 600;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .chat-panel .header .title .status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .chat-panel .header .title .status.online {
-            background: var(--purple);
-        }
-        .chat-panel .header .title .status.offline {
-            background: var(--text-muted);
-        }
-        .chat-panel .header .close-chat {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        .chat-panel .messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .chat-panel .messages .msg {
-            max-width: 85%;
-            padding: 10px 14px;
-            border-radius: 14px;
-            font-size: 0.85rem;
-            animation: fadeUp 0.3s ease;
-        }
-        .chat-panel .messages .msg.user {
-            align-self: flex-end;
-            background: var(--purple);
-            color: #fff;
-            border-bottom-right-radius: 4px;
-        }
-        .chat-panel .messages .msg.bot {
-            align-self: flex-start;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-bottom-left-radius: 4px;
-        }
-        .chat-panel .messages .msg .time {
-            font-size: 0.6rem;
-            opacity: 0.5;
-            margin-top: 4px;
-            display: block;
-        }
-        .chat-panel .messages .msg img {
-            max-width: 160px;
-            border-radius: 8px;
-            margin-top: 4px;
-        }
-        .chat-panel .messages .msg audio {
-            max-width: 180px;
-            margin-top: 4px;
-        }
-        .chat-panel .input-area {
-            padding: 12px 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-        }
-        .chat-panel .input-area input[type="text"] {
-            flex: 1;
-            padding: 10px 14px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            color: var(--text-light);
-            font-size: 0.85rem;
-            min-width: 120px;
-        }
-        .chat-panel .input-area input[type="text"]:focus {
+        .back-to-top:hover {
+            background: rgba(123, 44, 191, 0.15);
             border-color: var(--purple);
-        }
-        .chat-panel .input-area .btn-send {
-            padding: 10px 18px;
-            border-radius: 12px;
-            background: var(--purple);
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: var(--transition);
-        }
-        .chat-panel .input-area .btn-send:hover {
-            transform: scale(1.02);
-        }
-        .chat-panel .input-area .media-btn {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            padding: 6px;
-            transition: var(--transition);
-        }
-        .chat-panel .input-area .media-btn:hover {
-            color: var(--purple);
-        }
-        .chat-panel .input-area .media-btn.recording {
-            color: var(--purple);
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.3;
-            }
-        }
-        .chat-panel .input-area .file-input {
-            display: none;
+            transform: translateY(-4px);
         }
 
         /* ================================================================
-           DEDICATED PAID / FREE TOOLS PAGES
+           TOOLS PAGES
            ================================================================ */
         .tools-page {
             padding: 60px 0 80px;
@@ -3235,6 +3531,7 @@
             color: var(--text-muted);
             transition: var(--transition);
             font-size: 0.85rem;
+            cursor: pointer;
         }
         .tools-page .tools-header .back-link:hover {
             color: var(--purple);
@@ -3246,6 +3543,95 @@
         }
         .tools-page .tools-stats strong {
             color: var(--text-light);
+        }
+
+        /* ================================================================
+           SKELETON LOADING
+           ================================================================ */
+        .skeleton {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+        .skeleton .s-img {
+            aspect-ratio: 1/1;
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .skeleton .s-body {
+            padding: 16px 18px;
+        }
+        .skeleton .s-body .s-line {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        .skeleton .s-body .s-line.short {
+            width: 60%;
+        }
+        .skeleton .s-body .s-line.med {
+            width: 80%;
+        }
+        @keyframes shimmer {
+            0% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0.4;
+            }
+        }
+
+        /* ================================================================
+           SCROLL REVEAL
+           ================================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ================================================================
+           UTILITIES
+           ================================================================ */
+        .hidden {
+            display: none !important;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-2 {
+            margin-top: 16px;
+        }
+        .mb-2 {
+            margin-bottom: 16px;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gap-1 {
+            gap: 8px;
+        }
+        .text-muted {
+            color: var(--text-muted);
+        }
+        .text-glow {
+            color: var(--purple);
         }
 
         /* ================================================================
@@ -3289,8 +3675,16 @@
             .checkout-modal .form-grid .full {
                 grid-column: 1;
             }
-            .quick-message-section .message-grid {
+            .contact-section .contact-grid {
                 grid-template-columns: 1fr;
+            }
+            .pricing-modal .plans-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .pricing-modal .plans-grid .plan-card:last-child {
+                grid-column: 1 / -1;
+                max-width: 440px;
+                margin: 0 auto;
             }
             .hero-carousel .slide .slide-overlay {
                 max-width: 80%;
@@ -3407,10 +3801,6 @@
             .profile-overlay .profile-card .stats {
                 grid-template-columns: 1fr 1fr;
             }
-            .quick-message-section .message-info,
-            .quick-message-section .message-form {
-                padding: 24px;
-            }
             .hero-carousel {
                 aspect-ratio: 16/9;
                 min-height: 200px;
@@ -3475,6 +3865,24 @@
             }
             .navbar .logo {
                 font-size: 1.1rem;
+            }
+            .pricing-modal .plans-grid {
+                grid-template-columns: 1fr;
+                max-width: 440px;
+                margin: 0 auto;
+            }
+            .pricing-modal .pricing-content {
+                padding: 28px 20px;
+            }
+            .pricing-modal .plan-card .plan-price {
+                font-size: 2rem;
+            }
+            .contact-section .contact-info-card,
+            .contact-section .contact-form-card {
+                padding: 24px 20px;
+            }
+            .contact-section .contact-info-card .contact-item .details .value {
+                font-size: 0.85rem;
             }
         }
 
@@ -3564,97 +3972,18 @@
                 width: 95vw;
                 max-width: 95vw;
             }
-        }
-
-        /* ================================================================
-           SCROLL REVEAL
-           ================================================================ */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ================================================================
-           UTILITIES
-           ================================================================ */
-        .hidden {
-            display: none !important;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .mt-2 {
-            margin-top: 16px;
-        }
-        .mb-2 {
-            margin-bottom: 16px;
-        }
-        .w-full {
-            width: 100%;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .gap-1 {
-            gap: 8px;
-        }
-        .text-muted {
-            color: var(--text-muted);
-        }
-        .text-glow {
-            color: var(--purple);
-        }
-
-        /* ================================================================
-           BACK TO TOP
-           ================================================================ */
-        .back-to-top {
-            position: fixed;
-            bottom: 100px;
-            right: 28px;
-            z-index: 50;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(123, 44, 191, 0.10);
-            border: 1px solid rgba(123, 44, 191, 0.10);
-            color: var(--purple);
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-            backdrop-filter: blur(12px);
-            cursor: pointer;
-        }
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        .back-to-top:hover {
-            background: rgba(123, 44, 191, 0.15);
-            border-color: var(--purple);
-            transform: translateY(-4px);
-        }
-        @media (max-width: 768px) {
             .back-to-top {
                 bottom: 80px;
                 right: 16px;
                 width: 38px;
                 height: 38px;
                 font-size: 0.9rem;
+            }
+            .pricing-modal .plan-card .plan-name {
+                font-size: 1.3rem;
+            }
+            .pricing-modal .plan-card .plan-price {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -3666,7 +3995,7 @@
     ================================================================ -->
     <div id="loader">
         <div class="loader-ring"></div>
-        <div class="loader-text">MH Hacks</div>
+        <div class="loader-text">MH HACKS</div>
     </div>
 
     <!-- ================================================================
@@ -3684,8 +4013,8 @@
     ================================================================ -->
     <nav class="navbar" id="navbar">
         <a href="#" class="logo" id="logoLink">
-            <img src="https://i.ibb.co/wN77dfzw/logo.png" alt="MH Hacks Logo" loading="lazy" />
-            MH <span class="highlight">Hacks</span>
+            <img src="https://i.ibb.co/wN77dfzw/logo.png" alt="MH HACKS Logo" loading="lazy" />
+            MH <span class="highlight">HACKS</span>
         </a>
         <div class="nav-links">
             <a href="#home" data-nav class="active-link">Home</a>
@@ -3693,6 +4022,7 @@
             <a href="#categories" data-nav>Categories</a>
             <a href="#" data-nav id="allPaidToolsNav">All Paid Tools</a>
             <a href="#" data-nav id="allFreeToolsNav">All Free Tools</a>
+            <a href="#" data-nav id="pricingNav" style="color:var(--purple);font-weight:600;">Pricing Plans</a>
         </div>
         <div class="nav-actions">
             <button class="search-toggle" id="searchToggle" aria-label="Search"><i class="fas fa-search"></i></button>
@@ -3722,7 +4052,7 @@
     <div class="notif-panel" id="notifPanel">
         <div class="notif-header">
             <span>Notifications</span>
-            <span class="mark-read" id="markAllRead">Mark all read</span>
+            <span class="mark-read" id="markAllRead">Mark All Read</span>
         </div>
         <div id="notifList">
             <div class="empty">No notifications.</div>
@@ -3739,12 +4069,14 @@
         <a href="#categories" data-nav>Categories</a>
         <a href="#" data-nav id="mobileAllPaid">All Paid Tools</a>
         <a href="#" data-nav id="mobileAllFree">All Free Tools</a>
+        <a href="#" data-nav id="mobilePricing" style="color:var(--purple);font-weight:600;">Pricing Plans</a>
         <a href="#" data-nav id="mobileCheckin">Daily Check-In</a>
-        <!-- mobileSignIn injected by JS -->
+        <a href="#" data-nav id="mobileContact">Contact</a>
+        <a href="#" data-nav id="mobileSignIn">Sign In</a>
     </div>
 
     <!-- ================================================================
-    SEARCH OVERLAY — no X icon, compact
+    SEARCH OVERLAY
     ================================================================ -->
     <div class="search-overlay" id="searchOverlay">
         <div class="search-box">
@@ -3754,7 +4086,7 @@
     </div>
 
     <!-- ================================================================
-    CART SIDEBAR
+    CART SIDEBAR — PERSISTENT
     ================================================================ -->
     <div class="cart-sidebar" id="cartSidebar">
         <div class="header">
@@ -3772,7 +4104,7 @@
                 <span>Total</span>
                 <span class="amount" id="cartTotal">$0.00</span>
             </div>
-            <button class="btn-checkout" id="checkoutBtn">Proceed to Checkout</button>
+            <button class="btn-checkout" id="checkoutBtn">Proceed To Checkout</button>
         </div>
     </div>
 
@@ -3783,8 +4115,8 @@
         <div class="container">
             <div class="hero-content">
                 <div class="badge"><i class="fas fa-bolt" style="margin-right:6px;"></i>Premium Digital Marketplace</div>
-                <h1>Unlock the tools <br><span class="highlight">the top 1%</span> are using.</h1>
-                <p>MH Hacks curates premium and free tools, methods, tricks, courses and verified digital accounts — everything you need to grow faster, earn more and ship smarter. Instant delivery. No fluff. 30-day money-back guarantee.</p>
+                <h1>Unlock The Tools <br><span class="highlight">The Top 1%</span> Are Using.</h1>
+                <p>MH HACKS curates premium and free tools, methods, tricks, courses and verified digital accounts — everything you need to grow faster, earn more and ship smarter. Instant delivery. No fluff. 30-day money-back guarantee.</p>
                 <div class="hero-actions">
                     <a href="#products" class="btn-primary"><i class="fas fa-rocket"></i> Explore Products</a>
                     <a href="#free-tools" class="btn-secondary"><i class="fas fa-gift"></i> Free Tools</a>
@@ -3815,9 +4147,7 @@
     <section class="hero-carousel-section" id="heroCarouselSection">
         <div class="container">
             <div class="hero-carousel" id="heroCarousel">
-                <div class="slides" id="carouselSlides">
-                    <!-- Slides injected by JS -->
-                </div>
+                <div class="slides" id="carouselSlides"></div>
                 <button class="arrow prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
                 <button class="arrow next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
                 <div class="dots" id="carouselDots"></div>
@@ -3830,11 +4160,9 @@
     ================================================================ -->
     <section class="categories-section" id="categories">
         <div class="container">
-            <h2 class="section-title reveal">Shop by <span class="highlight">Category</span></h2>
+            <h2 class="section-title reveal">Shop By <span class="highlight">Category</span></h2>
             <p class="section-sub reveal">Premium & free, all in one place.</p>
-            <div class="categories-grid" id="categoryGrid">
-                <!-- Rendered by JS -->
-            </div>
+            <div class="categories-grid" id="categoryGrid"></div>
         </div>
     </section>
 
@@ -3854,9 +4182,7 @@
                     <button data-filter="free">Free</button>
                 </div>
             </div>
-            <div class="products-grid" id="productsGrid">
-                <!-- Rendered by JS -->
-            </div>
+            <div class="products-grid" id="productsGrid"></div>
         </div>
     </section>
 
@@ -3867,9 +4193,7 @@
         <div class="container">
             <h2 class="section-title reveal"><i class="fas fa-gift" style="color:var(--purple);margin-right:12px;"></i>Free <span class="highlight">Tools</span></h2>
             <p class="section-sub reveal">Powerful utilities at no cost.</p>
-            <div class="products-grid" id="freeToolsGrid">
-                <!-- Rendered by JS -->
-            </div>
+            <div class="products-grid" id="freeToolsGrid"></div>
         </div>
     </section>
 
@@ -3884,10 +4208,10 @@
                     <p class="section-sub">Premium tools, methods, courses, and more.</p>
                 </div>
                 <div class="sort-filter">
-                    <a href="#" class="back-link" id="paidBackLink"><i class="fas fa-arrow-left"></i> Back to Shop</a>
+                    <a href="#" class="back-link" id="paidBackLink"><i class="fas fa-arrow-left"></i> Back To Shop</a>
                     <select id="paidSortSelect">
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
+                        <option value="price-asc">Price: Low To High</option>
+                        <option value="price-desc">Price: High To Low</option>
                         <option value="rating">Rating</option>
                         <option value="popular">Popularity</option>
                     </select>
@@ -3910,7 +4234,7 @@
                     <p class="section-sub">Free tools, methods, courses, and resources.</p>
                 </div>
                 <div class="sort-filter">
-                    <a href="#" class="back-link" id="freeBackLink"><i class="fas fa-arrow-left"></i> Back to Shop</a>
+                    <a href="#" class="back-link" id="freeBackLink"><i class="fas fa-arrow-left"></i> Back To Shop</a>
                     <select id="freeSortSelect">
                         <option value="rating">Rating</option>
                         <option value="popular">Popularity</option>
@@ -3929,7 +4253,7 @@
     ================================================================ -->
     <div class="detail-overlay" id="detailOverlay">
         <div class="container">
-            <div class="back-btn" id="detailBack"><i class="fas fa-arrow-left"></i> Back to Shop</div>
+            <div class="back-btn" id="detailBack"><i class="fas fa-arrow-left"></i> Back To Shop</div>
             <div class="detail-grid" id="detailGrid">
                 <div class="gallery">
                     <div class="main-media" id="detailMainWrap">
@@ -3954,16 +4278,31 @@
                         <h4>Related Products</h4>
                         <div class="related-grid" id="detailRelatedGrid"></div>
                     </div>
-                    <div class="social-row">
-                        <span class="label">Share:</span>
-                        <a href="https://tiktok.com/@mhhacks" target="_blank" class="tiktok"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://youtube.com/@mhhacks" target="_blank" class="youtube"><i class="fab fa-youtube"></i></a>
-                        <a href="https://facebook.com/mhhacks" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://instagram.com/mhhacks" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://wa.me/971562100607" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <!-- SOCIAL SHARING WITH TELEGRAM -->
+                    <div class="social-share-row">
+                        <span class="label"><i class="fas fa-share-alt" style="color:var(--purple);margin-right:6px;"></i>Share:</span>
+                        <a href="#" class="share-btn" data-platform="facebook" title="Share On Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="share-btn" data-platform="twitter" title="Share On X"><i class="fab fa-x-twitter"></i></a>
+                        <a href="#" class="share-btn" data-platform="linkedin" title="Share On LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="share-btn" data-platform="telegram" title="Share On Telegram"><i class="fab fa-telegram-plane"></i></a>
+                        <a href="#" class="share-btn" data-platform="whatsapp" title="Share On WhatsApp"><i class="fab fa-whatsapp"></i></a>
                         <span style="margin-left:12px;font-size:0.75rem;color:var(--text-muted);">| mhhackshelpzone@gmail.com</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================
+    PRICING PLANS MODAL
+    ================================================================ -->
+    <div class="pricing-modal" id="pricingModal">
+        <div class="pricing-content">
+            <button class="close-pricing" id="closePricing"><i class="fas fa-times"></i></button>
+            <h2>Choose Your <span class="highlight">Plan</span></h2>
+            <p class="pricing-sub">Select the perfect plan for your needs. Unlock tools instantly after purchase.</p>
+            <div class="plans-grid" id="plansGrid">
+                <!-- Plans rendered by JS -->
             </div>
         </div>
     </div>
@@ -4061,7 +4400,7 @@
         <div class="auth-content">
             <button class="close-auth" id="closeAuth"><i class="fas fa-times"></i></button>
             <h2 id="authTitle">Sign In</h2>
-            <p class="sub" id="authSub">Welcome back to MH Hacks.</p>
+            <p class="sub" id="authSub">Welcome back to MH HACKS.</p>
             <form id="authForm">
                 <div id="authFields">
                     <div class="form-group" id="authNameGroup" style="display:none;">
@@ -4108,7 +4447,7 @@
     <div class="checkin-modal" id="checkinModal">
         <div class="checkin-content">
             <div class="reward">🎁</div>
-            <h3>Daily Check-in</h3>
+            <h3>Daily Check-In</h3>
             <p id="checkinStatus">Claim your daily reward!</p>
             <button class="btn-claim" id="claimCheckin"><i class="fas fa-calendar-check"></i> Claim Reward</button>
             <div class="history" id="checkinHistory"></div>
@@ -4152,29 +4491,69 @@
     </div>
 
     <!-- ================================================================
-    QUICK MESSAGE SECTION
+    CONTACT / TALK TO US SECTION
     ================================================================ -->
-    <section class="quick-message-section" id="quickMessage">
+    <section class="contact-section" id="contactSection">
         <div class="container">
-            <h2 class="section-title reveal">Send a <span class="highlight">Quick Message</span></h2>
-            <p class="section-sub reveal">We reply in minutes. Pre‑sales, support, feedback — we're here for you.</p>
-            <div class="message-grid reveal">
-                <div class="message-info">
-                    <h3><i class="fas fa-comment-dots" style="color:var(--purple);margin-right:10px;"></i>Talk to us</h3>
-                    <p>Our team is online 24/7 across email, WhatsApp, and live chat.</p>
-                    <ul>
-                        <li><i class="fas fa-envelope"></i> mhhackshelpzone@gmail.com</li>
-                        <li><i class="fas fa-clock"></i> Under 15 minutes response</li>
-                        <li><i class="fab fa-whatsapp"></i> +971 562 100 607</li>
-                        <li><i class="fas fa-comment"></i> Live chat bottom‑right</li>
-                    </ul>
+            <h2 class="section-title reveal">Talk To <span class="highlight">Us</span></h2>
+            <p class="section-sub reveal">We're here to help. Reach out anytime.</p>
+            <div class="contact-grid reveal">
+                <div class="contact-info-card">
+                    <h3><i class="fas fa-headset" style="color:var(--purple);margin-right:10px;"></i>Get In Touch</h3>
+                    <div class="contact-item">
+                        <div class="icon"><i class="fas fa-envelope"></i></div>
+                        <div class="details">
+                            <div class="label">Email</div>
+                            <div class="value"><a href="mailto:mhhackshelpzone@gmail.com">mhhackshelpzone@gmail.com</a></div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon"><i class="fab fa-whatsapp" style="color:#25D366;"></i></div>
+                        <div class="details">
+                            <div class="label">WhatsApp #1</div>
+                            <div class="value"><a href="https://wa.me/971562100607" target="_blank">+971 562 100 607</a></div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon"><i class="fab fa-whatsapp" style="color:#25D366;"></i></div>
+                        <div class="details">
+                            <div class="label">WhatsApp #2</div>
+                            <div class="value"><a href="https://wa.me/923007624789" target="_blank">+92 300 762 4789</a></div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon"><i class="fas fa-phone"></i></div>
+                        <div class="details">
+                            <div class="label">Call</div>
+                            <div class="value"><a href="tel:+923007624789">+92 300 762 4789</a></div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon"><i class="fab fa-telegram" style="color:#0088cc;"></i></div>
+                        <div class="details">
+                            <div class="label">Telegram</div>
+                            <div class="value"><a href="https://t.me/MH_HACKS_OWNER" target="_blank">@MH_HACKS_OWNER</a></div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="details">
+                            <div class="label">Address</div>
+                            <div class="value">Pakistan, Multan International</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.03);">
+                        <p style="font-size:0.85rem;color:var(--text-muted);"><i class="fas fa-clock" style="color:var(--purple);margin-right:6px;"></i>Response time: Under 15 minutes — 24/7</p>
+                    </div>
                 </div>
-                <div class="message-form">
-                    <form id="quickMessageForm">
-                        <div class="form-group"><label>Name *</label><input type="text" id="msgName" placeholder="Jane Doe" required></div>
-                        <div class="form-group"><label>Email *</label><input type="email" id="msgEmail" placeholder="you@example.com" required></div>
-                        <div class="form-group"><label>Subject</label><input type="text" id="msgSubject" placeholder="How can we help?"></div>
-                        <div class="form-group"><label>Message *</label><textarea id="msgMessage" placeholder="Tell us more…" rows="4" required></textarea></div>
+                <div class="contact-form-card">
+                    <h3><i class="fas fa-paper-plane" style="color:var(--purple);margin-right:10px;"></i>Send A Message</h3>
+                    <p class="sub">We'll reply within minutes.</p>
+                    <form id="contactForm">
+                        <div class="form-group"><label>Your Name *</label><input type="text" id="contactName" placeholder="Jane Doe" required></div>
+                        <div class="form-group"><label>Email *</label><input type="email" id="contactEmail" placeholder="you@example.com" required></div>
+                        <div class="form-group"><label>Subject</label><input type="text" id="contactSubject" placeholder="How can we help?"></div>
+                        <div class="form-group"><label>Message *</label><textarea id="contactMessage" placeholder="Tell us more…" rows="4" required></textarea></div>
                         <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send Message</button>
                     </form>
                 </div>
@@ -4190,8 +4569,8 @@
             <div class="grid">
                 <div class="brand">
                     <div class="logo">
-                        <img src="https://i.ibb.co/wN77dfzw/logo.png" alt="MH Hacks Logo" style="height:32px;width:auto;" />
-                        MH <span style="color:var(--purple);">Hacks</span>
+                        <img src="https://i.ibb.co/wN77dfzw/logo.png" alt="MH HACKS Logo" style="height:32px;width:auto;" />
+                        MH <span style="color:var(--purple);">HACKS</span>
                     </div>
                     <p>Premium digital marketplace for tools, courses, methods and verified accounts. Built for builders.</p>
                     <div class="socials">
@@ -4209,13 +4588,14 @@
                     <a href="#products">Shop</a>
                     <a href="#categories">Categories</a>
                     <a href="#free-tools">Free Tools</a>
+                    <a href="#" id="footerPricingLink">Pricing Plans</a>
                 </div>
                 <div class="col">
                     <h4>Support</h4>
                     <a href="#" class="policy-link" data-policy="privacy">Privacy Policy</a>
                     <a href="#" class="policy-link" data-policy="refund">Refund Policy</a>
                     <a href="#" class="policy-link" data-policy="terms">Terms & Conditions</a>
-                    <a href="#quickMessage">Contact</a>
+                    <a href="#contactSection">Contact</a>
                 </div>
                 <div class="col">
                     <h4>Products</h4>
@@ -4236,19 +4616,19 @@
                 </div>
             </div>
             <div class="bottom">
-                <span>&copy; 2026 MH Hacks. All rights reserved.</span>
+                <span>&copy; 2026 MH HACKS. All rights reserved.</span>
                 <div class="links">
                     <a href="#" class="policy-link" data-policy="privacy">Privacy</a>
                     <a href="#" class="policy-link" data-policy="refund">Refunds</a>
                     <a href="#" class="policy-link" data-policy="terms">Terms</a>
-                    <a href="#quickMessage">Contact</a>
+                    <a href="#contactSection">Contact</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <!-- ================================================================
-    POLICY MODALS (Privacy, Refund, Terms)
+    POLICY MODALS
     ================================================================ -->
     <!-- Privacy Policy Modal -->
     <div class="policy-modal" id="privacyPolicyModal">
@@ -4256,8 +4636,7 @@
             <button class="close-policy" data-close="privacyPolicyModal"><i class="fas fa-times"></i></button>
             <h2>Privacy Policy</h2>
             <div class="policy-date">Last updated: June 30, 2026</div>
-            <p>At MH Hacks, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.</p>
-
+            <p>At MH HACKS, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.</p>
             <h3>1. Information We Collect</h3>
             <p>We may collect personal information that you voluntarily provide to us when you:</p>
             <ul>
@@ -4267,7 +4646,6 @@
                 <li>Subscribe to our newsletter or updates</li>
             </ul>
             <p>This information may include your name, email address, phone number, payment details, and any other information you choose to provide.</p>
-
             <h3>2. How We Use Your Information</h3>
             <p>We use the information we collect to:</p>
             <ul>
@@ -4277,17 +4655,14 @@
                 <li>Send you promotional offers and updates (with your consent)</li>
                 <li>Comply with legal and regulatory obligations</li>
             </ul>
-
             <h3>3. Information Sharing</h3>
             <p>We do not sell, trade, or rent your personal information to third parties. We may share your information with:</p>
             <ul>
                 <li>Service providers who assist us in operating our website and processing payments</li>
                 <li>Law enforcement or regulatory authorities when required by law</li>
             </ul>
-
             <h3>4. Data Security</h3>
             <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
-
             <h3>5. Your Rights</h3>
             <p>You have the right to:</p>
             <ul>
@@ -4297,13 +4672,10 @@
                 <li>Withdraw consent at any time (where applicable)</li>
             </ul>
             <p>To exercise any of these rights, please contact us at <strong>mhhackshelpzone@gmail.com</strong>.</p>
-
             <h3>6. Cookies</h3>
             <p>We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. You can control cookie preferences through your browser settings.</p>
-
             <h3>7. Changes to This Policy</h3>
             <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page with an updated date.</p>
-
             <h3>8. Contact Us</h3>
             <p>If you have any questions about this Privacy Policy, please contact us at <strong>mhhackshelpzone@gmail.com</strong> or via WhatsApp at <strong>+971 562 100 607</strong>.</p>
         </div>
@@ -4315,20 +4687,17 @@
             <button class="close-policy" data-close="refundPolicyModal"><i class="fas fa-times"></i></button>
             <h2>Refund Policy</h2>
             <div class="policy-date">Last updated: June 30, 2026</div>
-            <p>At MH Hacks, we stand behind the quality of our products and services. This Refund Policy outlines the terms and conditions under which refunds are issued.</p>
-
+            <p>At MH HACKS, we stand behind the quality of our products and services. This Refund Policy outlines the terms and conditions under which refunds are issued.</p>
             <h3>1. 30-Day Money-Back Guarantee</h3>
             <p>We offer a <strong>30-day money-back guarantee</strong> on all paid digital products. If you are not satisfied with your purchase, you may request a refund within 30 days of the purchase date.</p>
-
             <h3>2. Eligibility for Refunds</h3>
             <p>To be eligible for a refund:</p>
             <ul>
-                <li>You must have purchased the product directly from MH Hacks</li>
+                <li>You must have purchased the product directly from MH HACKS</li>
                 <li>The purchase must be within the last 30 days</li>
                 <li>You must provide a valid order ID and proof of purchase</li>
                 <li>The product must not have been substantially downloaded or used beyond reasonable trial</li>
             </ul>
-
             <h3>3. Non-Refundable Items</h3>
             <p>The following items are not eligible for refunds:</p>
             <ul>
@@ -4337,7 +4706,6 @@
                 <li>Products that were purchased via third-party payment processors (subject to their own policies)</li>
                 <li>Custom or personalized services</li>
             </ul>
-
             <h3>4. How to Request a Refund</h3>
             <p>To request a refund:</p>
             <ul>
@@ -4345,7 +4713,6 @@
                 <li>Include your order ID, full name, and reason for the refund</li>
                 <li>Our team will review your request and respond within 2 business days</li>
             </ul>
-
             <h3>5. Refund Process</h3>
             <p>If your refund is approved:</p>
             <ul>
@@ -4353,16 +4720,7 @@
                 <li>Please allow 5-10 business days for the refund to reflect in your account</li>
                 <li>You will receive a confirmation email once the refund has been processed</li>
             </ul>
-
-            <h3>6. Late or Missing Refunds</h3>
-            <p>If you haven't received a refund within 10 business days:</p>
-            <ul>
-                <li>Check your bank or payment provider account again</li>
-                <li>Contact your credit card company or payment processor</li>
-                <li>Contact us at <strong>mhhackshelpzone@gmail.com</strong> for assistance</li>
-            </ul>
-
-            <h3>7. Contact Us</h3>
+            <h3>6. Contact Us</h3>
             <p>For any refund-related questions, please contact us at <strong>mhhackshelpzone@gmail.com</strong> or via WhatsApp at <strong>+971 562 100 607</strong>.</p>
         </div>
     </div>
@@ -4373,14 +4731,11 @@
             <button class="close-policy" data-close="termsPolicyModal"><i class="fas fa-times"></i></button>
             <h2>Terms &amp; Conditions</h2>
             <div class="policy-date">Last updated: June 30, 2026</div>
-            <p>Welcome to MH Hacks. By using our website and services, you agree to comply with and be bound by the following Terms &amp; Conditions. Please read them carefully.</p>
-
+            <p>Welcome to MH HACKS. By using our website and services, you agree to comply with and be bound by the following Terms &amp; Conditions. Please read them carefully.</p>
             <h3>1. Acceptance of Terms</h3>
-            <p>By accessing or using the MH Hacks website and services, you agree to be bound by these Terms &amp; Conditions and our Privacy Policy. If you do not agree, please do not use our services.</p>
-
+            <p>By accessing or using the MH HACKS website and services, you agree to be bound by these Terms &amp; Conditions and our Privacy Policy. If you do not agree, please do not use our services.</p>
             <h3>2. Description of Services</h3>
-            <p>MH Hacks provides a marketplace for digital products including tools, courses, methods, tricks, and verified digital accounts. All products are digital and delivered electronically unless otherwise stated.</p>
-
+            <p>MH HACKS provides a marketplace for digital products including tools, courses, methods, tricks, and verified digital accounts. All products are digital and delivered electronically unless otherwise stated.</p>
             <h3>3. User Accounts</h3>
             <p>To access certain features, you may be required to create an account. You are responsible for:</p>
             <ul>
@@ -4388,7 +4743,6 @@
                 <li>All activities that occur under your account</li>
                 <li>Notifying us immediately of any unauthorized use</li>
             </ul>
-
             <h3>4. Purchases and Payments</h3>
             <p>All purchases are subject to the following:</p>
             <ul>
@@ -4397,13 +4751,10 @@
                 <li>We accept various payment methods as indicated at checkout</li>
                 <li>You agree to provide accurate and complete payment information</li>
             </ul>
-
             <h3>5. Digital Product Delivery</h3>
             <p>Digital products are delivered electronically via download links or email. Delivery is typically instant but may take up to 24 hours for manual verification.</p>
-
             <h3>6. Intellectual Property</h3>
-            <p>All content on the MH Hacks website, including text, graphics, logos, and software, is the property of MH Hacks or its licensors and is protected by copyright and intellectual property laws.</p>
-
+            <p>All content on the MH HACKS website, including text, graphics, logos, and software, is the property of MH HACKS or its licensors and is protected by copyright and intellectual property laws.</p>
             <h3>7. User Conduct</h3>
             <p>You agree not to:</p>
             <ul>
@@ -4412,22 +4763,16 @@
                 <li>Resell, redistribute, or share purchased digital products without authorization</li>
                 <li>Post or transmit any harmful, offensive, or malicious content</li>
             </ul>
-
             <h3>8. Disclaimer of Warranties</h3>
             <p>All products and services are provided "as is" without warranties of any kind, either express or implied. We do not guarantee that our products will meet your specific requirements or that they will be error-free.</p>
-
             <h3>9. Limitation of Liability</h3>
-            <p>To the fullest extent permitted by law, MH Hacks shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our services.</p>
-
+            <p>To the fullest extent permitted by law, MH HACKS shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our services.</p>
             <h3>10. Indemnification</h3>
-            <p>You agree to indemnify and hold MH Hacks harmless from any claims, damages, losses, and expenses arising from your use of our services or violation of these terms.</p>
-
+            <p>You agree to indemnify and hold MH HACKS harmless from any claims, damages, losses, and expenses arising from your use of our services or violation of these terms.</p>
             <h3>11. Changes to Terms</h3>
             <p>We reserve the right to modify these Terms &amp; Conditions at any time. Changes will be effective immediately upon posting. Your continued use of our services constitutes acceptance of the updated terms.</p>
-
             <h3>12. Governing Law</h3>
             <p>These Terms &amp; Conditions shall be governed by and construed in accordance with the laws of Pakistan, without regard to its conflict of law provisions.</p>
-
             <h3>13. Contact Us</h3>
             <p>If you have any questions about these Terms &amp; Conditions, please contact us at <strong>mhhackshelpzone@gmail.com</strong> or via WhatsApp at <strong>+971 562 100 607</strong>.</p>
         </div>
@@ -4468,7 +4813,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- ================================================================
-    JAVASCRIPT
+    JAVASCRIPT — COMPLETE
     ================================================================ -->
     <script>
         // ================================================================
@@ -4841,6 +5186,9 @@
         let notifications = JSON.parse(localStorage.getItem('mh_notifications')) || [];
         let notifUnread = notifications.filter(n => !n.read).length;
 
+        // Pricing plans state
+        let selectedPlan = null;
+
         // ================================================================
         // 4. UTILITY FUNCTIONS
         // ================================================================
@@ -4917,7 +5265,9 @@
 
         function isFree(p) { return p.isFree; }
 
-        // Notification functions
+        // ================================================================
+        // 5. NOTIFICATIONS
+        // ================================================================
         function saveNotifications() {
             localStorage.setItem('mh_notifications', JSON.stringify(notifications));
             updateNotifBadge();
@@ -4984,7 +5334,7 @@
         }
 
         // ================================================================
-        // 5. AUTH SYSTEM
+        // 6. AUTH SYSTEM
         // ================================================================
         function loginUser(email, password, remember) {
             var user = findUserByEmail(email);
@@ -5041,7 +5391,7 @@
             saveCurrentUser();
             toast('Account created! You received 50 PKR bonus.', 'success');
             updateAuthUI();
-            addNotification('admin_message', 'Welcome to MH Hacks! You have 50 PKR in your wallet.');
+            addNotification('admin_message', 'Welcome to MH HACKS! You have 50 PKR in your wallet.');
             return true;
         }
 
@@ -5070,8 +5420,16 @@
             return false;
         }
 
+        function updateMobileSignIn() {
+            var link = document.getElementById('mobileSignIn');
+            if (!link) return;
+            if (currentUser) { link.textContent = 'Profile';
+                link.style.display = 'block'; } else { link.textContent = 'Sign In';
+                link.style.display = 'block'; }
+        }
+
         // ================================================================
-        // 6. CART FUNCTIONS — opens sidebar instead of modal
+        // 7. CART FUNCTIONS — PERSISTENT SIDEBAR
         // ================================================================
         function updateCartUI() {
             var badge = document.getElementById('cartBadge');
@@ -5087,7 +5445,7 @@
 
             if (cart.length === 0) {
                 container.innerHTML =
-                '<div class="empty"><i class="fas fa-box-open"></i><p>Your cart is empty</p></div>';
+                    '<div class="empty"><i class="fas fa-box-open"></i><p>Your cart is empty</p></div>';
                 totalEl.textContent = '$0.00';
                 checkoutBtn.disabled = true;
                 return;
@@ -5149,14 +5507,14 @@
             if (existing) { existing.qty += qty; } else { cart.push({ id: productId, qty: qty }); }
             saveCart();
             updateCartUI();
-            // Open cart sidebar immediately
+            // Open cart sidebar
             document.getElementById('cartSidebar').classList.add('open');
             toast(p.name + ' added to cart!', 'success');
             addNotification('product_added', p.name + ' added to cart (x' + qty + ')');
         }
 
         // ================================================================
-        // 7. RENDER PRODUCTS
+        // 8. RENDER PRODUCTS
         // ================================================================
         function getFilteredProducts(filter, category) {
             var result = products.slice();
@@ -5219,7 +5577,7 @@
 
             var actionBtn = isFree ?
                 '<button class="btn-download" data-id="' + p.id + '"><i class="fas fa-download"></i> Download</button>' :
-                '<button class="btn-add" data-id="' + p.id + '"><i class="fas fa-cart-plus"></i> Add</button>';
+                '<button class="btn-add" data-id="' + p.id + '"><i class="fas fa-cart-plus"></i> Add To Cart</button>';
 
             var playIcon = p.video ? '<div class="play-overlay"><i class="fas fa-play-circle"></i></div>' : '';
 
@@ -5255,7 +5613,6 @@
                     e.stopPropagation();
                     var p = getProduct(parseInt(btn.dataset.id));
                     if (p && p.downloadUrl && p.downloadUrl !== '#') {
-                        // Open in same tab
                         window.location.href = p.downloadUrl;
                         toast('Downloading ' + p.name + '...', 'success');
                     } else { toast('Download link not available', 'error'); }
@@ -5275,7 +5632,7 @@
         }
 
         // ================================================================
-        // 8. PRODUCT DETAIL OVERLAY
+        // 9. PRODUCT DETAIL OVERLAY
         // ================================================================
         function openDetailOverlay(id) {
             var p = getProduct(id);
@@ -5322,7 +5679,7 @@
                     '<span id="detailQtyDisplay">1</span>' +
                     '<button id="detailQtyInc">+</button>' +
                     '</div>' +
-                    '<button class="btn-add-cart" id="detailAddCart"><i class="fas fa-cart-plus"></i> Add to Cart</button>';
+                    '<button class="btn-add-cart" id="detailAddCart"><i class="fas fa-cart-plus"></i> Add To Cart</button>';
                 document.getElementById('detailQtyDec').addEventListener('click', function() {
                     detailQty = Math.max(1, detailQty - 1);
                     document.getElementById('detailQtyDisplay').textContent = detailQty;
@@ -5350,7 +5707,7 @@
                 }).join('');
             } else {
                 reviewsList.innerHTML =
-                '<div class="review"><div class="r-text" style="color:var(--text-muted);">No reviews yet.</div></div>';
+                    '<div class="review"><div class="r-text" style="color:var(--text-muted);">No reviews yet.</div></div>';
             }
 
             var relatedGrid = document.getElementById('detailRelatedGrid');
@@ -5358,7 +5715,7 @@
             .slice(0, 4);
             if (related.length === 0) {
                 relatedGrid.innerHTML =
-                '<div style="color:var(--text-muted);font-size:0.85rem;">No related products.</div>';
+                    '<div style="color:var(--text-muted);font-size:0.85rem;">No related products.</div>';
             } else {
                 relatedGrid.innerHTML = related.map(function(rp) {
                     return '<div class="related-item" data-id="' + rp.id + '">' +
@@ -5375,7 +5732,37 @@
                 });
             }
 
+            // Setup social sharing
+            setupSocialSharing(p);
+
             updateDetailGallery(p);
+        }
+
+        function setupSocialSharing(p) {
+            var url = encodeURIComponent(window.location.href.split('?')[0] + '?product=' + p.id);
+            var text = encodeURIComponent('Check out ' + p.name + ' on MH HACKS!');
+            var shareBtns = document.querySelectorAll('.share-btn');
+            var platforms = {
+                facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + url,
+                twitter: 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url,
+                linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + url,
+                telegram: 'https://t.me/share/url?url=' + url + '&text=' + text,
+                whatsapp: 'https://api.whatsapp.com/send?text=' + text + '%20' + url
+            };
+            shareBtns.forEach(function(btn) {
+                var platform = btn.dataset.platform;
+                btn.href = platforms[platform] || '#';
+                btn.target = '_blank';
+                btn.rel = 'noopener noreferrer';
+                btn.addEventListener('click', function(e) {
+                    if (platform === 'whatsapp' || platform === 'telegram') {
+                        // These open natively, no need to prevent default
+                    } else {
+                        e.preventDefault();
+                        window.open(btn.href, '_blank', 'width=600,height=400');
+                    }
+                });
+            });
         }
 
         function updateDetailGallery(p) {
@@ -5441,7 +5828,7 @@
         document.getElementById('detailBack').addEventListener('click', closeDetailOverlay);
 
         // ================================================================
-        // 9. CATEGORY RENDER
+        // 10. CATEGORY RENDER
         // ================================================================
         function renderCategories() {
             var grid = document.getElementById('categoryGrid');
@@ -5477,7 +5864,7 @@
         }
 
         // ================================================================
-        // 10. DEDICATED PAID / FREE TOOLS PAGES
+        // 11. DEDICATED PAID / FREE TOOLS PAGES
         // ================================================================
         function renderPaidToolsPage(sort, query) {
             var grid = document.getElementById('paidToolsGrid');
@@ -5590,7 +5977,7 @@
         }, 300));
 
         // ================================================================
-        // 11. HERO CAROUSEL
+        // 12. HERO CAROUSEL
         // ================================================================
         const carouselSlides = [{
             image: 'https://picsum.photos/seed/banner1/1200/500',
@@ -5606,7 +5993,7 @@
             link: '#products'
         }, {
             image: 'https://picsum.photos/seed/banner3/1200/500',
-            title: '🎁 Free Tools for Everyone',
+            title: '🎁 Free Tools For Everyone',
             subtitle: 'Powerful utilities at no cost. Start building.',
             cta: 'Get Free Tools',
             link: '#free-tools'
@@ -5682,7 +6069,144 @@
         });
 
         // ================================================================
-        // 12. CHECKOUT
+        // 13. PRICING PLANS
+        // ================================================================
+        function getPaidToolNames() {
+            return products.filter(function(p) { return !p.isFree; }).map(function(p) { return p.name; });
+        }
+
+        function getPlanTools(percentage) {
+            var paid = products.filter(function(p) { return !p.isFree; });
+            var count = Math.floor(paid.length * percentage / 100);
+            return paid.slice(0, count).map(function(p) { return p.name; });
+        }
+
+        function renderPricingPlans() {
+            var grid = document.getElementById('plansGrid');
+            var allPaid = products.filter(function(p) { return !p.isFree; });
+            var totalPaid = allPaid.length;
+            var totalValue = allPaid.reduce(function(sum, p) { return sum + p.price; }, 0);
+
+            var basicTools = getPlanTools(30);
+            var standardTools = getPlanTools(60);
+            var premiumTools = allPaid.map(function(p) { return p.name; });
+
+            var basicPrice = Math.round(totalValue * 0.15);
+            var standardPrice = Math.round(totalValue * 0.35);
+            var premiumPrice = Math.round(totalValue * 0.65);
+
+            var plans = [{
+                id: 'basic',
+                name: 'Basic',
+                desc: 'Perfect for beginners getting started.',
+                price: basicPrice,
+                originalPrice: Math.round(basicPrice * 1.6),
+                features: ['Access to 30% of paid tools', basicTools.length + ' tools included'],
+                tools: basicTools,
+                popular: false
+            }, {
+                id: 'standard',
+                name: 'Standard',
+                desc: 'For serious builders and creators.',
+                price: standardPrice,
+                originalPrice: Math.round(standardPrice * 1.5),
+                features: ['Access to 60% of paid tools', standardTools.length + ' tools included'],
+                tools: standardTools,
+                popular: true
+            }, {
+                id: 'premium',
+                name: 'Premium',
+                desc: 'Full access. Everything we offer.',
+                price: premiumPrice,
+                originalPrice: Math.round(premiumPrice * 1.4),
+                features: ['Access to 100% of paid tools', premiumTools.length + ' tools included'],
+                tools: premiumTools,
+                popular: false
+            }];
+
+            grid.innerHTML = plans.map(function(plan) {
+                var savings = plan.originalPrice - plan.price;
+                var toolList = plan.tools.slice(0, 8).map(function(t) {
+                    return '<span class="tool-list">• ' + t + '</span>';
+                }).join('');
+                if (plan.tools.length > 8) {
+                    toolList += '<span class="tool-list">• +' + (plan.tools.length - 8) + ' more...</span>';
+                }
+
+                return '<div class="plan-card ' + (plan.popular ? 'popular' : '') + '">' +
+                    (plan.popular ? '<div class="popular-badge">Most Popular</div>' : '') +
+                    '<div class="plan-name"><span class="highlight">' + plan.name + '</span></div>' +
+                    '<div class="plan-desc">' + plan.desc + '</div>' +
+                    '<div class="plan-price"><span class="currency">$</span>' + plan.price +
+                    ' <span class="period">/ lifetime</span></div>' +
+                    (plan.originalPrice > plan.price ? '<div class="plan-original">$' + plan.originalPrice +
+                        ' <span style="color:var(--purple);font-weight:600;">Save $' + savings +
+                        '</span></div>' : '') +
+                    '<div class="plan-savings">' + (plan.popular ? '⭐ Best value' : '') + '</div>' +
+                    '<div class="plan-features">' +
+                    plan.features.map(function(f) { return '<li><i class="fas fa-check-circle"></i> ' + f +
+                            '</li>'; }).join('') +
+                    '<li><i class="fas fa-tools"></i> Tools included:</li>' +
+                    toolList +
+                    '</div>' +
+                    '<button class="btn-select-plan ' + (plan.popular ? '' : 'outline') +
+                    '" data-plan="' + plan.id + '">Select ' + plan.name + ' Plan</button>' +
+                    '</div>';
+            }).join('');
+
+            grid.querySelectorAll('.btn-select-plan').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var planId = btn.dataset.plan;
+                    var plan = plans.find(function(p) { return p.id === planId; });
+                    if (plan) {
+                        selectedPlan = plan;
+                        toast('You selected the ' + plan.name + ' plan. Redirecting to checkout...',
+                            'success');
+                        // Simulate redirect to payment
+                        setTimeout(function() {
+                            document.getElementById('pricingModal').classList.remove('open');
+                            document.body.style.overflow = '';
+                            openCheckout();
+                        }, 800);
+                    }
+                });
+            });
+        }
+
+        function openPricingModal() {
+            var modal = document.getElementById('pricingModal');
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            renderPricingPlans();
+        }
+
+        document.getElementById('pricingNav').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPricingModal();
+        });
+        document.getElementById('mobilePricing').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('mobileMenu').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('active');
+            openPricingModal();
+        });
+        document.getElementById('footerPricingLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPricingModal();
+        });
+        document.getElementById('closePricing').addEventListener('click', function() {
+            document.getElementById('pricingModal').classList.remove('open');
+            document.body.style.overflow = '';
+        });
+        document.getElementById('pricingModal').addEventListener('click', function(e) {
+            if (e.target === e.currentTarget) {
+                document.getElementById('pricingModal').classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // ================================================================
+        // 14. CHECKOUT
         // ================================================================
         function openCheckout() {
             if (!currentUser) { toast('Please sign in to checkout', 'error');
@@ -5758,8 +6282,8 @@
                         'EasyPaisa': { acc: '03123456789', holder: 'Ali Abbas' },
                         'JazzCash': { acc: '03001234567', holder: 'Ali Abbas' },
                         'Bank Transfer': { acc: 'PK12ABCD1234567890', holder: 'Ali Abbas' },
-                        'PayPal': { acc: 'paypal@mhhacks.com', holder: 'MH Hacks' },
-                        'Binance Pay': { acc: '12345678', holder: 'MH Hacks' }
+                        'PayPal': { acc: 'paypal@mhhacks.com', holder: 'MH HACKS' },
+                        'Binance Pay': { acc: '12345678', holder: 'MH HACKS' }
                     };
                     var d = details[selectedPayment];
                     var qrData = selectedPayment + ': ' + d.acc + ' (' + d.holder + ')';
@@ -5967,7 +6491,7 @@
         });
 
         // ================================================================
-        // 13. DAILY CHECK-IN
+        // 15. DAILY CHECK-IN
         // ================================================================
         function openCheckin() {
             if (!currentUser) { toast('Please sign in to check in', 'error');
@@ -6073,7 +6597,7 @@
         });
 
         // ================================================================
-        // 14. PROFILE OVERLAY
+        // 16. PROFILE OVERLAY
         // ================================================================
         function openProfileOverlay() {
             if (!currentUser) { toast('Please sign in to view profile', 'error');
@@ -6188,7 +6712,7 @@
         });
 
         // ================================================================
-        // 15. AUTH MODAL
+        // 17. AUTH MODAL
         // ================================================================
         function openAuth(mode) {
             if (typeof mode === 'undefined') mode = 'signin';
@@ -6214,7 +6738,7 @@
 
             if (mode === 'signin') {
                 title.textContent = 'Sign In';
-                sub.textContent = 'Welcome back to MH Hacks.';
+                sub.textContent = 'Welcome back to MH HACKS.';
                 submitBtn.textContent = 'Sign In';
                 switchText.textContent = "Don't have an account? ";
                 switchLink.textContent = 'Sign Up';
@@ -6227,7 +6751,7 @@
                 document.getElementById('authPassword').placeholder = '••••••••';
             } else if (mode === 'signup') {
                 title.textContent = 'Create Account';
-                sub.textContent = 'Join MH Hacks today. You get 50 PKR bonus!';
+                sub.textContent = 'Join MH HACKS today. You get 50 PKR bonus!';
                 submitBtn.textContent = 'Sign Up';
                 switchText.textContent = "Already have an account? ";
                 switchLink.textContent = 'Sign In';
@@ -6317,7 +6841,7 @@
         });
 
         // ================================================================
-        // 16. SEARCH — no X icon, compact
+        // 18. SEARCH
         // ================================================================
         var searchOverlay = document.getElementById('searchOverlay');
         var searchInput = document.getElementById('searchInput');
@@ -6421,7 +6945,7 @@
         });
 
         // ================================================================
-        // 17. FILTERS
+        // 19. FILTERS
         // ================================================================
         document.querySelectorAll('#filterButtons button').forEach(function(btn) {
             btn.addEventListener('click', function() {
@@ -6437,7 +6961,7 @@
         });
 
         // ================================================================
-        // 18. NAVBAR SCROLL
+        // 20. NAVBAR SCROLL
         // ================================================================
         window.addEventListener('scroll', function() {
             var nav = document.getElementById('navbar');
@@ -6453,7 +6977,7 @@
         });
 
         // ================================================================
-        // 19. MOBILE MENU
+        // 21. MOBILE MENU
         // ================================================================
         document.getElementById('hamburger').addEventListener('click', function() {
             document.getElementById('mobileMenu').classList.toggle('open');
@@ -6470,8 +6994,16 @@
             });
         });
 
+        // Mobile contact link
+        document.getElementById('mobileContact').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('mobileMenu').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('active');
+            document.getElementById('contactSection').scrollIntoView({ behavior: 'smooth' });
+        });
+
         // ================================================================
-        // 20. CART TOGGLE
+        // 22. CART TOGGLE
         // ================================================================
         document.getElementById('cartToggle').addEventListener('click', function() {
             document.getElementById('cartSidebar').classList.toggle('open');
@@ -6486,7 +7018,7 @@
         });
 
         // ================================================================
-        // 21. SCROLL REVEAL
+        // 23. SCROLL REVEAL
         // ================================================================
         var revealObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
@@ -6496,7 +7028,7 @@
         document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
 
         // ================================================================
-        // 22. PARTICLES
+        // 24. PARTICLES
         // ================================================================
         (function initParticles() {
             var canvas = document.getElementById('particles-canvas');
@@ -6554,7 +7086,7 @@
         })();
 
         // ================================================================
-        // 23. CHAT SYSTEM
+        // 25. CHAT SYSTEM
         // ================================================================
         var chatFab = document.getElementById('chatFab');
         var chatPanel = document.getElementById('chatPanel');
@@ -6746,7 +7278,23 @@
         });
 
         // ================================================================
-        // 24. POLICY MODALS (NEW)
+        // 26. CONTACT FORM
+        // ================================================================
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var name = document.getElementById('contactName').value.trim();
+            var email = document.getElementById('contactEmail').value.trim();
+            var subject = document.getElementById('contactSubject').value.trim();
+            var message = document.getElementById('contactMessage').value.trim();
+            if (!name || !email || !message) { toast('Please fill in all required fields', 'error'); return; }
+            if (!email.includes('@')) { toast('Please enter a valid email', 'error'); return; }
+            toast('✅ Message sent! We\'ll reply within 15 minutes.', 'success');
+            addNotification('complaint', 'New message from ' + name + ': ' + (subject || 'General inquiry'));
+            this.reset();
+        });
+
+        // ================================================================
+        // 27. POLICY MODALS
         // ================================================================
         function openPolicyModal(modalId) {
             var modal = document.getElementById(modalId);
@@ -6793,7 +7341,7 @@
         });
 
         // ================================================================
-        // 25. NOTIFICATION TOGGLE
+        // 28. NOTIFICATION TOGGLE
         // ================================================================
         document.getElementById('notifToggle').addEventListener('click', function(e) {
             e.stopPropagation();
@@ -6815,7 +7363,7 @@
         });
 
         // ================================================================
-        // 26. NAVIGATION: Logo back to home
+        // 29. NAVIGATION: Logo back to home
         // ================================================================
         document.getElementById('logoLink').addEventListener('click', function(e) {
             e.preventDefault();
@@ -6826,49 +7374,7 @@
         });
 
         // ================================================================
-        // 27. QUICK MESSAGE FORM
-        // ================================================================
-        document.getElementById('quickMessageForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var name = document.getElementById('msgName').value.trim();
-            var email = document.getElementById('msgEmail').value.trim();
-            var subject = document.getElementById('msgSubject').value.trim();
-            var message = document.getElementById('msgMessage').value.trim();
-            if (!name || !email || !message) { toast('Please fill in all required fields', 'error'); return; }
-            if (!email.includes('@')) { toast('Please enter a valid email', 'error'); return; }
-            toast('✅ Message sent! We\'ll reply within 15 minutes.', 'success');
-            addNotification('complaint', 'New message from ' + name + ': ' + subject);
-            this.reset();
-        });
-
-        // ================================================================
-        // 28. MOBILE SIGN IN LINK
-        // ================================================================
-        var mobileMenu = document.getElementById('mobileMenu');
-        var signInLink = document.createElement('a');
-        signInLink.href = '#';
-        signInLink.id = 'mobileSignIn';
-        signInLink.textContent = 'Sign In';
-        signInLink.style.display = 'block';
-        mobileMenu.appendChild(signInLink);
-
-        signInLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('mobileMenu').classList.remove('open');
-            document.getElementById('hamburger').classList.remove('active');
-            if (currentUser) { openProfileOverlay(); } else { openAuth('signin'); }
-        });
-
-        function updateMobileSignIn() {
-            var link = document.getElementById('mobileSignIn');
-            if (!link) return;
-            if (currentUser) { link.textContent = 'Profile';
-                link.style.display = 'block'; } else { link.textContent = 'Sign In';
-                link.style.display = 'block'; }
-        }
-
-        // ================================================================
-        // 29. INIT APP
+        // 30. INIT APP
         // ================================================================
         function initApp() {
             if (checkRemembered()) { updateAuthUI();
@@ -6906,12 +7412,12 @@
         }
 
         // ================================================================
-        // 30. ESCAPE CLOSE
+        // 31. ESCAPE CLOSE
         // ================================================================
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 document.querySelectorAll(
-                    '.modal.open, .checkout-modal.open, .auth-modal.open, .confirm-modal.open, .checkin-modal.open, .policy-modal.open'
+                    '.modal.open, .checkout-modal.open, .auth-modal.open, .confirm-modal.open, .checkin-modal.open, .policy-modal.open, .pricing-modal.open'
                     ).forEach(function(el) {
                     el.classList.remove('open');
                     document.body.style.overflow = '';
@@ -6926,7 +7432,7 @@
         });
 
         // ================================================================
-        // 31. FORCE HIDE LOADER SAFETY
+        // 32. FORCE HIDE LOADER SAFETY
         // ================================================================
         setTimeout(function() {
             var loader = document.getElementById('loader');
@@ -6936,17 +7442,20 @@
             }
         }, 8000);
 
-        console.log('🚀 MH Hacks — Premium Edition Loaded!');
+        console.log('🚀 MH HACKS — Premium Edition Loaded!');
         console.log('👤 Admin toggle: double-click "Offline" in chat header.');
         console.log('📱 All Paid / Free Tools pages are live.');
-        console.log('🔍 Search bar: no X icon, compact results.');
+        console.log('🔍 Search bar: compact results.');
         console.log('🎠 Hero carousel is active with auto-slide.');
-        console.log('🛒 Add to Cart → opens Cart sidebar directly (no pop-up).');
+        console.log('🛒 Add To Cart → opens persistent Cart sidebar (right side).');
         console.log('💰 Wallet system: PKR with daily check-in (1-7), referral (8 PKR), sign-up bonus (50 PKR).');
         console.log('🔔 Notification system: 5 types (product_added, admin_message, chat_message, order_confirmed, order_rejected, complaint).');
         console.log('📄 Privacy / Refund / Terms pages in modals.');
         console.log('🎨 Color scheme: White, Purple (#7B2CBF), Black.');
         console.log('📞 Contact: mhhackshelpzone@gmail.com | +971562100607 | +923007624789 | @MH_HACKS_OWNER');
+        console.log('📦 Pricing Plans: Basic, Standard, Premium with tool lists.');
+        console.log('📱 Social Sharing: Facebook, X, LinkedIn, Telegram, WhatsApp on product detail.');
+        console.log('🏷️ Capitalization: "MH HACKS" all caps, everything else Title Case.');
     </script>
 </body>
 </html>
