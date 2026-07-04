@@ -4115,17 +4115,17 @@
         <div class="container">
             <div class="hero-content">
                 <div class="badge"><i class="fas fa-bolt" style="margin-right:6px;"></i>Premium Digital Marketplace</div>
-                <h1>Unlock The Tools <br><span class="highlight">The Top 1%</span> Are Using.</h1>
-                <p>MH HACKS curates premium and free tools, methods, tricks, courses and verified digital accounts — everything you need to grow faster, earn more and ship smarter. Instant delivery. No fluff. 30-day money-back guarantee.</p>
-                <div class="hero-actions">
-                    <a href="#products" class="btn-primary"><i class="fas fa-rocket"></i> Explore Products</a>
-                    <a href="#free-tools" class="btn-secondary"><i class="fas fa-gift"></i> Free Tools</a>
+                <h1 id="heroHeadline">Unlock The Tools <br><span class="highlight">The Top 1%</span> Are Using.</h1>
+                <p id="heroSubline">MH HACKS curates premium and free tools, methods, tricks, courses and verified digital accounts — everything you need to grow faster, earn more and ship smarter. Instant delivery. No fluff. 30-day money-back guarantee.</p>
+                <div class="hero-actions" id="heroActions">
+                    <a href="#products" class="btn-primary" id="heroBtnPrimary"><i class="fas fa-rocket"></i> Explore Products</a>
+                    <a href="#free-tools" class="btn-secondary" id="heroBtnSecondary"><i class="fas fa-gift"></i> Free Tools</a>
                 </div>
-                <div class="hero-stats">
-                    <div class="stat"><div class="num">180K+</div><div class="label">Active Customers</div></div>
-                    <div class="stat"><div class="num">4.9/5</div><div class="label">Avg. Rating</div></div>
-                    <div class="stat"><div class="num">92</div><div class="label">Countries Served</div></div>
-                    <div class="stat"><div class="num">30</div><div class="label">Days Money-Back</div></div>
+                <div class="hero-stats" id="heroStats">
+                    <div class="stat"><div class="num" id="statCustomers">180K+</div><div class="label">Active Customers</div></div>
+                    <div class="stat"><div class="num" id="statRating">4.9/5</div><div class="label">Avg. Rating</div></div>
+                    <div class="stat"><div class="num" id="statCountries">92</div><div class="label">Countries Served</div></div>
+                    <div class="stat"><div class="num" id="statGuarantee">30</div><div class="label">Days Money-Back</div></div>
                 </div>
             </div>
             <div class="hero-visual">
@@ -4813,7 +4813,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- ================================================================
-    JAVASCRIPT — COMPLETE
+    JAVASCRIPT — COMPLETE WITH INTEGRATION LAYER
     ================================================================ -->
     <script>
         // ================================================================
@@ -4830,376 +4830,681 @@
         })();
 
         // ================================================================
-        // 1. PRODUCT DATA — 16 products (12 paid, 4 free)
+        // 1. SHARED STORAGE KEYS (IDENTICAL TO ADMIN PANEL)
         // ================================================================
-        const products = [{
-            id: 1,
-            name: 'Hacker Toolkit Pro',
-            category: 'Premium Tools',
-            categorySlug: 'premium-tools',
-            price: 89,
-            originalPrice: 149,
-            isFree: false,
-            rating: 4.9,
-            reviews: 2143,
-            description: 'An all-in-one suite of 40+ pro-grade utilities used by top engineers and security researchers worldwide. Includes network scanners, exploit frameworks, and code analysis tools.',
-            images: ['https://picsum.photos/seed/hacker1/600/400', 'https://picsum.photos/seed/hacker2/600/400',
-                'https://picsum.photos/seed/hacker3/600/400', 'https://picsum.photos/seed/hacker4/600/400'
-            ],
-            video: '',
-            features: ['40+ premium tools', 'Cross-platform', 'Lifetime updates', 'Priority support'],
-            badge: 'BEST SELLER',
-            discount: 40,
-            reviewsList: [{ user: 'Alex M.', text: 'Absolutely game-changing toolkit!', rating: 5 }]
-        }, {
-            id: 2,
-            name: 'AI Prompt Vault 2026',
-            category: 'Premium Tools',
-            categorySlug: 'premium-tools',
-            price: 19,
-            originalPrice: 49,
-            isFree: false,
-            rating: 4.9,
-            reviews: 4210,
-            description: 'Curated collection of 500+ high-converting AI prompts for ChatGPT, Claude, and Midjourney. Updated weekly with new prompts.',
-            images: ['https://picsum.photos/seed/ai1/600/400', 'https://picsum.photos/seed/ai2/600/400',
-                'https://picsum.photos/seed/ai3/600/400', 'https://picsum.photos/seed/ai4/600/400'
-            ],
-            video: '',
-            features: ['500+ prompts', 'Weekly updates', 'All major AI platforms', 'Copy-paste ready'],
-            badge: 'BEST SELLER',
-            discount: 61,
-            reviewsList: [{ user: 'Sarah K.', text: 'Best prompt collection I\'ve ever used!', rating: 5 }]
-        }, {
-            id: 3,
-            name: 'Instagram 10K Aged Account',
-            category: 'Digital Accounts',
-            categorySlug: 'digital-accounts',
-            price: 199,
-            originalPrice: 299,
-            isFree: false,
-            rating: 4.8,
-            reviews: 410,
-            description: 'Verified aged Instagram account with 10,000+ real followers. Established in 2022, high trust score, ready for monetization.',
-            images: ['https://picsum.photos/seed/ig1/600/400', 'https://picsum.photos/seed/ig2/600/400',
-                'https://picsum.photos/seed/ig3/600/400', 'https://picsum.photos/seed/ig4/600/400'
-            ],
-            video: '',
-            features: ['10K+ real followers', 'Aged 2022', 'High trust score', 'Email included'],
-            badge: 'PREMIUM',
-            discount: 33,
-            reviewsList: [{ user: 'John D.', text: 'Perfect account, exactly as described!', rating: 5 }]
-        }, {
-            id: 4,
-            name: 'Viral Hooks Vault',
-            category: 'Premium Tricks',
-            categorySlug: 'premium-tricks',
-            price: 29,
-            originalPrice: 49,
-            isFree: false,
-            rating: 4.9,
-            reviews: 1731,
-            description: '100+ proven viral hooks and scripts for TikTok, Reels, and Shorts. Used by top creators to grow millions of followers.',
-            images: ['https://picsum.photos/seed/viral1/600/400', 'https://picsum.photos/seed/viral2/600/400',
-                'https://picsum.photos/seed/viral3/600/400', 'https://picsum.photos/seed/viral4/600/400'
-            ],
-            video: 'https://www.w3schools.com/html/mov_bbb.mp4',
-            features: ['100+ hooks', 'Script templates', 'Top creator verified', 'Weekly new hooks'],
-            badge: 'PREMIUM',
-            discount: 41,
-            reviewsList: [{ user: 'Emily R.', text: 'My views skyrocketed after using these!', rating: 5 }]
-        }, {
-            id: 5,
-            name: 'Growth Playbook 2026',
-            category: 'Premium Methods',
-            categorySlug: 'premium-methods',
-            price: 49,
-            originalPrice: 79,
-            isFree: false,
-            rating: 4.7,
-            reviews: 892,
-            description: 'Complete growth methodology used by top SaaS companies. Includes acquisition, retention, and monetization strategies.',
-            images: ['https://picsum.photos/seed/growth1/600/400', 'https://picsum.photos/seed/growth2/600/400',
-                'https://picsum.photos/seed/growth3/600/400', 'https://picsum.photos/seed/growth4/600/400'
-            ],
-            video: '',
-            features: ['12 modules', 'Case studies', 'Templates included', 'Lifetime access'],
-            badge: 'BEST SELLER',
-            discount: 38,
-            reviewsList: [{ user: 'Michael B.', text: 'This playbook changed my business!', rating: 5 }]
-        }, {
-            id: 6,
-            name: 'Free Image Compressor',
-            category: 'Free Tools',
-            categorySlug: 'free-tools',
-            price: 0,
-            originalPrice: 0,
-            isFree: true,
-            rating: 4.8,
-            reviews: 9421,
-            description: 'Lossless image compression tool. Reduce image size by up to 80% without quality loss. Batch processing supported.',
-            images: ['https://picsum.photos/seed/compress1/600/400', 'https://picsum.photos/seed/compress2/600/400',
-                'https://picsum.photos/seed/compress3/600/400'
-            ],
-            video: '',
-            features: ['Lossless compression', 'Batch processing', 'Drag & drop', 'Export in 3 formats'],
-            badge: 'FREE',
-            discount: 0,
-            downloadUrl: '#',
-            reviewsList: [{ user: 'David L.', text: 'Super useful tool, saved me hours!', rating: 5 }]
-        }, {
-            id: 7,
-            name: 'Free JSON Formatter',
-            category: 'Free Tools',
-            categorySlug: 'free-tools',
-            price: 0,
-            originalPrice: 0,
-            isFree: true,
-            rating: 4.9,
-            reviews: 5210,
-            description: 'Online JSON formatter and validator. Format, minify, and validate JSON data with syntax highlighting.',
-            images: ['https://picsum.photos/seed/json1/600/400', 'https://picsum.photos/seed/json2/600/400',
-                'https://picsum.photos/seed/json3/600/400'
-            ],
-            video: '',
-            features: ['Format & minify', 'Validate JSON', 'Syntax highlighting', 'Export options'],
-            badge: 'FREE',
-            discount: 0,
-            downloadUrl: '#',
-            reviewsList: [{ user: 'Anna W.', text: 'My go-to JSON tool, fast and clean!', rating: 5 }]
-        }, {
-            id: 8,
-            name: 'Free Palette Generator',
-            category: 'Free Tools',
-            categorySlug: 'free-tools',
-            price: 0,
-            originalPrice: 0,
-            isFree: true,
-            rating: 4.7,
-            reviews: 2102,
-            description: 'AI-powered color palette generator. Create stunning color schemes for your designs in seconds.',
-            images: ['https://picsum.photos/seed/palette1/600/400', 'https://picsum.photos/seed/palette2/600/400',
-                'https://picsum.photos/seed/palette3/600/400'
-            ],
-            video: '',
-            features: ['AI-generated', 'Export as CSS', 'Color harmonies', '1000+ palettes'],
-            badge: 'FREE',
-            discount: 0,
-            downloadUrl: '#',
-            reviewsList: [{ user: 'Chris P.', text: 'Beautiful palettes every time!', rating: 4 }]
-        }, {
-            id: 9,
-            name: 'TikTok 50K Account',
-            category: 'Digital Accounts',
-            categorySlug: 'digital-accounts',
-            price: 249,
-            originalPrice: 399,
-            isFree: false,
-            rating: 4.6,
-            reviews: 215,
-            description: 'High-engagement TikTok account with 50,000+ followers. Great for affiliate marketing and brand promotion.',
-            images: ['https://picsum.photos/seed/tt1/600/400', 'https://picsum.photos/seed/tt2/600/400',
-                'https://picsum.photos/seed/tt3/600/400'
-            ],
-            video: '',
-            features: ['50K+ followers', 'High engagement', 'Established 2023', 'Full access'],
-            badge: 'PREMIUM',
-            discount: 38,
-            reviewsList: [{ user: 'Laura S.', text: 'Excellent account, great engagement!', rating: 5 }]
-        }, {
-            id: 10,
-            name: 'YouTube Monetized Account',
-            category: 'Digital Accounts',
-            categorySlug: 'digital-accounts',
-            price: 299,
-            originalPrice: 499,
-            isFree: false,
-            rating: 4.7,
-            reviews: 178,
-            description: 'YouTube channel with 1,000+ subscribers and 4,000+ watch hours — fully monetized and ready for Adsense.',
-            images: ['https://picsum.photos/seed/yt1/600/400', 'https://picsum.photos/seed/yt2/600/400',
-                'https://picsum.photos/seed/yt3/600/400'
-            ],
-            video: '',
-            features: ['Monetized', '1K+ subs', '4K+ watch hours', 'AdSense ready'],
-            badge: 'PREMIUM',
-            discount: 40,
-            reviewsList: [{ user: 'Ryan T.', text: 'Monetization approved in 2 days!', rating: 5 }]
-        }, {
-            id: 11,
-            name: 'Dropshipping Blueprint',
-            category: 'Premium Methods',
-            categorySlug: 'premium-methods',
-            price: 39,
-            originalPrice: 69,
-            isFree: false,
-            rating: 4.8,
-            reviews: 634,
-            description: 'Step-by-step blueprint to build a profitable dropshipping store from scratch. Includes product sourcing and ad strategies.',
-            images: ['https://picsum.photos/seed/ds1/600/400', 'https://picsum.photos/seed/ds2/600/400',
-                'https://picsum.photos/seed/ds3/600/400'
-            ],
-            video: 'https://www.w3schools.com/html/mov_bbb.mp4',
-            features: ['10 modules', 'Product sourcing', 'Ad templates', 'Store setup guide'],
-            badge: 'PREMIUM',
-            discount: 43,
-            reviewsList: [{ user: 'Nina P.', text: 'Best dropshipping guide out there!', rating: 5 }]
-        }, {
-            id: 12,
-            name: 'SEO Masterclass 2026',
-            category: 'Premium Courses',
-            categorySlug: 'premium-courses',
-            price: 59,
-            originalPrice: 99,
-            isFree: false,
-            rating: 4.9,
-            reviews: 412,
-            description: 'Complete SEO course covering everything from keyword research to advanced link building. Rank #1 on Google.',
-            images: ['https://picsum.photos/seed/seo1/600/400', 'https://picsum.photos/seed/seo2/600/400',
-                'https://picsum.photos/seed/seo3/600/400'
-            ],
-            video: '',
-            features: ['20+ hours', 'Worksheets', 'Case studies', 'Lifetime updates'],
-            badge: 'BEST SELLER',
-            discount: 40,
-            reviewsList: [{ user: 'Omar H.', text: 'This course is pure gold for SEO!', rating: 5 }]
-        }, {
-            id: 13,
-            name: 'Free CSS Animations Course',
-            category: 'Free Courses',
-            categorySlug: 'free-courses',
-            price: 0,
-            originalPrice: 0,
-            isFree: true,
-            rating: 4.7,
-            reviews: 1850,
-            description: 'Learn CSS animations from scratch. Master transitions, keyframes, and advanced animation techniques.',
-            images: ['https://picsum.photos/seed/css1/600/400', 'https://picsum.photos/seed/css2/600/400',
-                'https://picsum.photos/seed/css3/600/400'
-            ],
-            video: '',
-            features: ['8 hours', 'Interactive demos', 'Projects included', 'Certificate'],
-            badge: 'FREE',
-            discount: 0,
-            downloadUrl: '#',
-            reviewsList: [{ user: 'Elena G.', text: 'Finally animations make sense!', rating: 5 }]
-        }, {
-            id: 14,
-            name: 'Free Python Basics',
-            category: 'Free Courses',
-            categorySlug: 'free-courses',
-            price: 0,
-            originalPrice: 0,
-            isFree: true,
-            rating: 4.8,
-            reviews: 2100,
-            description: 'Beginner-friendly Python course. Learn syntax, data structures, and build real-world projects.',
-            images: ['https://picsum.photos/seed/py1/600/400', 'https://picsum.photos/seed/py2/600/400',
-                'https://picsum.photos/seed/py3/600/400'
-            ],
-            video: '',
-            features: ['12 hours', 'Hands-on projects', 'Quizzes', 'Community support'],
-            badge: 'FREE',
-            discount: 0,
-            downloadUrl: '#',
-            reviewsList: [{ user: 'Mark R.', text: 'Best free Python course I\'ve found!', rating: 5 }]
-        }, {
-            id: 15,
-            name: 'Premium Facebook Ads Course',
-            category: 'Premium Courses',
-            categorySlug: 'premium-courses',
-            price: 79,
-            originalPrice: 129,
-            isFree: false,
-            rating: 4.8,
-            reviews: 312,
-            description: 'Master Facebook and Instagram advertising. Learn audience targeting, creative strategy, and scaling tactics.',
-            images: ['https://picsum.photos/seed/fbads1/600/400', 'https://picsum.photos/seed/fbads2/600/400',
-                'https://picsum.photos/seed/fbads3/600/400'
-            ],
-            video: '',
-            features: ['15 hours', 'Ad templates', 'Budget optimization', 'Case studies'],
-            badge: 'PREMIUM',
-            discount: 39,
-            reviewsList: [{ user: 'Sophia L.', text: 'My ROAS doubled after this course!', rating: 5 }]
-        }, {
-            id: 16,
-            name: 'Twitter Growth Hacks',
-            category: 'Premium Tricks',
-            categorySlug: 'premium-tricks',
-            price: 19,
-            originalPrice: 39,
-            isFree: false,
-            rating: 4.6,
-            reviews: 567,
-            description: 'Secret tactics to grow your Twitter audience rapidly. Used by top creators to gain 10K+ followers in 30 days.',
-            images: ['https://picsum.photos/seed/tw1/600/400', 'https://picsum.photos/seed/tw2/600/400',
-                'https://picsum.photos/seed/tw3/600/400'
-            ],
-            video: '',
-            features: ['30 tactics', 'Scripts included', 'Automation tips', 'Community access'],
-            badge: 'PREMIUM',
-            discount: 51,
-            reviewsList: [{ user: 'James C.', text: 'Gained 5K followers in 2 weeks!', rating: 5 }]
-        }];
+        var STORAGE_KEYS = {
+            PRODUCTS: 'mh_products',
+            CATEGORIES: 'mh_categories',
+            USERS: 'mh_users',
+            ORDERS: 'mh_orders',
+            CART: 'mh_cart',
+            NOTIFICATIONS: 'mh_notifications',
+            SETTINGS: 'mh_settings',
+            PLANS: 'mh_plans',
+            COUPONS: 'mh_coupons',
+            CHECKINS: 'mh_checkins',
+            CHAT_MESSAGES: 'mh_chat_messages',
+            WALLET_TX: 'mh_wallet_transactions',
+            REFERRAL_HISTORY: 'mh_referral_history',
+            ANALYTICS: 'mh_analytics',
+            BANNERS: 'mh_banners',
+            SLIDERS: 'mh_sliders',
+            STATISTICS: 'mh_statistics',
+            REPORTS: 'mh_reports',
+            ACTIVITY: 'mh_activity',
+            ADMIN_AUTH: 'mh_admin_auth',
+            ADMIN_SESSION: 'mh_admin_session',
+            SEARCH_HISTORY: 'mh_search_history',
+            RECENT_PRODUCTS: 'mh_recent_products',
+            FEATURED_PRODUCTS: 'mh_featured_products',
+            POPULAR_PRODUCTS: 'mh_popular_products',
+            WISHLIST: 'mh_wishlist',
+            DOWNLOADS: 'mh_downloads',
+            TRANSACTIONS: 'mh_transactions',
+            LOGS: 'mh_logs'
+        };
 
         // ================================================================
-        // 2. CATEGORY DATA
+        // 2. REAL-TIME SYNCHRONIZATION LAYER (BroadcastChannel + storage)
         // ================================================================
-        const categories = [
-            { id: 'premium-tools', label: 'Premium Tools', icon: 'fa-cogs', count: 0 },
-            { id: 'free-tools', label: 'Free Tools', icon: 'fa-gift', count: 0 },
-            { id: 'premium-tricks', label: 'Premium Tricks', icon: 'fa-magic', count: 0 },
-            { id: 'premium-methods', label: 'Premium Methods', icon: 'fa-chart-line', count: 0 },
-            { id: 'premium-courses', label: 'Premium Courses', icon: 'fa-graduation-cap', count: 0 },
-            { id: 'free-courses', label: 'Free Courses', icon: 'fa-book-open', count: 0 },
-            { id: 'digital-accounts', label: 'Digital Accounts', icon: 'fa-user-circle', count: 0 },
-            { id: 'free-tricks', label: 'Free Tricks', icon: 'fa-wand-magic-sparkles', count: 0 },
-            { id: 'free-methods', label: 'Free Methods', icon: 'fa-arrow-trend-up', count: 0 }
-        ];
+        var SYNC_CHANNEL = 'mh_hacks_channel';
+        var syncChannel = null;
+
+        try {
+            syncChannel = new BroadcastChannel(SYNC_CHANNEL);
+            console.log('[SYNC] BroadcastChannel established: ' + SYNC_CHANNEL);
+        } catch (e) {
+            console.warn('[SYNC] BroadcastChannel not supported, using storage events only.');
+        }
+
+        function broadcastChange(type, key, data) {
+            var payload = { type: type, key: key, data: data, timestamp: Date.now() };
+            if (syncChannel) {
+                try {
+                    syncChannel.postMessage(payload);
+                } catch (e) { /* ignore */ }
+            }
+            // Also dispatch custom event within page
+            window.dispatchEvent(new CustomEvent('mh-sync', { detail: payload }));
+        }
+
+        // Listen for BroadcastChannel messages
+        if (syncChannel) {
+            syncChannel.onmessage = function(event) {
+                var payload = event.data;
+                if (payload && payload.key) {
+                    console.log('[SYNC] Received broadcast:', payload.type, payload.key);
+                    handleSyncMessage(payload);
+                }
+            };
+        }
+
+        // Listen for storage events from other tabs
+        window.addEventListener('storage', function(event) {
+            if (event.key && event.key.startsWith('mh_')) {
+                console.log('[SYNC] Storage event:', event.key);
+                var data = null;
+                try {
+                    data = JSON.parse(event.newValue);
+                } catch (e) { data = event.newValue; }
+                handleSyncMessage({ type: 'storage', key: event.key, data: data, timestamp: Date.now() });
+            }
+        });
+
+        // Listen for custom events within the same page
+        window.addEventListener('mh-sync', function(event) {
+            handleSyncMessage(event.detail);
+        });
+
+        // Handle sync messages
+        function handleSyncMessage(payload) {
+            var key = payload.key;
+            var data = payload.data;
+            var type = payload.type;
+
+            // Route to appropriate handler based on key
+            switch (key) {
+                case STORAGE_KEYS.PRODUCTS:
+                    if (data !== null) {
+                        window.products = data || getDefaultProducts();
+                        renderProducts();
+                        renderFreeTools();
+                        renderPaidToolsPage(
+                            document.getElementById('paidSortSelect') ? document.getElementById('paidSortSelect')
+                            .value : 'price-asc',
+                            document.getElementById('paidSearchInput') ? document.getElementById('paidSearchInput')
+                            .value : ''
+                        );
+                        renderFreeToolsPage(
+                            document.getElementById('freeSortSelect') ? document.getElementById('freeSortSelect')
+                            .value : 'rating',
+                            document.getElementById('freeSearchInput') ? document.getElementById('freeSearchInput')
+                            .value : ''
+                        );
+                        renderCategories();
+                        toast('🔄 Products updated from admin', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.CATEGORIES:
+                    if (data !== null) {
+                        window.categories = data || getDefaultCategories();
+                        renderCategories();
+                        toast('🔄 Categories updated from admin', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.USERS:
+                    if (data !== null) {
+                        window.users = data || [];
+                        if (window.currentUser) {
+                            var updated = window.users.find(function(u) { return u.id === window.currentUser.id; });
+                            if (updated) window.currentUser = updated;
+                        }
+                        toast('🔄 Users data refreshed', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.ORDERS:
+                    if (data !== null) {
+                        window.orders = data || [];
+                        toast('🔄 Orders updated from admin', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.NOTIFICATIONS:
+                    if (data !== null) {
+                        window.notifications = data || [];
+                        renderNotifications();
+                        updateNotifBadge();
+                        toast('🔄 Notifications updated', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.SETTINGS:
+                    if (data !== null) {
+                        window.settings = data || getDefaultSettings();
+                        applySettingsToUI(window.settings);
+                        toast('🔄 Site settings applied', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.PLANS:
+                    if (data !== null) {
+                        window.plans = data || getDefaultPlans();
+                        renderPricingPlans();
+                        toast('🔄 Pricing plans updated', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.COUPONS:
+                    if (data !== null) {
+                        window.coupons = data || [];
+                        toast('🔄 Coupons updated from admin', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.CHECKINS:
+                    if (data !== null) {
+                        if (window.currentUser) {
+                            var userCheckins = data[window.currentUser.id] || [];
+                            window.checkinData = userCheckins;
+                        }
+                        toast('🔄 Check-in data updated', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.CHAT_MESSAGES:
+                    if (data !== null) {
+                        window.chatHistory = data || [];
+                        if (document.getElementById('chatMessages')) {
+                            renderChatMessages();
+                        }
+                        toast('🔄 Chat messages updated', 'info');
+                    }
+                    break;
+
+                case STORAGE_KEYS.WALLET_TX:
+                case STORAGE_KEYS.ANALYTICS:
+                case STORAGE_KEYS.SLIDERS:
+                case STORAGE_KEYS.BANNERS:
+                    // These are handled elsewhere or just notify
+                    break;
+
+                default:
+                    // Generic refresh for unknown keys
+                    if (key && key.startsWith('mh_')) {
+                        // Let the page refresh relevant data
+                        if (key === STORAGE_KEYS.PRODUCTS || key === STORAGE_KEYS.CATEGORIES) {
+                            // already handled above
+                        }
+                    }
+                    break;
+            }
+
+            // Dispatch a refresh event for the current page
+            if (window.currentPage && key === STORAGE_KEYS.PRODUCTS) {
+                // If we're on a page that shows products, refresh it
+                var page = window.currentPage || 'home';
+                if (page === 'products' || page === 'home') {
+                    renderProducts();
+                    renderFreeTools();
+                }
+            }
+        }
 
         // ================================================================
-        // 3. STATE
+        // 3. HELPERS: GET DEFAULTS
         // ================================================================
-        let cart = JSON.parse(localStorage.getItem('mh_cart')) || [];
-        let currentFilter = 'all';
-        let currentCategory = null;
-        let selectedPayment = null;
-        let uploadFile = null;
-        let authMode = 'signin';
-        let currentUser = JSON.parse(localStorage.getItem('mh_currentUser')) || null;
-        let users = JSON.parse(localStorage.getItem('mh_users')) || [];
-        let orders = JSON.parse(localStorage.getItem('mh_orders')) || [];
-        let detailProductId = null;
-        let detailQty = 1;
-        let chatHistory = [];
-        let isRecording = false;
-        let mediaRecorder = null;
-        let audioChunks = [];
-        let adminOnline = false;
-        let detailImageIndex = 0;
-        let couponApplied = false;
-        let couponDiscount = 0;
-        let couponCode = '';
+        function getDefaultProducts() {
+            return [{
+                id: 1,
+                name: 'Hacker Toolkit Pro',
+                category: 'Premium Tools',
+                categorySlug: 'premium-tools',
+                price: 89,
+                originalPrice: 149,
+                isFree: false,
+                rating: 4.9,
+                reviews: 2143,
+                description: 'An all-in-one suite of 40+ pro-grade utilities.',
+                images: ['https://picsum.photos/seed/hacker1/600/400', 'https://picsum.photos/seed/hacker2/600/400',
+                    'https://picsum.photos/seed/hacker3/600/400', 'https://picsum.photos/seed/hacker4/600/400'
+                ],
+                video: '',
+                features: ['40+ premium tools', 'Cross-platform', 'Lifetime updates', 'Priority support'],
+                badge: 'BEST SELLER',
+                discount: 40,
+                reviewsList: [{ user: 'Alex M.', text: 'Game-changing!', rating: 5 }]
+            }, {
+                id: 2,
+                name: 'AI Prompt Vault 2026',
+                category: 'Premium Tools',
+                categorySlug: 'premium-tools',
+                price: 19,
+                originalPrice: 49,
+                isFree: false,
+                rating: 4.9,
+                reviews: 4210,
+                description: '500+ high-converting AI prompts.',
+                images: ['https://picsum.photos/seed/ai1/600/400', 'https://picsum.photos/seed/ai2/600/400',
+                    'https://picsum.photos/seed/ai3/600/400', 'https://picsum.photos/seed/ai4/600/400'
+                ],
+                video: '',
+                features: ['500+ prompts', 'Weekly updates', 'All major AI platforms'],
+                badge: 'BEST SELLER',
+                discount: 61,
+                reviewsList: [{ user: 'Sarah K.', text: 'Best prompt collection!', rating: 5 }]
+            }, {
+                id: 3,
+                name: 'Instagram 10K Aged Account',
+                category: 'Digital Accounts',
+                categorySlug: 'digital-accounts',
+                price: 199,
+                originalPrice: 299,
+                isFree: false,
+                rating: 4.8,
+                reviews: 410,
+                description: 'Aged Instagram account with 10,000+ real followers.',
+                images: ['https://picsum.photos/seed/ig1/600/400', 'https://picsum.photos/seed/ig2/600/400',
+                    'https://picsum.photos/seed/ig3/600/400', 'https://picsum.photos/seed/ig4/600/400'
+                ],
+                video: '',
+                features: ['10K+ real followers', 'Aged 2022', 'High trust score'],
+                badge: 'PREMIUM',
+                discount: 33,
+                reviewsList: [{ user: 'John D.', text: 'Perfect account!', rating: 5 }]
+            }, {
+                id: 4,
+                name: 'Viral Hooks Vault',
+                category: 'Premium Tricks',
+                categorySlug: 'premium-tricks',
+                price: 29,
+                originalPrice: 49,
+                isFree: false,
+                rating: 4.9,
+                reviews: 1731,
+                description: '100+ proven viral hooks and scripts.',
+                images: ['https://picsum.photos/seed/viral1/600/400', 'https://picsum.photos/seed/viral2/600/400',
+                    'https://picsum.photos/seed/viral3/600/400', 'https://picsum.photos/seed/viral4/600/400'
+                ],
+                video: '',
+                features: ['100+ hooks', 'Script templates', 'Top creator verified'],
+                badge: 'PREMIUM',
+                discount: 41,
+                reviewsList: [{ user: 'Emily R.', text: 'Views skyrocketed!', rating: 5 }]
+            }, {
+                id: 5,
+                name: 'Growth Playbook 2026',
+                category: 'Premium Methods',
+                categorySlug: 'premium-methods',
+                price: 49,
+                originalPrice: 79,
+                isFree: false,
+                rating: 4.7,
+                reviews: 892,
+                description: 'Complete growth methodology for SaaS.',
+                images: ['https://picsum.photos/seed/growth1/600/400', 'https://picsum.photos/seed/growth2/600/400',
+                    'https://picsum.photos/seed/growth3/600/400', 'https://picsum.photos/seed/growth4/600/400'
+                ],
+                video: '',
+                features: ['12 modules', 'Case studies', 'Templates included'],
+                badge: 'BEST SELLER',
+                discount: 38,
+                reviewsList: [{ user: 'Michael B.', text: 'Changed my business!', rating: 5 }]
+            }, {
+                id: 6,
+                name: 'Free Image Compressor',
+                category: 'Free Tools',
+                categorySlug: 'free-tools',
+                price: 0,
+                originalPrice: 0,
+                isFree: true,
+                rating: 4.8,
+                reviews: 9421,
+                description: 'Lossless image compression tool.',
+                images: ['https://picsum.photos/seed/compress1/600/400',
+                    'https://picsum.photos/seed/compress2/600/400',
+                    'https://picsum.photos/seed/compress3/600/400'
+                ],
+                video: '',
+                features: ['Lossless compression', 'Batch processing', 'Drag & drop'],
+                badge: 'FREE',
+                discount: 0,
+                downloadUrl: '#',
+                reviewsList: [{ user: 'David L.', text: 'Super useful!', rating: 5 }]
+            }, {
+                id: 7,
+                name: 'Free JSON Formatter',
+                category: 'Free Tools',
+                categorySlug: 'free-tools',
+                price: 0,
+                originalPrice: 0,
+                isFree: true,
+                rating: 4.9,
+                reviews: 5210,
+                description: 'Online JSON formatter and validator.',
+                images: ['https://picsum.photos/seed/json1/600/400', 'https://picsum.photos/seed/json2/600/400',
+                    'https://picsum.photos/seed/json3/600/400'
+                ],
+                video: '',
+                features: ['Format & minify', 'Validate JSON', 'Syntax highlighting'],
+                badge: 'FREE',
+                discount: 0,
+                downloadUrl: '#',
+                reviewsList: [{ user: 'Anna W.', text: 'My go-to JSON tool!', rating: 5 }]
+            }, {
+                id: 8,
+                name: 'Free Palette Generator',
+                category: 'Free Tools',
+                categorySlug: 'free-tools',
+                price: 0,
+                originalPrice: 0,
+                isFree: true,
+                rating: 4.7,
+                reviews: 2102,
+                description: 'AI-powered color palette generator.',
+                images: ['https://picsum.photos/seed/palette1/600/400',
+                    'https://picsum.photos/seed/palette2/600/400',
+                    'https://picsum.photos/seed/palette3/600/400'
+                ],
+                video: '',
+                features: ['AI-generated', 'Export as CSS', 'Color harmonies'],
+                badge: 'FREE',
+                discount: 0,
+                downloadUrl: '#',
+                reviewsList: [{ user: 'Chris P.', text: 'Beautiful palettes!', rating: 4 }]
+            }, {
+                id: 9,
+                name: 'TikTok 50K Account',
+                category: 'Digital Accounts',
+                categorySlug: 'digital-accounts',
+                price: 249,
+                originalPrice: 399,
+                isFree: false,
+                rating: 4.6,
+                reviews: 215,
+                description: 'High-engagement TikTok account with 50K+ followers.',
+                images: ['https://picsum.photos/seed/tt1/600/400', 'https://picsum.photos/seed/tt2/600/400',
+                    'https://picsum.photos/seed/tt3/600/400'
+                ],
+                video: '',
+                features: ['50K+ followers', 'High engagement', 'Established 2023'],
+                badge: 'PREMIUM',
+                discount: 38,
+                reviewsList: [{ user: 'Laura S.', text: 'Great engagement!', rating: 5 }]
+            }, {
+                id: 10,
+                name: 'YouTube Monetized Account',
+                category: 'Digital Accounts',
+                categorySlug: 'digital-accounts',
+                price: 299,
+                originalPrice: 499,
+                isFree: false,
+                rating: 4.7,
+                reviews: 178,
+                description: 'YouTube channel monetized and ready for Adsense.',
+                images: ['https://picsum.photos/seed/yt1/600/400', 'https://picsum.photos/seed/yt2/600/400',
+                    'https://picsum.photos/seed/yt3/600/400'
+                ],
+                video: '',
+                features: ['Monetized', '1K+ subs', '4K+ watch hours'],
+                badge: 'PREMIUM',
+                discount: 40,
+                reviewsList: [{ user: 'Ryan T.', text: 'Monetization approved!', rating: 5 }]
+            }, {
+                id: 11,
+                name: 'Dropshipping Blueprint',
+                category: 'Premium Methods',
+                categorySlug: 'premium-methods',
+                price: 39,
+                originalPrice: 69,
+                isFree: false,
+                rating: 4.8,
+                reviews: 634,
+                description: 'Step-by-step dropshipping blueprint.',
+                images: ['https://picsum.photos/seed/ds1/600/400', 'https://picsum.photos/seed/ds2/600/400',
+                    'https://picsum.photos/seed/ds3/600/400'
+                ],
+                video: '',
+                features: ['10 modules', 'Product sourcing', 'Ad templates'],
+                badge: 'PREMIUM',
+                discount: 43,
+                reviewsList: [{ user: 'Nina P.', text: 'Best dropshipping guide!', rating: 5 }]
+            }, {
+                id: 12,
+                name: 'SEO Masterclass 2026',
+                category: 'Premium Courses',
+                categorySlug: 'premium-courses',
+                price: 59,
+                originalPrice: 99,
+                isFree: false,
+                rating: 4.9,
+                reviews: 412,
+                description: 'Complete SEO course from keyword to link building.',
+                images: ['https://picsum.photos/seed/seo1/600/400', 'https://picsum.photos/seed/seo2/600/400',
+                    'https://picsum.photos/seed/seo3/600/400'
+                ],
+                video: '',
+                features: ['20+ hours', 'Worksheets', 'Case studies'],
+                badge: 'BEST SELLER',
+                discount: 40,
+                reviewsList: [{ user: 'Omar H.', text: 'Pure gold for SEO!', rating: 5 }]
+            }, {
+                id: 13,
+                name: 'Free CSS Animations Course',
+                category: 'Free Courses',
+                categorySlug: 'free-courses',
+                price: 0,
+                originalPrice: 0,
+                isFree: true,
+                rating: 4.7,
+                reviews: 1850,
+                description: 'Learn CSS animations from scratch.',
+                images: ['https://picsum.photos/seed/css1/600/400', 'https://picsum.photos/seed/css2/600/400',
+                    'https://picsum.photos/seed/css3/600/400'
+                ],
+                video: '',
+                features: ['8 hours', 'Interactive demos', 'Projects included'],
+                badge: 'FREE',
+                discount: 0,
+                downloadUrl: '#',
+                reviewsList: [{ user: 'Elena G.', text: 'Finally animations make sense!', rating: 5 }]
+            }, {
+                id: 14,
+                name: 'Free Python Basics',
+                category: 'Free Courses',
+                categorySlug: 'free-courses',
+                price: 0,
+                originalPrice: 0,
+                isFree: true,
+                rating: 4.8,
+                reviews: 2100,
+                description: 'Beginner-friendly Python course.',
+                images: ['https://picsum.photos/seed/py1/600/400', 'https://picsum.photos/seed/py2/600/400',
+                    'https://picsum.photos/seed/py3/600/400'
+                ],
+                video: '',
+                features: ['12 hours', 'Hands-on projects', 'Quizzes'],
+                badge: 'FREE',
+                discount: 0,
+                downloadUrl: '#',
+                reviewsList: [{ user: 'Mark R.', text: 'Best free Python course!', rating: 5 }]
+            }, {
+                id: 15,
+                name: 'Premium Facebook Ads Course',
+                category: 'Premium Courses',
+                categorySlug: 'premium-courses',
+                price: 79,
+                originalPrice: 129,
+                isFree: false,
+                rating: 4.8,
+                reviews: 312,
+                description: 'Master Facebook and Instagram advertising.',
+                images: ['https://picsum.photos/seed/fbads1/600/400',
+                    'https://picsum.photos/seed/fbads2/600/400',
+                    'https://picsum.photos/seed/fbads3/600/400'
+                ],
+                video: '',
+                features: ['15 hours', 'Ad templates', 'Budget optimization'],
+                badge: 'PREMIUM',
+                discount: 39,
+                reviewsList: [{ user: 'Sophia L.', text: 'ROAS doubled!', rating: 5 }]
+            }, {
+                id: 16,
+                name: 'Twitter Growth Hacks',
+                category: 'Premium Tricks',
+                categorySlug: 'premium-tricks',
+                price: 19,
+                originalPrice: 39,
+                isFree: false,
+                rating: 4.6,
+                reviews: 567,
+                description: 'Secret tactics to grow Twitter audience rapidly.',
+                images: ['https://picsum.photos/seed/tw1/600/400', 'https://picsum.photos/seed/tw2/600/400',
+                    'https://picsum.photos/seed/tw3/600/400'
+                ],
+                video: '',
+                features: ['30 tactics', 'Scripts included', 'Automation tips'],
+                badge: 'PREMIUM',
+                discount: 51,
+                reviewsList: [{ user: 'James C.', text: 'Gained 5K followers!', rating: 5 }]
+            }];
+        }
 
-        // Notification state
-        let notifications = JSON.parse(localStorage.getItem('mh_notifications')) || [];
-        let notifUnread = notifications.filter(n => !n.read).length;
+        function getDefaultCategories() {
+            return [
+                { id: 'premium-tools', label: 'Premium Tools', icon: 'fa-cogs', count: 0 },
+                { id: 'free-tools', label: 'Free Tools', icon: 'fa-gift', count: 0 },
+                { id: 'premium-tricks', label: 'Premium Tricks', icon: 'fa-magic', count: 0 },
+                { id: 'premium-methods', label: 'Premium Methods', icon: 'fa-chart-line', count: 0 },
+                { id: 'premium-courses', label: 'Premium Courses', icon: 'fa-graduation-cap', count: 0 },
+                { id: 'free-courses', label: 'Free Courses', icon: 'fa-book-open', count: 0 },
+                { id: 'digital-accounts', label: 'Digital Accounts', icon: 'fa-user-circle', count: 0 },
+                { id: 'free-tricks', label: 'Free Tricks', icon: 'fa-wand-magic-sparkles', count: 0 },
+                { id: 'free-methods', label: 'Free Methods', icon: 'fa-arrow-trend-up', count: 0 }
+            ];
+        }
 
-        // Pricing plans state
-        let selectedPlan = null;
+        function getDefaultPlans() {
+            return [{
+                id: 'basic',
+                name: 'Basic',
+                desc: 'Perfect for beginners.',
+                price: 29,
+                originalPrice: 49,
+                features: ['Access to 30% of paid tools', 'Basic support'],
+                popular: false
+            }, {
+                id: 'standard',
+                name: 'Standard',
+                desc: 'For serious builders.',
+                price: 59,
+                originalPrice: 89,
+                features: ['Access to 60% of paid tools', 'Priority support'],
+                popular: true
+            }, {
+                id: 'premium',
+                name: 'Premium',
+                desc: 'Full access. Everything.',
+                price: 99,
+                originalPrice: 149,
+                features: ['Access to 100% of paid tools', '24/7 VIP support'],
+                popular: false
+            }];
+        }
+
+        function getDefaultSettings() {
+            return {
+                siteName: 'MH HACKS',
+                logoUrl: 'https://i.ibb.co/wN77dfzw/logo.png',
+                heroTitle: 'Unlock The Tools The Top 1% Are Using.',
+                heroSubtitle: 'Premium digital tools, courses, methods, and verified accounts.',
+                primaryColor: '#7B2CBF',
+                primaryLight: '#9D4EDD',
+                contactEmail: 'mhhackshelpzone@gmail.com',
+                contactPhone: '+92 300 762 4789',
+                facebook: 'https://facebook.com/mhhacks',
+                instagram: 'https://instagram.com/mhhacks',
+                whatsApp1: 'https://wa.me/971562100607',
+                whatsApp2: 'https://wa.me/923007624789',
+                telegram: 'https://t.me/MH_HACKS_OWNER',
+                tiktok: 'https://tiktok.com/@mhhacks',
+                youtube: 'https://youtube.com/@mhhacks',
+                footerText: '© 2026 MH HACKS. All rights reserved.',
+                privacy: 'Privacy Policy content...',
+                refund: 'Refund Policy content...',
+                terms: 'Terms & Conditions content...'
+            };
+        }
 
         // ================================================================
-        // 4. UTILITY FUNCTIONS
+        // 4. DATA LAYER — READ/WRITE WITH SYNC
+        // ================================================================
+        function readData(key, fallback) {
+            try {
+                var data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : fallback;
+            } catch (e) { return fallback; }
+        }
+
+        function writeData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+            broadcastChange('update', key, data);
+        }
+
+        // ================================================================
+        // 5. PRODUCT DATA (shared with localStorage)
+        // ================================================================
+        var products = readData(STORAGE_KEYS.PRODUCTS, getDefaultProducts());
+        var categories = readData(STORAGE_KEYS.CATEGORIES, getDefaultCategories());
+        var users = readData(STORAGE_KEYS.USERS, []);
+        var orders = readData(STORAGE_KEYS.ORDERS, []);
+        var notifications = readData(STORAGE_KEYS.NOTIFICATIONS, []);
+        var settings = readData(STORAGE_KEYS.SETTINGS, getDefaultSettings());
+        var plans = readData(STORAGE_KEYS.PLANS, getDefaultPlans());
+        var coupons = readData(STORAGE_KEYS.COUPONS, []);
+        var checkinData = readData(STORAGE_KEYS.CHECKINS, {});
+        var chatHistory = readData(STORAGE_KEYS.CHAT_MESSAGES, []);
+        var analytics = readData(STORAGE_KEYS.ANALYTICS, { daily: {} });
+        var sliders = readData(STORAGE_KEYS.SLIDERS, []);
+        var banners = readData(STORAGE_KEYS.BANNERS, []);
+
+        // ================================================================
+        // 6. STATE
+        // ================================================================
+        var cart = JSON.parse(localStorage.getItem('mh_cart')) || [];
+        var currentFilter = 'all';
+        var currentCategory = null;
+        var selectedPayment = null;
+        var uploadFile = null;
+        var authMode = 'signin';
+        var currentUser = JSON.parse(localStorage.getItem('mh_currentUser')) || null;
+        var detailProductId = null;
+        var detailQty = 1;
+        var isRecording = false;
+        var mediaRecorder = null;
+        var audioChunks = [];
+        var adminOnline = false;
+        var detailImageIndex = 0;
+        var couponApplied = false;
+        var couponDiscount = 0;
+        var couponCode = '';
+        var selectedPlan = null;
+        var currentPage = 'home';
+        var notifUnread = notifications.filter(function(n) { return !n.read; }).length;
+
+        // ================================================================
+        // 7. UTILITY FUNCTIONS
         // ================================================================
         function generateOrderId() { return 'MH-' + String(Math.floor(1000 + Math.random() * 9000)); }
 
         function formatPrice(p) { return '$' + p.toFixed(2); }
 
         function starsHtml(rating) {
-            let full = Math.floor(rating);
-            let half = rating % 1 >= 0.5 ? 1 : 0;
-            let empty = 5 - full - half;
+            var full = Math.floor(rating);
+            var half = rating % 1 >= 0.5 ? 1 : 0;
+            var empty = 5 - full - half;
             return '<i class="fas fa-star"></i>'.repeat(full) +
                 (half ? '<i class="fas fa-star-half-alt"></i>' : '') +
                 '<i class="far fa-star"></i>'.repeat(empty);
@@ -5207,9 +5512,9 @@
 
         function toast(message, type) {
             if (typeof type === 'undefined') type = 'info';
-            const container = document.getElementById('toastContainer');
-            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-            const el = document.createElement('div');
+            var container = document.getElementById('toastContainer');
+            var icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+            var el = document.createElement('div');
             el.className = 'toast ' + type;
             el.innerHTML =
                 '<span class="icon"><i class="fas ' + (icons[type] || icons.info) + '"></i></span>' +
@@ -5233,9 +5538,9 @@
 
         function getProduct(id) { return products.find(function(p) { return p.id === id; }); }
 
-        function saveUsers() { localStorage.setItem('mh_users', JSON.stringify(users)); }
+        function saveUsers() { writeData(STORAGE_KEYS.USERS, users); }
 
-        function saveOrders() { localStorage.setItem('mh_orders', JSON.stringify(orders)); }
+        function saveOrders() { writeData(STORAGE_KEYS.ORDERS, orders); }
 
         function saveCart() { localStorage.setItem('mh_cart', JSON.stringify(cart)); }
 
@@ -5266,10 +5571,40 @@
         function isFree(p) { return p.isFree; }
 
         // ================================================================
-        // 5. NOTIFICATIONS
+        // 8. APPLY SETTINGS TO UI
+        // ================================================================
+        function applySettingsToUI(settings) {
+            if (!settings) return;
+            // Hero
+            var headline = document.getElementById('heroHeadline');
+            if (headline && settings.heroTitle) {
+                headline.innerHTML = settings.heroTitle.replace(/\n/g, '<br>');
+            }
+            var subline = document.getElementById('heroSubline');
+            if (subline && settings.heroSubtitle) {
+                subline.textContent = settings.heroSubtitle;
+            }
+            // Logo
+            var logos = document.querySelectorAll('.logo img');
+            logos.forEach(function(img) {
+                if (settings.logoUrl) img.src = settings.logoUrl;
+            });
+            // Colors
+            if (settings.primaryColor) {
+                document.documentElement.style.setProperty('--primary', settings.primaryColor);
+                document.documentElement.style.setProperty('--purple', settings.primaryColor);
+            }
+            if (settings.primaryLight) {
+                document.documentElement.style.setProperty('--primary-light', settings.primaryLight);
+                document.documentElement.style.setProperty('--primary-glow', settings.primaryLight);
+            }
+        }
+
+        // ================================================================
+        // 9. NOTIFICATIONS
         // ================================================================
         function saveNotifications() {
-            localStorage.setItem('mh_notifications', JSON.stringify(notifications));
+            writeData(STORAGE_KEYS.NOTIFICATIONS, notifications);
             updateNotifBadge();
         }
 
@@ -5290,15 +5625,17 @@
         }
 
         function updateNotifBadge() {
-            var unread = notifications.filter(n => !n.read).length;
-            document.getElementById('notifBadge').textContent = unread;
-            document.getElementById('notifBadge').style.display = unread > 0 ? 'flex' : 'none';
+            var unread = notifications.filter(function(n) { return !n.read; }).length;
+            var badge = document.getElementById('notifBadge');
+            if (badge) { badge.textContent = unread;
+                badge.style.display = unread > 0 ? 'flex' : 'none'; }
             notifUnread = unread;
             renderNotifications();
         }
 
         function renderNotifications() {
             var list = document.getElementById('notifList');
+            if (!list) return;
             if (notifications.length === 0) {
                 list.innerHTML = '<div class="empty">No notifications.</div>';
                 return;
@@ -5325,7 +5662,7 @@
             list.querySelectorAll('.notif-item').forEach(function(el) {
                 el.addEventListener('click', function() {
                     var id = parseInt(el.dataset.id);
-                    var n = notifications.find(function(n) { return n.id === id; });
+                    var n = notifications.find(function(not) { return not.id === id; });
                     if (n) { n.read = true;
                         saveNotifications();
                         updateNotifBadge(); }
@@ -5334,7 +5671,7 @@
         }
 
         // ================================================================
-        // 6. AUTH SYSTEM
+        // 10. AUTH SYSTEM
         // ================================================================
         function loginUser(email, password, remember) {
             var user = findUserByEmail(email);
@@ -5429,10 +5766,11 @@
         }
 
         // ================================================================
-        // 7. CART FUNCTIONS — PERSISTENT SIDEBAR
+        // 11. CART FUNCTIONS
         // ================================================================
         function updateCartUI() {
             var badge = document.getElementById('cartBadge');
+            if (!badge) return;
             var count = cart.reduce(function(s, i) { return s + i.qty; }, 0);
             badge.textContent = count;
             if (count > 0) { badge.classList.add('bounce');
@@ -5442,12 +5780,13 @@
             var container = document.getElementById('cartItems');
             var totalEl = document.getElementById('cartTotal');
             var checkoutBtn = document.getElementById('checkoutBtn');
+            if (!container) return;
 
             if (cart.length === 0) {
                 container.innerHTML =
                     '<div class="empty"><i class="fas fa-box-open"></i><p>Your cart is empty</p></div>';
-                totalEl.textContent = '$0.00';
-                checkoutBtn.disabled = true;
+                if (totalEl) totalEl.textContent = '$0.00';
+                if (checkoutBtn) checkoutBtn.disabled = true;
                 return;
             }
 
@@ -5474,8 +5813,8 @@
                     '</div>';
             });
             container.innerHTML = html;
-            totalEl.textContent = formatPrice(total);
-            checkoutBtn.disabled = false;
+            if (totalEl) totalEl.textContent = formatPrice(total);
+            if (checkoutBtn) checkoutBtn.disabled = false;
 
             container.querySelectorAll('.qty-control button').forEach(function(btn) {
                 btn.addEventListener('click', function() {
@@ -5507,14 +5846,13 @@
             if (existing) { existing.qty += qty; } else { cart.push({ id: productId, qty: qty }); }
             saveCart();
             updateCartUI();
-            // Open cart sidebar
             document.getElementById('cartSidebar').classList.add('open');
             toast(p.name + ' added to cart!', 'success');
             addNotification('product_added', p.name + ' added to cart (x' + qty + ')');
         }
 
         // ================================================================
-        // 8. RENDER PRODUCTS
+        // 12. RENDER PRODUCTS
         // ================================================================
         function getFilteredProducts(filter, category) {
             var result = products.slice();
@@ -5540,6 +5878,7 @@
 
         function renderProducts() {
             var grid = document.getElementById('productsGrid');
+            if (!grid) return;
             var filtered = getFilteredProducts(currentFilter, currentCategory);
             if (filtered.length === 0) {
                 grid.innerHTML =
@@ -5552,6 +5891,7 @@
 
         function renderFreeTools() {
             var grid = document.getElementById('freeToolsGrid');
+            if (!grid) return;
             var free = products.filter(function(p) { return p.isFree; });
             if (free.length === 0) {
                 grid.innerHTML =
@@ -5632,7 +5972,7 @@
         }
 
         // ================================================================
-        // 9. PRODUCT DETAIL OVERLAY
+        // 13. PRODUCT DETAIL OVERLAY
         // ================================================================
         function openDetailOverlay(id) {
             var p = getProduct(id);
@@ -5641,6 +5981,7 @@
             detailQty = 1;
             detailImageIndex = 0;
             var overlay = document.getElementById('detailOverlay');
+            if (!overlay) return;
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
 
@@ -5666,12 +6007,15 @@
             if (p.isFree) {
                 actions.innerHTML =
                     '<button class="btn-download-now" id="detailDownloadBtn"><i class="fas fa-download"></i> Download Now</button>';
-                document.getElementById('detailDownloadBtn').addEventListener('click', function() {
-                    if (p.downloadUrl && p.downloadUrl !== '#') {
-                        window.location.href = p.downloadUrl;
-                        toast('Downloading ' + p.name + '...', 'success');
-                    } else { toast('Download not available', 'error'); }
-                });
+                var dlBtn = document.getElementById('detailDownloadBtn');
+                if (dlBtn) {
+                    dlBtn.addEventListener('click', function() {
+                        if (p.downloadUrl && p.downloadUrl !== '#') {
+                            window.location.href = p.downloadUrl;
+                            toast('Downloading ' + p.name + '...', 'success');
+                        } else { toast('Download not available', 'error'); }
+                    });
+                }
             } else {
                 actions.innerHTML =
                     '<div class="qty-selector">' +
@@ -5680,17 +6024,15 @@
                     '<button id="detailQtyInc">+</button>' +
                     '</div>' +
                     '<button class="btn-add-cart" id="detailAddCart"><i class="fas fa-cart-plus"></i> Add To Cart</button>';
-                document.getElementById('detailQtyDec').addEventListener('click', function() {
-                    detailQty = Math.max(1, detailQty - 1);
-                    document.getElementById('detailQtyDisplay').textContent = detailQty;
-                });
-                document.getElementById('detailQtyInc').addEventListener('click', function() {
-                    detailQty = Math.min(10, detailQty + 1);
-                    document.getElementById('detailQtyDisplay').textContent = detailQty;
-                });
-                document.getElementById('detailAddCart').addEventListener('click', function() {
-                    addToCart(p.id, detailQty);
-                });
+                var dec = document.getElementById('detailQtyDec');
+                var inc = document.getElementById('detailQtyInc');
+                var display = document.getElementById('detailQtyDisplay');
+                if (dec) dec.addEventListener('click', function() { detailQty = Math.max(1, detailQty - 1); if (display)
+                        display.textContent = detailQty; });
+                if (inc) inc.addEventListener('click', function() { detailQty = Math.min(10, detailQty + 1); if (display)
+                        display.textContent = detailQty; });
+                var addBtn = document.getElementById('detailAddCart');
+                if (addBtn) addBtn.addEventListener('click', function() { addToCart(p.id, detailQty); });
             }
 
             var features = document.getElementById('detailFeatures');
@@ -5732,9 +6074,7 @@
                 });
             }
 
-            // Setup social sharing
             setupSocialSharing(p);
-
             updateDetailGallery(p);
         }
 
@@ -5754,14 +6094,6 @@
                 btn.href = platforms[platform] || '#';
                 btn.target = '_blank';
                 btn.rel = 'noopener noreferrer';
-                btn.addEventListener('click', function(e) {
-                    if (platform === 'whatsapp' || platform === 'telegram') {
-                        // These open natively, no need to prevent default
-                    } else {
-                        e.preventDefault();
-                        window.open(btn.href, '_blank', 'width=600,height=400');
-                    }
-                });
             });
         }
 
@@ -5769,6 +6101,7 @@
             var mainWrap = document.getElementById('detailMainWrap');
             var mainImg = document.getElementById('detailMainImg');
             var playBig = document.getElementById('detailPlayBig');
+            if (!mainWrap || !mainImg) return;
 
             var currentMedia = p.images[detailImageIndex] || p.images[0];
             var isVideo = p.video && detailImageIndex === p.images.length;
@@ -5798,6 +6131,7 @@
             }
 
             var thumbs = document.getElementById('detailThumbs');
+            if (!thumbs) return;
             var thumbItems = [];
             p.images.forEach(function(img, i) {
                 thumbItems.push(
@@ -5822,16 +6156,19 @@
         }
 
         function closeDetailOverlay() {
-            document.getElementById('detailOverlay').classList.remove('active');
+            var overlay = document.getElementById('detailOverlay');
+            if (overlay) overlay.classList.remove('active');
             document.body.style.overflow = '';
         }
-        document.getElementById('detailBack').addEventListener('click', closeDetailOverlay);
+        var detailBack = document.getElementById('detailBack');
+        if (detailBack) detailBack.addEventListener('click', closeDetailOverlay);
 
         // ================================================================
-        // 10. CATEGORY RENDER
+        // 14. CATEGORY RENDER
         // ================================================================
         function renderCategories() {
             var grid = document.getElementById('categoryGrid');
+            if (!grid) return;
             var counts = {};
             products.forEach(function(p) { var slug = p.categorySlug;
                 counts[slug] = (counts[slug] || 0) + 1; });
@@ -5851,10 +6188,10 @@
                     var cat = el.dataset.cat;
                     if (currentCategory === cat) { currentCategory = null; } else { currentCategory = cat; }
                     currentFilter = 'all';
-                    document.querySelectorAll('#filterButtons button').forEach(function(b) { b.classList
-                            .remove('active'); });
-                    document.querySelector('#filterButtons button[data-filter="all"]').classList.add(
-                    'active');
+                    var filterBtns = document.querySelectorAll('#filterButtons button');
+                    filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                    var allBtn = document.querySelector('#filterButtons button[data-filter="all"]');
+                    if (allBtn) allBtn.classList.add('active');
                     renderCategories();
                     renderProducts();
                     hideAllToolsPages();
@@ -5864,10 +6201,11 @@
         }
 
         // ================================================================
-        // 11. DEDICATED PAID / FREE TOOLS PAGES
+        // 15. DEDICATED PAID / FREE TOOLS PAGES
         // ================================================================
         function renderPaidToolsPage(sort, query) {
             var grid = document.getElementById('paidToolsGrid');
+            if (!grid) return;
             var filtered = products.filter(function(p) { return !p.isFree; });
             if (query) { var q = query.toLowerCase();
                 filtered = filtered.filter(function(p) { return p.name.toLowerCase().includes(q) || p.category
@@ -5877,8 +6215,8 @@
             else if (sort === 'rating') filtered.sort(function(a, b) { return b.rating - a.rating; });
             else if (sort === 'popular') filtered.sort(function(a, b) { return b.reviews - a.reviews; });
 
-            document.getElementById('paidStats').innerHTML = 'Showing <strong>' + filtered.length +
-                '</strong> paid items';
+            var stats = document.getElementById('paidStats');
+            if (stats) stats.innerHTML = 'Showing <strong>' + filtered.length + '</strong> paid items';
             if (filtered.length === 0) {
                 grid.innerHTML =
                     '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--text-muted);"><i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:12px;"></i>No paid items found.</div>';
@@ -5890,6 +6228,7 @@
 
         function renderFreeToolsPage(sort, query) {
             var grid = document.getElementById('freeToolsPageGrid');
+            if (!grid) return;
             var filtered = products.filter(function(p) { return p.isFree; });
             if (query) { var q = query.toLowerCase();
                 filtered = filtered.filter(function(p) { return p.name.toLowerCase().includes(q) || p.category
@@ -5898,8 +6237,8 @@
             else if (sort === 'popular') filtered.sort(function(a, b) { return b.reviews - a.reviews; });
             else if (sort === 'name') filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
 
-            document.getElementById('freeStats').innerHTML = 'Showing <strong>' + filtered.length +
-                '</strong> free items';
+            var stats = document.getElementById('freeStats');
+            if (stats) stats.innerHTML = 'Showing <strong>' + filtered.length + '</strong> free items';
             if (filtered.length === 0) {
                 grid.innerHTML =
                     '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--text-muted);"><i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:12px;"></i>No free items found.</div>';
@@ -5911,75 +6250,99 @@
 
         function showPaidToolsPage() {
             hideAllToolsPages();
-            document.getElementById('paidToolsPage').classList.add('active');
-            renderPaidToolsPage(document.getElementById('paidSortSelect').value, document.getElementById(
-                'paidSearchInput').value);
-            document.getElementById('paidToolsPage').scrollIntoView({ behavior: 'smooth' });
+            var page = document.getElementById('paidToolsPage');
+            if (page) page.classList.add('active');
+            renderPaidToolsPage(
+                document.getElementById('paidSortSelect') ? document.getElementById('paidSortSelect').value :
+                'price-asc',
+                document.getElementById('paidSearchInput') ? document.getElementById('paidSearchInput').value : ''
+            );
+            var el = document.getElementById('paidToolsPage');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
         function showFreeToolsPage() {
             hideAllToolsPages();
-            document.getElementById('freeToolsPage').classList.add('active');
-            renderFreeToolsPage(document.getElementById('freeSortSelect').value, document.getElementById(
-                'freeSearchInput').value);
-            document.getElementById('freeToolsPage').scrollIntoView({ behavior: 'smooth' });
+            var page = document.getElementById('freeToolsPage');
+            if (page) page.classList.add('active');
+            renderFreeToolsPage(
+                document.getElementById('freeSortSelect') ? document.getElementById('freeSortSelect').value :
+                'rating',
+                document.getElementById('freeSearchInput') ? document.getElementById('freeSearchInput').value : ''
+            );
+            var el = document.getElementById('freeToolsPage');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
         function hideAllToolsPages() {
             document.querySelectorAll('.tools-page').forEach(function(el) { el.classList.remove('active'); });
         }
 
-        document.getElementById('allPaidToolsNav').addEventListener('click', function(e) {
+        var allPaidNav = document.getElementById('allPaidToolsNav');
+        if (allPaidNav) allPaidNav.addEventListener('click', function(e) { e.preventDefault();
+            showPaidToolsPage(); });
+        var mobileAllPaid = document.getElementById('mobileAllPaid');
+        if (mobileAllPaid) mobileAllPaid.addEventListener('click', function(e) {
             e.preventDefault();
-            showPaidToolsPage();
-        });
-        document.getElementById('mobileAllPaid').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('mobileMenu').classList.remove('open');
-            document.getElementById('hamburger').classList.remove('active');
+            var menu = document.getElementById('mobileMenu');
+            if (menu) menu.classList.remove('open');
+            var hamburger = document.getElementById('hamburger');
+            if (hamburger) hamburger.classList.remove('active');
             showPaidToolsPage();
         });
 
-        document.getElementById('allFreeToolsNav').addEventListener('click', function(e) {
+        var allFreeNav = document.getElementById('allFreeToolsNav');
+        if (allFreeNav) allFreeNav.addEventListener('click', function(e) { e.preventDefault();
+            showFreeToolsPage(); });
+        var mobileAllFree = document.getElementById('mobileAllFree');
+        if (mobileAllFree) mobileAllFree.addEventListener('click', function(e) {
             e.preventDefault();
-            showFreeToolsPage();
-        });
-        document.getElementById('mobileAllFree').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('mobileMenu').classList.remove('open');
-            document.getElementById('hamburger').classList.remove('active');
+            var menu = document.getElementById('mobileMenu');
+            if (menu) menu.classList.remove('open');
+            var hamburger = document.getElementById('hamburger');
+            if (hamburger) hamburger.classList.remove('active');
             showFreeToolsPage();
         });
 
-        document.getElementById('paidBackLink').addEventListener('click', function(e) {
+        var paidBack = document.getElementById('paidBackLink');
+        if (paidBack) paidBack.addEventListener('click', function(e) {
             e.preventDefault();
             hideAllToolsPages();
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
         });
-        document.getElementById('freeBackLink').addEventListener('click', function(e) {
+        var freeBack = document.getElementById('freeBackLink');
+        if (freeBack) freeBack.addEventListener('click', function(e) {
             e.preventDefault();
             hideAllToolsPages();
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
         });
 
-        document.getElementById('paidSortSelect').addEventListener('change', function() {
-            renderPaidToolsPage(this.value, document.getElementById('paidSearchInput').value);
+        var paidSort = document.getElementById('paidSortSelect');
+        if (paidSort) paidSort.addEventListener('change', function() {
+            renderPaidToolsPage(this.value, document.getElementById('paidSearchInput') ? document.getElementById(
+                'paidSearchInput').value : '');
         });
-        document.getElementById('paidSearchInput').addEventListener('input', debounce(function() {
-            renderPaidToolsPage(document.getElementById('paidSortSelect').value, this.value);
+        var paidSearch = document.getElementById('paidSearchInput');
+        if (paidSearch) paidSearch.addEventListener('input', debounce(function() {
+            renderPaidToolsPage(document.getElementById('paidSortSelect') ? document.getElementById(
+                'paidSortSelect').value : 'price-asc', this.value);
         }, 300));
 
-        document.getElementById('freeSortSelect').addEventListener('change', function() {
-            renderFreeToolsPage(this.value, document.getElementById('freeSearchInput').value);
+        var freeSort = document.getElementById('freeSortSelect');
+        if (freeSort) freeSort.addEventListener('change', function() {
+            renderFreeToolsPage(this.value, document.getElementById('freeSearchInput') ? document.getElementById(
+                'freeSearchInput').value : '');
         });
-        document.getElementById('freeSearchInput').addEventListener('input', debounce(function() {
-            renderFreeToolsPage(document.getElementById('freeSortSelect').value, this.value);
+        var freeSearch = document.getElementById('freeSearchInput');
+        if (freeSearch) freeSearch.addEventListener('input', debounce(function() {
+            renderFreeToolsPage(document.getElementById('freeSortSelect') ? document.getElementById(
+                'freeSortSelect').value : 'rating', this.value);
         }, 300));
 
         // ================================================================
-        // 12. HERO CAROUSEL
+        // 16. HERO CAROUSEL
         // ================================================================
-        const carouselSlides = [{
+        var carouselSlides = readData(STORAGE_KEYS.SLIDERS, [{
             image: 'https://picsum.photos/seed/banner1/1200/500',
             title: '🔥 Premium Tools Collection',
             subtitle: 'Top-rated tools for growth & automation.',
@@ -5997,14 +6360,15 @@
             subtitle: 'Powerful utilities at no cost. Start building.',
             cta: 'Get Free Tools',
             link: '#free-tools'
-        }];
+        }]);
 
-        let currentSlide = 0;
-        let carouselInterval = null;
+        var currentSlide = 0;
+        var carouselInterval = null;
 
         function renderCarousel() {
             var slidesContainer = document.getElementById('carouselSlides');
             var dotsContainer = document.getElementById('carouselDots');
+            if (!slidesContainer || !dotsContainer) return;
             slidesContainer.innerHTML = carouselSlides.map(function(s, i) {
                 return '<div class="slide" data-index="' + i + '">' +
                     '<img src="' + s.image + '" alt="' + s.title + '" loading="lazy">' +
@@ -6043,33 +6407,25 @@
             carouselInterval = setInterval(nextSlide, 5000);
         }
 
-        document.getElementById('carouselNext').addEventListener('click', function() { nextSlide();
+        var nextBtn = document.getElementById('carouselNext');
+        var prevBtn = document.getElementById('carouselPrev');
+        if (nextBtn) nextBtn.addEventListener('click', function() { nextSlide();
             startCarousel(); });
-        document.getElementById('carouselPrev').addEventListener('click', function() { prevSlide();
+        if (prevBtn) prevBtn.addEventListener('click', function() { prevSlide();
             startCarousel(); });
-        document.getElementById('carouselDots').addEventListener('click', function(e) {
-            if (e.target.classList.contains('dot')) {
-                var idx = parseInt(e.target.dataset.index);
-                updateCarousel(idx);
-                startCarousel();
-            }
-        });
-        var carouselEl = document.getElementById('heroCarousel');
-        var touchStartX = 0,
-            touchEndX = 0;
-        carouselEl.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; });
-        carouselEl.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            var diff = touchStartX - touchEndX;
-            if (Math.abs(diff) > 50) {
-                if (diff > 0) nextSlide();
-                else prevSlide();
-                startCarousel();
-            }
-        });
+        var dotsContainer = document.getElementById('carouselDots');
+        if (dotsContainer) {
+            dotsContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dot')) {
+                    var idx = parseInt(e.target.dataset.index);
+                    updateCarousel(idx);
+                    startCarousel();
+                }
+            });
+        }
 
         // ================================================================
-        // 13. PRICING PLANS
+        // 17. PRICING PLANS
         // ================================================================
         function getPaidToolNames() {
             return products.filter(function(p) { return !p.isFree; }).map(function(p) { return p.name; });
@@ -6083,6 +6439,7 @@
 
         function renderPricingPlans() {
             var grid = document.getElementById('plansGrid');
+            if (!grid) return;
             var allPaid = products.filter(function(p) { return !p.isFree; });
             var totalPaid = allPaid.length;
             var totalValue = allPaid.reduce(function(sum, p) { return sum + p.price; }, 0);
@@ -6095,7 +6452,7 @@
             var standardPrice = Math.round(totalValue * 0.35);
             var premiumPrice = Math.round(totalValue * 0.65);
 
-            var plans = [{
+            var planData = [{
                 id: 'basic',
                 name: 'Basic',
                 desc: 'Perfect for beginners getting started.',
@@ -6124,7 +6481,7 @@
                 popular: false
             }];
 
-            grid.innerHTML = plans.map(function(plan) {
+            grid.innerHTML = planData.map(function(plan) {
                 var savings = plan.originalPrice - plan.price;
                 var toolList = plan.tools.slice(0, 8).map(function(t) {
                     return '<span class="tool-list">• ' + t + '</span>';
@@ -6157,14 +6514,14 @@
             grid.querySelectorAll('.btn-select-plan').forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     var planId = btn.dataset.plan;
-                    var plan = plans.find(function(p) { return p.id === planId; });
+                    var plan = planData.find(function(p) { return p.id === planId; });
                     if (plan) {
                         selectedPlan = plan;
                         toast('You selected the ' + plan.name + ' plan. Redirecting to checkout...',
                             'success');
-                        // Simulate redirect to payment
                         setTimeout(function() {
-                            document.getElementById('pricingModal').classList.remove('open');
+                            var modal = document.getElementById('pricingModal');
+                            if (modal) modal.classList.remove('open');
                             document.body.style.overflow = '';
                             openCheckout();
                         }, 800);
@@ -6175,44 +6532,51 @@
 
         function openPricingModal() {
             var modal = document.getElementById('pricingModal');
+            if (!modal) return;
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
             renderPricingPlans();
         }
 
-        document.getElementById('pricingNav').addEventListener('click', function(e) {
+        var pricingNav = document.getElementById('pricingNav');
+        if (pricingNav) pricingNav.addEventListener('click', function(e) { e.preventDefault();
+            openPricingModal(); });
+        var mobilePricing = document.getElementById('mobilePricing');
+        if (mobilePricing) mobilePricing.addEventListener('click', function(e) {
             e.preventDefault();
+            var menu = document.getElementById('mobileMenu');
+            if (menu) menu.classList.remove('open');
+            var hamburger = document.getElementById('hamburger');
+            if (hamburger) hamburger.classList.remove('active');
             openPricingModal();
         });
-        document.getElementById('mobilePricing').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('mobileMenu').classList.remove('open');
-            document.getElementById('hamburger').classList.remove('active');
-            openPricingModal();
-        });
-        document.getElementById('footerPricingLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPricingModal();
-        });
-        document.getElementById('closePricing').addEventListener('click', function() {
-            document.getElementById('pricingModal').classList.remove('open');
+        var footerPricing = document.getElementById('footerPricingLink');
+        if (footerPricing) footerPricing.addEventListener('click', function(e) { e.preventDefault();
+            openPricingModal(); });
+
+        var closePricing = document.getElementById('closePricing');
+        if (closePricing) closePricing.addEventListener('click', function() {
+            var modal = document.getElementById('pricingModal');
+            if (modal) modal.classList.remove('open');
             document.body.style.overflow = '';
         });
-        document.getElementById('pricingModal').addEventListener('click', function(e) {
+        var pricingModal = document.getElementById('pricingModal');
+        if (pricingModal) pricingModal.addEventListener('click', function(e) {
             if (e.target === e.currentTarget) {
-                document.getElementById('pricingModal').classList.remove('open');
+                pricingModal.classList.remove('open');
                 document.body.style.overflow = '';
             }
         });
 
         // ================================================================
-        // 14. CHECKOUT
+        // 18. CHECKOUT
         // ================================================================
         function openCheckout() {
             if (!currentUser) { toast('Please sign in to checkout', 'error');
                 openAuth('signin'); return; }
             if (cart.length === 0) { toast('Your cart is empty', 'error'); return; }
             var modal = document.getElementById('checkoutModal');
+            if (!modal) return;
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
             selectedPayment = null;
@@ -6221,19 +6585,27 @@
             couponDiscount = 0;
             couponCode = '';
             document.querySelectorAll('.pm-option').forEach(function(el) { el.classList.remove('active'); });
-            document.getElementById('paymentDetail').textContent = 'Select a payment method above.';
-            document.getElementById('qrSection').style.display = 'none';
-            document.getElementById('uploadPreview').innerHTML = '';
-            document.getElementById('uploadInput').value = '';
-            document.getElementById('couponInput').value = '';
-            document.getElementById('couponDiscountRow').style.display = 'none';
-            document.getElementById('checkoutName').value = currentUser.fullName || '';
-            document.getElementById('checkoutEmail').value = currentUser.email || '';
+            var detail = document.getElementById('paymentDetail');
+            if (detail) detail.textContent = 'Select a payment method above.';
+            var qr = document.getElementById('qrSection');
+            if (qr) qr.style.display = 'none';
+            var preview = document.getElementById('uploadPreview');
+            if (preview) preview.innerHTML = '';
+            var uploadInput = document.getElementById('uploadInput');
+            if (uploadInput) uploadInput.value = '';
+            var couponInput = document.getElementById('couponInput');
+            if (couponInput) couponInput.value = '';
+            var discountRow = document.getElementById('couponDiscountRow');
+            if (discountRow) discountRow.style.display = 'none';
+            var nameInput = document.getElementById('checkoutName');
+            if (nameInput) nameInput.value = currentUser.fullName || '';
+            var emailInput = document.getElementById('checkoutEmail');
+            if (emailInput) emailInput.value = currentUser.email || '';
             var walletRow = document.getElementById('walletRow');
             var walletDisplay = document.getElementById('walletDisplay');
             var bal = currentUser.walletBalance || 0;
-            walletDisplay.textContent = bal + ' PKR';
-            walletRow.style.display = 'flex';
+            if (walletDisplay) walletDisplay.textContent = bal + ' PKR';
+            if (walletRow) walletRow.style.display = 'flex';
             renderCheckoutSummary();
         }
 
@@ -6249,20 +6621,25 @@
                 itemsHtml += '<div class="row"><span>' + p.name + ' × ' + item.qty +
                     '</span><span>' + formatPrice(subtotal) + '</span></div>';
             });
-            list.innerHTML = itemsHtml;
-            document.getElementById('checkoutItemsCount').textContent = cart.reduce(function(s, i) { return s + i
-                .qty; }, 0);
-            document.getElementById('checkoutSubtotal').textContent = formatPrice(total);
+            if (list) list.innerHTML = itemsHtml;
+            var countEl = document.getElementById('checkoutItemsCount');
+            if (countEl) countEl.textContent = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+            var subtotalEl = document.getElementById('checkoutSubtotal');
+            if (subtotalEl) subtotalEl.textContent = formatPrice(total);
 
             var discount = couponApplied ? couponDiscount : 0;
             var finalTotal = total - discount;
             if (couponApplied && discount > 0) {
-                document.getElementById('couponDiscountRow').style.display = 'flex';
-                document.getElementById('couponDiscountAmount').textContent = '-' + formatPrice(discount);
+                var discountRow = document.getElementById('couponDiscountRow');
+                var discountAmount = document.getElementById('couponDiscountAmount');
+                if (discountRow) discountRow.style.display = 'flex';
+                if (discountAmount) discountAmount.textContent = '-' + formatPrice(discount);
             } else {
-                document.getElementById('couponDiscountRow').style.display = 'none';
+                var discountRow = document.getElementById('couponDiscountRow');
+                if (discountRow) discountRow.style.display = 'none';
             }
-            document.getElementById('checkoutTotal').textContent = formatPrice(finalTotal);
+            var totalEl = document.getElementById('checkoutTotal');
+            if (totalEl) totalEl.textContent = formatPrice(finalTotal);
             return finalTotal;
         }
 
@@ -6272,9 +6649,14 @@
                 el.classList.add('active');
                 selectedPayment = el.dataset.method;
 
+                var detail = document.getElementById('paymentDetail');
+                var qrSection = document.getElementById('qrSection');
+                var qrImage = document.getElementById('qrImage');
+                var accountDetail = document.getElementById('accountDetail');
+
                 if (selectedPayment === 'Wallet') {
-                    document.getElementById('qrSection').style.display = 'none';
-                    document.getElementById('paymentDetail').innerHTML =
+                    if (qrSection) qrSection.style.display = 'none';
+                    if (detail) detail.innerHTML =
                         '<strong>Wallet</strong> — You have <strong>' + (currentUser.walletBalance || 0) +
                         ' PKR</strong> in your wallet.';
                 } else {
@@ -6286,96 +6668,157 @@
                         'Binance Pay': { acc: '12345678', holder: 'MH HACKS' }
                     };
                     var d = details[selectedPayment];
-                    var qrData = selectedPayment + ': ' + d.acc + ' (' + d.holder + ')';
-                    document.getElementById('qrImage').src =
-                        'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(
-                        qrData);
-                    document.getElementById('qrSection').style.display = 'block';
-                    document.getElementById('accountDetail').textContent = selectedPayment + ' — ' + d.acc +
-                        ' (' + d.holder + ')';
-                    document.getElementById('paymentDetail').innerHTML =
-                        '<strong>' + selectedPayment + '</strong> — Account: <strong>' + d.acc + '</strong> (' +
-                        d.holder + ')';
+                    if (d && qrImage) {
+                        var qrData = selectedPayment + ': ' + d.acc + ' (' + d.holder + ')';
+                        qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' +
+                            encodeURIComponent(qrData);
+                    }
+                    if (qrSection) qrSection.style.display = 'block';
+                    if (accountDetail) accountDetail.textContent = selectedPayment + ' — ' + (d ? d.acc : '') +
+                        ' (' + (d ? d.holder : '') + ')';
+                    if (detail) detail.innerHTML = '<strong>' + selectedPayment +
+                        '</strong> — Account: <strong>' + (d ? d.acc : '') + '</strong> (' + (d ? d
+                        .holder : '') + ')';
                 }
             });
         });
 
         var uploadZone = document.getElementById('uploadZone');
         var uploadInput = document.getElementById('uploadInput');
-        uploadZone.addEventListener('click', function() { uploadInput.click(); });
-        uploadZone.addEventListener('dragover', function(e) { e.preventDefault();
-            uploadZone.classList.add('dragover'); });
-        uploadZone.addEventListener('dragleave', function() { uploadZone.classList.remove('dragover'); });
-        uploadZone.addEventListener('drop', function(e) {
-            e.preventDefault();
-            uploadZone.classList.remove('dragover');
-            if (e.dataTransfer.files.length) handleUploadFile(e.dataTransfer.files[0]);
-        });
-        uploadInput.addEventListener('change', function() {
-            if (uploadInput.files.length) handleUploadFile(uploadInput.files[0]);
-        });
+        if (uploadZone) {
+            uploadZone.addEventListener('click', function() { if (uploadInput) uploadInput.click(); });
+            uploadZone.addEventListener('dragover', function(e) { e.preventDefault();
+                uploadZone.classList.add('dragover'); });
+            uploadZone.addEventListener('dragleave', function() { uploadZone.classList.remove('dragover'); });
+            uploadZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                if (e.dataTransfer.files.length) handleUploadFile(e.dataTransfer.files[0]);
+            });
+        }
+        if (uploadInput) {
+            uploadInput.addEventListener('change', function() {
+                if (uploadInput.files.length) handleUploadFile(uploadInput.files[0]);
+            });
+        }
 
         function handleUploadFile(file) {
             if (!file.type.startsWith('image/')) { toast('Please upload an image file', 'error'); return; }
             uploadFile = file;
             var reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('uploadPreview').innerHTML =
-                    '<img src="' + e.target.result + '" alt="Screenshot">';
+                var preview = document.getElementById('uploadPreview');
+                if (preview) preview.innerHTML = '<img src="' + e.target.result + '" alt="Screenshot">';
             };
             reader.readAsDataURL(file);
             toast('Screenshot uploaded', 'success');
         }
 
-        document.getElementById('applyCouponBtn').addEventListener('click', function() {
-            var code = document.getElementById('couponInput').value.trim().toUpperCase();
-            if (!code) { toast('Please enter a coupon code', 'error'); return; }
-            if (code === 'MH10') {
-                couponApplied = true;
-                couponDiscount = renderCheckoutSummary() * 0.10;
-                couponCode = code;
-                toast('Coupon applied! 10% off.', 'success');
-                renderCheckoutSummary();
-            } else if (code === 'MH20') {
-                couponApplied = true;
-                couponDiscount = renderCheckoutSummary() * 0.20;
-                couponCode = code;
-                toast('Coupon applied! 20% off.', 'success');
-                renderCheckoutSummary();
-            } else {
-                toast('Invalid coupon code', 'error');
-            }
-        });
+        var applyCouponBtn = document.getElementById('applyCouponBtn');
+        if (applyCouponBtn) {
+            applyCouponBtn.addEventListener('click', function() {
+                var code = document.getElementById('couponInput') ? document.getElementById('couponInput')
+                    .value.trim().toUpperCase() : '';
+                if (!code) { toast('Please enter a coupon code', 'error'); return; }
+                var validCoupons = readData(STORAGE_KEYS.COUPONS, []);
+                var found = validCoupons.find(function(c) { return c.code === code && c.active; });
+                if (found) {
+                    var discountAmount = 0;
+                    if (found.type === 'percent') {
+                        discountAmount = renderCheckoutSummary() * (found.value / 100);
+                    } else {
+                        discountAmount = found.value;
+                    }
+                    couponApplied = true;
+                    couponDiscount = discountAmount;
+                    couponCode = code;
+                    toast('Coupon applied! ' + (found.type === 'percent' ? found.value + '%' : '$' + found
+                        .value) + ' off.', 'success');
+                    renderCheckoutSummary();
+                } else {
+                    toast('Invalid or inactive coupon code', 'error');
+                }
+            });
+        }
 
-        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            var name = document.getElementById('checkoutName').value.trim();
-            var email = document.getElementById('checkoutEmail').value.trim();
-            if (!name) { toast('Please enter your full name', 'error'); return; }
-            if (!email || !email.includes('@')) { toast('Please enter a valid email', 'error'); return; }
-            if (!selectedPayment) { toast('Please select a payment method', 'error'); return; }
+        var checkoutForm = document.getElementById('checkoutForm');
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                var name = document.getElementById('checkoutName') ? document.getElementById('checkoutName')
+                    .value.trim() : '';
+                var email = document.getElementById('checkoutEmail') ? document.getElementById('checkoutEmail')
+                    .value.trim() : '';
+                if (!name) { toast('Please enter your full name', 'error'); return; }
+                if (!email || !email.includes('@')) { toast('Please enter a valid email', 'error'); return; }
+                if (!selectedPayment) { toast('Please select a payment method', 'error'); return; }
 
-            var total = cart.reduce(function(s, item) {
-                var p = getProduct(item.id);
-                return s + (p.price * item.qty);
-            }, 0);
-            if (couponApplied) total = total - couponDiscount;
-            var finalTotal = Math.max(0, total);
+                var total = cart.reduce(function(s, item) {
+                    var p = getProduct(item.id);
+                    return s + (p.price * item.qty);
+                }, 0);
+                if (couponApplied) total = total - couponDiscount;
+                var finalTotal = Math.max(0, total);
 
-            if (selectedPayment === 'Wallet') {
-                if (!currentUser) { toast('Please sign in', 'error'); return; }
-                var balance = currentUser.walletBalance || 0;
-                var totalPKR = Math.round(finalTotal * 280);
-                if (balance < totalPKR) {
-                    toast('Insufficient wallet balance. You need ' + totalPKR + ' PKR.', 'error');
+                if (selectedPayment === 'Wallet') {
+                    if (!currentUser) { toast('Please sign in', 'error'); return; }
+                    var balance = currentUser.walletBalance || 0;
+                    var totalPKR = Math.round(finalTotal * 280);
+                    if (balance < totalPKR) {
+                        toast('Insufficient wallet balance. You need ' + totalPKR + ' PKR.', 'error');
+                        return;
+                    }
+                    var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
+                    if (uIdx !== -1) {
+                        users[uIdx].walletBalance = balance - totalPKR;
+                        currentUser = users[uIdx];
+                        saveUsers();
+                        saveCurrentUser();
+                        var orderId = generateOrderId();
+                        var order = {
+                            id: orderId,
+                            userId: currentUser.id,
+                            customerName: name,
+                            customerEmail: email,
+                            items: cart.map(function(item) { return { id: item.id, qty: item.qty }; }),
+                            total: finalTotal,
+                            paymentMethod: 'Wallet',
+                            coupon: couponApplied ? couponCode : null,
+                            date: new Date().toISOString(),
+                            status: 'Completed'
+                        };
+                        orders.push(order);
+                        saveOrders();
+                        users[uIdx].totalPurchased = (users[uIdx].totalPurchased || 0) + 1;
+                        saveUsers();
+                        cart = [];
+                        saveCart();
+                        updateCartUI();
+                        var modal = document.getElementById('checkoutModal');
+                        if (modal) modal.classList.remove('open');
+                        document.body.style.overflow = '';
+                        var confirmOrder = document.getElementById('confirmOrderId');
+                        if (confirmOrder) confirmOrder.textContent = '#' + orderId;
+                        var confirmModal = document.getElementById('confirmModal');
+                        if (confirmModal) confirmModal.classList.add('open');
+                        toast('Order placed using wallet!', 'success');
+                        addNotification('order_confirmed', 'Order ' + orderId + ' confirmed (Wallet payment).');
+                        return;
+                    }
+                }
+
+                if (selectedPayment !== 'Wallet' && !uploadFile) {
+                    toast('Please upload a payment screenshot', 'error');
                     return;
                 }
-                var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
-                if (uIdx !== -1) {
-                    users[uIdx].walletBalance = balance - totalPKR;
-                    currentUser = users[uIdx];
-                    saveUsers();
-                    saveCurrentUser();
+
+                var btn = document.getElementById('placeOrderBtn');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                }
+
+                try {
                     var orderId = generateOrderId();
                     var order = {
                         id: orderId,
@@ -6384,119 +6827,92 @@
                         customerEmail: email,
                         items: cart.map(function(item) { return { id: item.id, qty: item.qty }; }),
                         total: finalTotal,
-                        paymentMethod: 'Wallet',
+                        paymentMethod: selectedPayment,
                         coupon: couponApplied ? couponCode : null,
                         date: new Date().toISOString(),
-                        status: 'Completed'
+                        status: 'Pending'
                     };
                     orders.push(order);
                     saveOrders();
-                    users[uIdx].totalPurchased = (users[uIdx].totalPurchased || 0) + 1;
-                    saveUsers();
+
+                    var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
+                    if (uIdx !== -1) {
+                        users[uIdx].totalPurchased = (users[uIdx].totalPurchased || 0) + 1;
+                        if (users[uIdx].referrerId) {
+                            var refIdx = users.findIndex(function(u) { return u.id === users[uIdx]
+                                    .referrerId; });
+                            if (refIdx !== -1) {
+                                var commission = finalTotal * 0.10;
+                                users[refIdx].walletBalance = (users[refIdx].walletBalance || 0) + (
+                                    commission * 280);
+                                if (!users[refIdx].referralHistory) users[refIdx].referralHistory = [];
+                                var refEntry = users[refIdx].referralHistory.find(function(r) { return r
+                                        .userId === currentUser.id; });
+                                if (refEntry) { refEntry.earnings = (refEntry.earnings || 0) + (
+                                        commission * 280);
+                                    refEntry.status = 'Purchased'; }
+                                saveUsers();
+                            }
+                        }
+                        saveUsers();
+                    }
+
                     cart = [];
                     saveCart();
                     updateCartUI();
-                    document.getElementById('checkoutModal').classList.remove('open');
+                    var modal = document.getElementById('checkoutModal');
+                    if (modal) modal.classList.remove('open');
                     document.body.style.overflow = '';
-                    document.getElementById('confirmOrderId').textContent = '#' + orderId;
-                    document.getElementById('confirmModal').classList.add('open');
-                    toast('Order placed using wallet!', 'success');
-                    addNotification('order_confirmed', 'Order ' + orderId + ' confirmed (Wallet payment).');
-                    return;
-                }
-            }
+                    var confirmOrder = document.getElementById('confirmOrderId');
+                    if (confirmOrder) confirmOrder.textContent = '#' + orderId;
+                    var confirmModal = document.getElementById('confirmModal');
+                    if (confirmModal) confirmModal.classList.add('open');
+                    toast('Order placed successfully!', 'success');
+                    addNotification('order_confirmed', 'Order ' + orderId + ' placed. Awaiting verification.');
 
-            if (selectedPayment !== 'Wallet' && !uploadFile) {
-                toast('Please upload a payment screenshot', 'error');
-                return;
-            }
-
-            var btn = document.getElementById('placeOrderBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-            try {
-                var orderId = generateOrderId();
-                var order = {
-                    id: orderId,
-                    userId: currentUser.id,
-                    customerName: name,
-                    customerEmail: email,
-                    items: cart.map(function(item) { return { id: item.id, qty: item.qty }; }),
-                    total: finalTotal,
-                    paymentMethod: selectedPayment,
-                    coupon: couponApplied ? couponCode : null,
-                    date: new Date().toISOString(),
-                    status: 'Pending'
-                };
-                orders.push(order);
-                saveOrders();
-
-                var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
-                if (uIdx !== -1) {
-                    users[uIdx].totalPurchased = (users[uIdx].totalPurchased || 0) + 1;
-                    if (users[uIdx].referrerId) {
-                        var refIdx = users.findIndex(function(u) { return u.id === users[uIdx].referrerId; });
-                        if (refIdx !== -1) {
-                            var commission = finalTotal * 0.10;
-                            users[refIdx].walletBalance = (users[refIdx].walletBalance || 0) + (commission *
-                            280);
-                            if (!users[refIdx].referralHistory) users[refIdx].referralHistory = [];
-                            var refEntry = users[refIdx].referralHistory.find(function(r) { return r
-                                    .userId === currentUser.id; });
-                            if (refEntry) { refEntry.earnings = (refEntry.earnings || 0) + (commission *
-                                    280);
-                                refEntry.status = 'Purchased'; }
-                            saveUsers();
-                        }
-                    }
-                    saveUsers();
+                } catch (err) {
+                    console.error('Checkout error:', err);
+                    toast('There was an error placing your order. Please try again.', 'error');
                 }
 
-                cart = [];
-                saveCart();
-                updateCartUI();
-                document.getElementById('checkoutModal').classList.remove('open');
-                document.body.style.overflow = '';
-                document.getElementById('confirmOrderId').textContent = '#' + orderId;
-                document.getElementById('confirmModal').classList.add('open');
-                toast('Order placed successfully!', 'success');
-                addNotification('order_confirmed', 'Order ' + orderId + ' placed. Awaiting verification.');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-lock"></i> Place Order';
+                }
+            });
+        }
 
-            } catch (err) {
-                console.error('Checkout error:', err);
-                toast('There was an error placing your order. Please try again.', 'error');
-            }
-
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-lock"></i> Place Order';
-        });
-
-        document.getElementById('closeCheckout').addEventListener('click', function() {
-            document.getElementById('checkoutModal').classList.remove('open');
+        var closeCheckout = document.getElementById('closeCheckout');
+        if (closeCheckout) closeCheckout.addEventListener('click', function() {
+            var modal = document.getElementById('checkoutModal');
+            if (modal) modal.classList.remove('open');
             document.body.style.overflow = '';
         });
-        document.getElementById('checkoutModal').addEventListener('click', function(e) {
+        var checkoutModal = document.getElementById('checkoutModal');
+        if (checkoutModal) checkoutModal.addEventListener('click', function(e) {
             if (e.target === e.currentTarget) {
-                document.getElementById('checkoutModal').classList.remove('open');
+                checkoutModal.classList.remove('open');
                 document.body.style.overflow = '';
             }
         });
 
-        document.getElementById('confirmContinue').addEventListener('click', function() {
-            document.getElementById('confirmModal').classList.remove('open');
+        var confirmContinue = document.getElementById('confirmContinue');
+        if (confirmContinue) confirmContinue.addEventListener('click', function() {
+            var modal = document.getElementById('confirmModal');
+            if (modal) modal.classList.remove('open');
             document.body.style.overflow = '';
             hideAllToolsPages();
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
         });
 
         // ================================================================
-        // 15. DAILY CHECK-IN
+        // 19. DAILY CHECK-IN
         // ================================================================
         function openCheckin() {
             if (!currentUser) { toast('Please sign in to check in', 'error');
                 openAuth('signin'); return; }
             var modal = document.getElementById('checkinModal');
+            if (!modal) return;
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
             renderCheckinUI();
@@ -6512,11 +6928,7 @@
                 var d = new Date(sorted[i].date);
                 d.setHours(0, 0, 0, 0);
                 var diffDays = (today - d) / (1000 * 60 * 60 * 24);
-                if (diffDays === streak) {
-                    streak++;
-                } else {
-                    break;
-                }
+                if (diffDays === streak) { streak++; } else { break; }
             }
             return streak;
         }
@@ -6526,19 +6938,20 @@
             var today = new Date().toDateString();
             var todayEntry = checkins.find(function(c) { return new Date(c.date).toDateString() === today; });
             var claimed = !!todayEntry;
-
             var streak = getCheckinStreak(checkins);
             var rewardAmount = (streak % 7) + 1;
 
-            document.getElementById('checkinStatus').textContent = claimed ?
+            var status = document.getElementById('checkinStatus');
+            if (status) status.textContent = claimed ?
                 '✅ You already checked in today! Come back tomorrow.' :
                 '🎁 Claim your daily reward of ' + rewardAmount + ' PKR! (Streak: ' + streak + ' days)';
 
             var btn = document.getElementById('claimCheckin');
-            btn.disabled = claimed;
-            btn.textContent = claimed ? 'Already Claimed' : 'Claim Reward';
+            if (btn) { btn.disabled = claimed;
+                btn.textContent = claimed ? 'Already Claimed' : 'Claim Reward'; }
 
             var history = document.getElementById('checkinHistory');
+            if (!history) return;
             var days = [];
             for (var i = 6; i >= 0; i--) {
                 var d = new Date();
@@ -6556,136 +6969,170 @@
             }).join('');
         }
 
-        document.getElementById('claimCheckin').addEventListener('click', function() {
-            if (!currentUser) return;
-            var checkins = getCheckins(currentUser.id);
-            var today = new Date().toDateString();
-            if (checkins.some(function(c) { return new Date(c.date).toDateString() === today; })) {
-                toast('Already checked in today!', 'info');
-                return;
-            }
-            var streak = getCheckinStreak(checkins);
-            var reward = (streak % 7) + 1;
-            checkins.push({ date: new Date().toISOString(), points: reward });
-            saveCheckins(currentUser.id, checkins);
-            var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
-            if (uIdx !== -1) {
-                users[uIdx].walletBalance = (users[uIdx].walletBalance || 0) + reward;
-                users[uIdx].totalCheckins = (users[uIdx].totalCheckins || 0) + 1;
-                currentUser = users[uIdx];
-                saveUsers();
-                saveCurrentUser();
-            }
-            toast('🎉 +' + reward + ' PKR added to your wallet!', 'success');
-            renderCheckinUI();
-            updateAuthUI();
-            addNotification('admin_message', 'You earned ' + reward + ' PKR from daily check-in.');
-        });
+        var claimCheckin = document.getElementById('claimCheckin');
+        if (claimCheckin) {
+            claimCheckin.addEventListener('click', function() {
+                if (!currentUser) return;
+                var checkins = getCheckins(currentUser.id);
+                var today = new Date().toDateString();
+                if (checkins.some(function(c) { return new Date(c.date).toDateString() === today; })) {
+                    toast('Already checked in today!', 'info');
+                    return;
+                }
+                var streak = getCheckinStreak(checkins);
+                var reward = (streak % 7) + 1;
+                checkins.push({ date: new Date().toISOString(), points: reward });
+                saveCheckins(currentUser.id, checkins);
+                var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
+                if (uIdx !== -1) {
+                    users[uIdx].walletBalance = (users[uIdx].walletBalance || 0) + reward;
+                    users[uIdx].totalCheckins = (users[uIdx].totalCheckins || 0) + 1;
+                    currentUser = users[uIdx];
+                    saveUsers();
+                    saveCurrentUser();
+                }
+                toast('🎉 +' + reward + ' PKR added to your wallet!', 'success');
+                renderCheckinUI();
+                updateAuthUI();
+                addNotification('admin_message', 'You earned ' + reward + ' PKR from daily check-in.');
+            });
+        }
 
-        document.getElementById('checkinToggle').addEventListener('click', openCheckin);
-        document.getElementById('mobileCheckin').addEventListener('click', function(e) {
+        var checkinToggle = document.getElementById('checkinToggle');
+        if (checkinToggle) checkinToggle.addEventListener('click', openCheckin);
+        var mobileCheckin = document.getElementById('mobileCheckin');
+        if (mobileCheckin) mobileCheckin.addEventListener('click', function(e) {
             e.preventDefault();
-            document.getElementById('mobileMenu').classList.remove('open');
-            document.getElementById('hamburger').classList.remove('active');
+            var menu = document.getElementById('mobileMenu');
+            if (menu) menu.classList.remove('open');
+            var hamburger = document.getElementById('hamburger');
+            if (hamburger) hamburger.classList.remove('active');
             openCheckin();
         });
-        document.getElementById('checkinModal').addEventListener('click', function(e) {
+        var checkinModal = document.getElementById('checkinModal');
+        if (checkinModal) checkinModal.addEventListener('click', function(e) {
             if (e.target === e.currentTarget) {
-                document.getElementById('checkinModal').classList.remove('open');
+                checkinModal.classList.remove('open');
                 document.body.style.overflow = '';
             }
         });
 
         // ================================================================
-        // 16. PROFILE OVERLAY
+        // 20. PROFILE OVERLAY
         // ================================================================
         function openProfileOverlay() {
             if (!currentUser) { toast('Please sign in to view profile', 'error');
                 openAuth('signin'); return; }
             var overlay = document.getElementById('profileOverlay');
+            if (!overlay) return;
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             renderProfile();
         }
 
         function closeProfileOverlay() {
-            document.getElementById('profileOverlay').classList.remove('active');
+            var overlay = document.getElementById('profileOverlay');
+            if (overlay) overlay.classList.remove('active');
             document.body.style.overflow = '';
         }
 
         function renderProfile() {
             if (!currentUser) return;
-            document.getElementById('profileAvatar').textContent = getInitials(currentUser.fullName);
-            document.getElementById('profileName').textContent = currentUser.fullName;
-            document.getElementById('profileEmail').textContent = currentUser.email;
-            document.getElementById('profileWallet').textContent = (currentUser.walletBalance || 0) + ' PKR';
-            document.getElementById('profileRefs').textContent = currentUser.totalReferrals || 0;
-            document.getElementById('profileCheckins').textContent = currentUser.totalCheckins || 0;
-            document.getElementById('profilePurchased').textContent = currentUser.totalPurchased || 0;
-            document.getElementById('profileRefCode').textContent = currentUser.referralCode || 'MHXXXX';
+            var avatar = document.getElementById('profileAvatar');
+            if (avatar) avatar.textContent = getInitials(currentUser.fullName);
+            var name = document.getElementById('profileName');
+            if (name) name.textContent = currentUser.fullName;
+            var email = document.getElementById('profileEmail');
+            if (email) email.textContent = currentUser.email;
+            var wallet = document.getElementById('profileWallet');
+            if (wallet) wallet.textContent = (currentUser.walletBalance || 0) + ' PKR';
+            var refs = document.getElementById('profileRefs');
+            if (refs) refs.textContent = currentUser.totalReferrals || 0;
+            var checkins = document.getElementById('profileCheckins');
+            if (checkins) checkins.textContent = currentUser.totalCheckins || 0;
+            var purchased = document.getElementById('profilePurchased');
+            if (purchased) purchased.textContent = currentUser.totalPurchased || 0;
+            var refCode = document.getElementById('profileRefCode');
+            if (refCode) refCode.textContent = currentUser.referralCode || 'MHXXXX';
 
             var refList = document.getElementById('refHistoryList');
             var refHistory = currentUser.referralHistory || [];
-            if (refHistory.length === 0) {
-                refList.innerHTML = '<div class="empty">No referrals yet. Share your link!</div>';
-            } else {
-                refList.innerHTML = refHistory.map(function(r) {
-                    return '<div class="entry">' +
-                        '<span class="name">' + r.name + '</span>' +
-                        '<span>' + new Date(r.joinDate).toLocaleDateString() + '</span>' +
-                        '<span class="status ' + (r.status === 'Purchased' ? '' : 'pending') + '">' + r
-                        .status + '</span>' +
-                        (r.earnings ? '<span style="color:var(--purple);">+' + r.earnings.toFixed(0) +
-                            ' PKR</span>' : '') +
-                        '</div>';
-                }).join('');
+            if (refList) {
+                if (refHistory.length === 0) {
+                    refList.innerHTML = '<div class="empty">No referrals yet. Share your link!</div>';
+                } else {
+                    refList.innerHTML = refHistory.map(function(r) {
+                        return '<div class="entry">' +
+                            '<span class="name">' + r.name + '</span>' +
+                            '<span>' + new Date(r.joinDate).toLocaleDateString() + '</span>' +
+                            '<span class="status ' + (r.status === 'Purchased' ? '' : 'pending') +
+                            '">' + r.status + '</span>' +
+                            (r.earnings ? '<span style="color:var(--purple);">+' + r.earnings
+                            .toFixed(0) + ' PKR</span>' : '') +
+                            '</div>';
+                    }).join('');
+                }
             }
 
             var checkinList = document.getElementById('checkinHistoryList');
-            var checkins = getCheckins(currentUser.id);
-            if (checkins.length === 0) {
-                checkinList.innerHTML = '<div class="empty">No check‑ins yet.</div>';
-            } else {
-                var sorted = checkins.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
-                checkinList.innerHTML = sorted.slice(0, 10).map(function(c) {
-                    return '<div class="entry">' +
-                        '<span>' + new Date(c.date).toLocaleDateString() + '</span>' +
-                        '<span style="color:var(--purple);">+' + c.points + ' PKR</span>' +
-                        '</div>';
-                }).join('');
+            var checkinsData = getCheckins(currentUser.id);
+            if (checkinList) {
+                if (checkinsData.length === 0) {
+                    checkinList.innerHTML = '<div class="empty">No check‑ins yet.</div>';
+                } else {
+                    var sorted = checkinsData.slice().sort(function(a, b) { return new Date(b.date) - new Date(a
+                            .date); });
+                    checkinList.innerHTML = sorted.slice(0, 10).map(function(c) {
+                        return '<div class="entry">' +
+                            '<span>' + new Date(c.date).toLocaleDateString() + '</span>' +
+                            '<span style="color:var(--purple);">+' + c.points + ' PKR</span>' +
+                            '</div>';
+                    }).join('');
+                }
             }
 
             var orderList = document.getElementById('orderHistoryList');
             var userOrders = orders.filter(function(o) { return o.userId === currentUser.id; });
-            if (userOrders.length === 0) {
-                orderList.innerHTML = '<div class="empty">No orders yet.</div>';
-            } else {
-                orderList.innerHTML = userOrders.slice().sort(function(a, b) { return new Date(b.date) - new Date(a
-                        .date); }).map(function(o) {
-                    return '<div class="entry">' +
-                        '<span>#' + o.id + '</span>' +
-                        '<span>' + new Date(o.date).toLocaleDateString() + '</span>' +
-                        '<span style="color:var(--purple);">' + formatPrice(o.total) + '</span>' +
-                        '<span class="status ' + (o.status === 'Completed' ? '' : 'pending') +
-                        '">' + o.status + '</span>' +
-                        '</div>';
-                }).join('');
+            if (orderList) {
+                if (userOrders.length === 0) {
+                    orderList.innerHTML = '<div class="empty">No orders yet.</div>';
+                } else {
+                    orderList.innerHTML = userOrders.slice().sort(function(a, b) { return new Date(b.date) - new Date(
+                            a.date); }).map(function(o) {
+                        return '<div class="entry">' +
+                            '<span>#' + o.id + '</span>' +
+                            '<span>' + new Date(o.date).toLocaleDateString() + '</span>' +
+                            '<span style="color:var(--purple);">' + formatPrice(o.total) +
+                            '</span>' +
+                            '<span class="status ' + (o.status === 'Completed' ? '' : 'pending') +
+                            '">' + o.status + '</span>' +
+                            '</div>';
+                    }).join('');
+                }
             }
         }
 
-        document.getElementById('profileBack').addEventListener('click', closeProfileOverlay);
-        document.getElementById('profileToggle').addEventListener('click', function() {
-            if (!currentUser) { openAuth('signin'); } else { openProfileOverlay(); }
-        });
+        var profileBack = document.getElementById('profileBack');
+        if (profileBack) profileBack.addEventListener('click', closeProfileOverlay);
+        var profileToggle = document.getElementById('profileToggle');
+        if (profileToggle) {
+            profileToggle.addEventListener('click', function() {
+                if (!currentUser) { openAuth('signin'); } else { openProfileOverlay(); }
+            });
+        }
 
-        document.getElementById('copyRefBtn').addEventListener('click', function() {
-            var code = document.getElementById('profileRefCode').textContent;
-            var link = window.location.origin + '?ref=' + code;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(link).then(function() { toast('Referral link copied!', 'success'); })
-                .catch(function() { fallbackCopy(link); });
-            } else { fallbackCopy(link); }
-        });
+        var copyRefBtn = document.getElementById('copyRefBtn');
+        if (copyRefBtn) {
+            copyRefBtn.addEventListener('click', function() {
+                var code = document.getElementById('profileRefCode');
+                if (!code) return;
+                var link = window.location.origin + '?ref=' + code.textContent;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(link).then(function() { toast('Referral link copied!',
+                            'success'); }).catch(function() { fallbackCopy(link); });
+                } else { fallbackCopy(link); }
+            });
+        }
 
         function fallbackCopy(text) {
             var ta = document.createElement('textarea');
@@ -6697,27 +7144,32 @@
             toast('Referral link copied!', 'success');
         }
 
-        document.getElementById('logoutBtn').addEventListener('click', logoutUser);
-        document.getElementById('changePwdBtn').addEventListener('click', function() {
-            if (!currentUser) return;
-            var newPwd = prompt('Enter new password (min 6 characters):');
-            if (newPwd && newPwd.length >= 6) {
-                var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
-                if (uIdx !== -1) { users[uIdx].password = newPwd;
-                    currentUser = users[uIdx];
-                    saveUsers();
-                    saveCurrentUser();
-                    toast('Password updated!', 'success'); }
-            } else if (newPwd !== null) { toast('Password must be at least 6 characters', 'error'); }
-        });
+        var logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) logoutBtn.addEventListener('click', logoutUser);
+        var changePwdBtn = document.getElementById('changePwdBtn');
+        if (changePwdBtn) {
+            changePwdBtn.addEventListener('click', function() {
+                if (!currentUser) return;
+                var newPwd = prompt('Enter new password (min 6 characters):');
+                if (newPwd && newPwd.length >= 6) {
+                    var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
+                    if (uIdx !== -1) { users[uIdx].password = newPwd;
+                        currentUser = users[uIdx];
+                        saveUsers();
+                        saveCurrentUser();
+                        toast('Password updated!', 'success'); }
+                } else if (newPwd !== null) { toast('Password must be at least 6 characters', 'error'); }
+            });
+        }
 
         // ================================================================
-        // 17. AUTH MODAL
+        // 21. AUTH MODAL
         // ================================================================
         function openAuth(mode) {
             if (typeof mode === 'undefined') mode = 'signin';
             authMode = mode;
             var modal = document.getElementById('authModal');
+            if (!modal) return;
             var title = document.getElementById('authTitle');
             var sub = document.getElementById('authSub');
             var submitBtn = document.getElementById('authSubmitBtn');
@@ -6728,137 +7180,176 @@
             var confirmGroup = document.getElementById('authConfirmGroup');
             var rememberGroup = document.getElementById('authRememberGroup');
             var forgotLink = document.getElementById('authForgotLink');
-            document.getElementById('authPassword').style.display = 'block';
-            document.getElementById('pwdStrength').style.display = 'block';
-            nameGroup.style.display = 'none';
-            refGroup.style.display = 'none';
-            confirmGroup.style.display = 'none';
-            rememberGroup.style.display = 'flex';
-            forgotLink.style.display = 'block';
+            var pwdInput = document.getElementById('authPassword');
+            var pwdStrength = document.getElementById('pwdStrength');
+
+            if (pwdInput) pwdInput.style.display = 'block';
+            if (pwdStrength) pwdStrength.style.display = 'block';
+
+            if (nameGroup) nameGroup.style.display = 'none';
+            if (refGroup) refGroup.style.display = 'none';
+            if (confirmGroup) confirmGroup.style.display = 'none';
+            if (rememberGroup) rememberGroup.style.display = 'flex';
+            if (forgotLink) forgotLink.style.display = 'block';
 
             if (mode === 'signin') {
-                title.textContent = 'Sign In';
-                sub.textContent = 'Welcome back to MH HACKS.';
-                submitBtn.textContent = 'Sign In';
-                switchText.textContent = "Don't have an account? ";
-                switchLink.textContent = 'Sign Up';
-                nameGroup.style.display = 'none';
-                refGroup.style.display = 'none';
-                confirmGroup.style.display = 'none';
-                rememberGroup.style.display = 'flex';
-                forgotLink.style.display = 'block';
-                document.getElementById('authEmail').placeholder = 'Email or Username';
-                document.getElementById('authPassword').placeholder = '••••••••';
+                if (title) title.textContent = 'Sign In';
+                if (sub) sub.textContent = 'Welcome back to MH HACKS.';
+                if (submitBtn) submitBtn.textContent = 'Sign In';
+                if (switchText) switchText.textContent = "Don't have an account? ";
+                if (switchLink) switchLink.textContent = 'Sign Up';
+                if (nameGroup) nameGroup.style.display = 'none';
+                if (refGroup) refGroup.style.display = 'none';
+                if (confirmGroup) confirmGroup.style.display = 'none';
+                if (rememberGroup) rememberGroup.style.display = 'flex';
+                if (forgotLink) forgotLink.style.display = 'block';
+                var emailInput = document.getElementById('authEmail');
+                if (emailInput) emailInput.placeholder = 'Email or Username';
+                if (pwdInput) pwdInput.placeholder = '••••••••';
             } else if (mode === 'signup') {
-                title.textContent = 'Create Account';
-                sub.textContent = 'Join MH HACKS today. You get 50 PKR bonus!';
-                submitBtn.textContent = 'Sign Up';
-                switchText.textContent = "Already have an account? ";
-                switchLink.textContent = 'Sign In';
-                nameGroup.style.display = 'block';
-                refGroup.style.display = 'block';
-                confirmGroup.style.display = 'block';
-                rememberGroup.style.display = 'none';
-                forgotLink.style.display = 'none';
-                document.getElementById('authEmail').placeholder = 'Email Address';
-                document.getElementById('authPassword').placeholder = 'Create password (min 6)';
-                document.getElementById('authConfirm').placeholder = 'Confirm password';
-                document.getElementById('authRef').placeholder = 'Referral ID (optional)';
+                if (title) title.textContent = 'Create Account';
+                if (sub) sub.textContent = 'Join MH HACKS today. You get 50 PKR bonus!';
+                if (submitBtn) submitBtn.textContent = 'Sign Up';
+                if (switchText) switchText.textContent = "Already have an account? ";
+                if (switchLink) switchLink.textContent = 'Sign In';
+                if (nameGroup) nameGroup.style.display = 'block';
+                if (refGroup) refGroup.style.display = 'block';
+                if (confirmGroup) confirmGroup.style.display = 'block';
+                if (rememberGroup) rememberGroup.style.display = 'none';
+                if (forgotLink) forgotLink.style.display = 'none';
+                var emailInput = document.getElementById('authEmail');
+                if (emailInput) emailInput.placeholder = 'Email Address';
+                if (pwdInput) pwdInput.placeholder = 'Create password (min 6)';
+                var confirmInput = document.getElementById('authConfirm');
+                if (confirmInput) confirmInput.placeholder = 'Confirm password';
+                var refInput = document.getElementById('authRef');
+                if (refInput) refInput.placeholder = 'Referral ID (optional)';
             } else if (mode === 'forgot') {
-                title.textContent = 'Reset Password';
-                sub.textContent = 'Enter your email to reset your password.';
-                submitBtn.textContent = 'Send Reset Link';
-                switchText.textContent = "Remember your password? ";
-                switchLink.textContent = 'Sign In';
-                nameGroup.style.display = 'none';
-                refGroup.style.display = 'none';
-                confirmGroup.style.display = 'none';
-                rememberGroup.style.display = 'none';
-                forgotLink.style.display = 'none';
-                document.getElementById('authEmail').placeholder = 'Email Address';
-                document.getElementById('authPassword').style.display = 'none';
-                document.getElementById('pwdStrength').style.display = 'none';
+                if (title) title.textContent = 'Reset Password';
+                if (sub) sub.textContent = 'Enter your email to reset your password.';
+                if (submitBtn) submitBtn.textContent = 'Send Reset Link';
+                if (switchText) switchText.textContent = "Remember your password? ";
+                if (switchLink) switchLink.textContent = 'Sign In';
+                if (nameGroup) nameGroup.style.display = 'none';
+                if (refGroup) refGroup.style.display = 'none';
+                if (confirmGroup) confirmGroup.style.display = 'none';
+                if (rememberGroup) rememberGroup.style.display = 'none';
+                if (forgotLink) forgotLink.style.display = 'none';
+                var emailInput = document.getElementById('authEmail');
+                if (emailInput) emailInput.placeholder = 'Email Address';
+                if (pwdInput) pwdInput.style.display = 'none';
+                if (pwdStrength) pwdStrength.style.display = 'none';
             }
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
         }
 
-        document.getElementById('closeAuth').addEventListener('click', function() {
-            document.getElementById('authModal').classList.remove('open');
+        var closeAuth = document.getElementById('closeAuth');
+        if (closeAuth) closeAuth.addEventListener('click', function() {
+            var modal = document.getElementById('authModal');
+            if (modal) modal.classList.remove('open');
             document.body.style.overflow = '';
         });
-        document.getElementById('authModal').addEventListener('click', function(e) {
+        var authModal = document.getElementById('authModal');
+        if (authModal) authModal.addEventListener('click', function(e) {
             if (e.target === e.currentTarget) {
-                document.getElementById('authModal').classList.remove('open');
+                authModal.classList.remove('open');
                 document.body.style.overflow = '';
             }
         });
 
-        document.getElementById('authForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var email = document.getElementById('authEmail').value.trim();
-            var password = document.getElementById('authPassword').value;
+        var authForm = document.getElementById('authForm');
+        if (authForm) {
+            authForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var email = document.getElementById('authEmail') ? document.getElementById('authEmail')
+                    .value.trim() : '';
+                var password = document.getElementById('authPassword') ? document.getElementById('authPassword')
+                    .value : '';
 
-            if (authMode === 'signin') {
-                var remember = document.getElementById('authRemember').checked;
-                if (loginUser(email, password, remember)) {
-                    document.getElementById('authModal').classList.remove('open');
+                if (authMode === 'signin') {
+                    var remember = document.getElementById('authRemember') ? document.getElementById(
+                        'authRemember').checked : false;
+                    if (loginUser(email, password, remember)) {
+                        var modal = document.getElementById('authModal');
+                        if (modal) modal.classList.remove('open');
+                        document.body.style.overflow = '';
+                        renderProfile();
+                    }
+                } else if (authMode === 'signup') {
+                    var name = document.getElementById('authName') ? document.getElementById('authName')
+                        .value.trim() : '';
+                    var confirm = document.getElementById('authConfirm') ? document.getElementById(
+                        'authConfirm').value : '';
+                    var ref = document.getElementById('authRef') ? document.getElementById('authRef')
+                        .value.trim() : '';
+                    if (!name) { toast('Please enter your full name', 'error'); return; }
+                    if (password !== confirm) { toast('Passwords do not match', 'error'); return; }
+                    if (signupUser(name, email, password, ref)) {
+                        var modal = document.getElementById('authModal');
+                        if (modal) modal.classList.remove('open');
+                        document.body.style.overflow = '';
+                        renderProfile();
+                    }
+                } else if (authMode === 'forgot') {
+                    var user = findUserByEmail(email);
+                    if (!user) { toast('No account found with that email', 'error'); return; }
+                    toast('Password reset link sent to ' + email + ' (demo)', 'success');
+                    var modal = document.getElementById('authModal');
+                    if (modal) modal.classList.remove('open');
                     document.body.style.overflow = '';
-                    renderProfile();
                 }
-            } else if (authMode === 'signup') {
-                var name = document.getElementById('authName').value.trim();
-                var confirm = document.getElementById('authConfirm').value;
-                var ref = document.getElementById('authRef').value.trim();
-                if (!name) { toast('Please enter your full name', 'error'); return; }
-                if (password !== confirm) { toast('Passwords do not match', 'error'); return; }
-                if (signupUser(name, email, password, ref)) {
-                    document.getElementById('authModal').classList.remove('open');
-                    document.body.style.overflow = '';
-                    renderProfile();
-                }
-            } else if (authMode === 'forgot') {
-                var user = findUserByEmail(email);
-                if (!user) { toast('No account found with that email', 'error'); return; }
-                toast('Password reset link sent to ' + email + ' (demo)', 'success');
-                document.getElementById('authModal').classList.remove('open');
-                document.body.style.overflow = '';
-            }
-        });
+            });
+        }
 
-        document.getElementById('authSwitchLink').addEventListener('click', function() {
-            if (authMode === 'signin') { openAuth('signup'); } else if (authMode === 'signup') { openAuth(
-                'signin'); } else { openAuth('signin'); }
-        });
-        document.getElementById('authForgotLink').addEventListener('click', function() { openAuth('forgot'); });
-        document.getElementById('authPassword').addEventListener('input', function() {
-            var pwd = this.value;
-            var bar = document.getElementById('pwdBar');
-            if (pwd.length === 0) { bar.className = 'bar';
-                bar.style.width = '0%'; return; }
-            if (pwd.length < 4) { bar.className = 'bar weak'; } else if (pwd.length < 8) { bar.className =
-                    'bar medium'; } else { bar.className = 'bar strong'; }
-        });
+        var authSwitchLink = document.getElementById('authSwitchLink');
+        if (authSwitchLink) {
+            authSwitchLink.addEventListener('click', function() {
+                if (authMode === 'signin') { openAuth('signup'); } else if (authMode === 'signup') { openAuth(
+                        'signin'); } else { openAuth('signin'); }
+            });
+        }
+        var authForgotLink = document.getElementById('authForgotLink');
+        if (authForgotLink) authForgotLink.addEventListener('click', function() { openAuth('forgot'); });
+        var authPassword = document.getElementById('authPassword');
+        if (authPassword) {
+            authPassword.addEventListener('input', function() {
+                var pwd = this.value;
+                var bar = document.getElementById('pwdBar');
+                if (!bar) return;
+                if (pwd.length === 0) { bar.className = 'bar';
+                    bar.style.width = '0%'; return; }
+                if (pwd.length < 4) { bar.className = 'bar weak'; } else if (pwd.length < 8) { bar.className =
+                        'bar medium'; } else { bar.className = 'bar strong'; }
+            });
+        }
 
         // ================================================================
-        // 18. SEARCH
+        // 22. SEARCH
         // ================================================================
         var searchOverlay = document.getElementById('searchOverlay');
         var searchInput = document.getElementById('searchInput');
         var searchResults = document.getElementById('searchResults');
 
-        document.getElementById('searchToggle').addEventListener('click', function() {
-            searchOverlay.classList.toggle('open');
-            if (searchOverlay.classList.contains('open')) {
-                searchInput.focus();
-                showTrending();
-            }
-        });
-        searchOverlay.addEventListener('click', function(e) {
-            if (e.target === e.currentTarget) searchOverlay.classList.remove('open');
-        });
+        var searchToggle = document.getElementById('searchToggle');
+        if (searchToggle) {
+            searchToggle.addEventListener('click', function() {
+                if (!searchOverlay) return;
+                searchOverlay.classList.toggle('open');
+                if (searchOverlay.classList.contains('open') && searchInput) {
+                    searchInput.focus();
+                    showTrending();
+                }
+            });
+        }
+        if (searchOverlay) {
+            searchOverlay.addEventListener('click', function(e) {
+                if (e.target === e.currentTarget) searchOverlay.classList.remove('open');
+            });
+        }
 
         function showTrending() {
+            if (!searchResults) return;
             var trending = products.slice().sort(function(a, b) { return b.rating - a.rating; }).slice(0, 6);
             var recent = JSON.parse(localStorage.getItem('mh_recentSearches')) || [];
             var html = '';
@@ -6887,21 +7378,24 @@
                 '<div style="padding:20px;color:var(--text-muted);text-align:center;">No trending products.</div>';
             searchResults.innerHTML = html;
             attachResultClickEvents();
-            searchResults.querySelectorAll('.recent-item').forEach(function(el) {
-                el.addEventListener('click', function() {
-                    var q = el.dataset.query;
-                    searchInput.value = q;
-                    performSearch(q);
+            if (searchResults) {
+                searchResults.querySelectorAll('.recent-item').forEach(function(el) {
+                    el.addEventListener('click', function() {
+                        var q = el.dataset.query;
+                        if (searchInput) searchInput.value = q;
+                        performSearch(q);
+                    });
                 });
-            });
+            }
         }
 
         function attachResultClickEvents() {
+            if (!searchResults) return;
             searchResults.querySelectorAll('.result-item').forEach(function(el) {
                 el.addEventListener('click', function() {
                     var id = parseInt(el.dataset.id);
                     if (id) {
-                        searchOverlay.classList.remove('open');
+                        if (searchOverlay) searchOverlay.classList.remove('open');
                         openDetailOverlay(id);
                     }
                 });
@@ -6909,6 +7403,7 @@
         }
 
         var performSearch = debounce(function(query) {
+            if (!searchResults) return;
             var q = query.trim().toLowerCase();
             if (q.length === 0) { showTrending(); return; }
             var recent = JSON.parse(localStorage.getItem('mh_recentSearches')) || [];
@@ -6939,18 +7434,20 @@
             attachResultClickEvents();
         }, 300);
 
-        searchInput.addEventListener('input', function(e) { performSearch(e.target.value); });
-        searchInput.addEventListener('focus', function() {
-            if (searchInput.value.trim() === '') showTrending();
-        });
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) { performSearch(e.target.value); });
+            searchInput.addEventListener('focus', function() {
+                if (searchInput.value.trim() === '') showTrending();
+            });
+        }
 
         // ================================================================
-        // 19. FILTERS
+        // 23. FILTERS
         // ================================================================
-        document.querySelectorAll('#filterButtons button').forEach(function(btn) {
+        var filterBtns = document.querySelectorAll('#filterButtons button');
+        filterBtns.forEach(function(btn) {
             btn.addEventListener('click', function() {
-                document.querySelectorAll('#filterButtons button').forEach(function(b) { b.classList.remove(
-                        'active'); });
+                filterBtns.forEach(function(b) { b.classList.remove('active'); });
                 btn.classList.add('active');
                 currentFilter = btn.dataset.filter;
                 currentCategory = null;
@@ -6961,64 +7458,90 @@
         });
 
         // ================================================================
-        // 20. NAVBAR SCROLL
+        // 24. NAVBAR SCROLL
         // ================================================================
         window.addEventListener('scroll', function() {
             var nav = document.getElementById('navbar');
-            if (window.scrollY > 50) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
-
+            if (nav) {
+                if (window.scrollY > 50) nav.classList.add('scrolled');
+                else nav.classList.remove('scrolled');
+            }
             var backToTop = document.getElementById('backToTop');
-            if (window.scrollY > 600) backToTop.classList.add('visible');
-            else backToTop.classList.remove('visible');
+            if (backToTop) {
+                if (window.scrollY > 600) backToTop.classList.add('visible');
+                else backToTop.classList.remove('visible');
+            }
         });
-        document.getElementById('backToTop').addEventListener('click', function() {
+        var backToTop = document.getElementById('backToTop');
+        if (backToTop) backToTop.addEventListener('click', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         // ================================================================
-        // 21. MOBILE MENU
+        // 25. MOBILE MENU
         // ================================================================
-        document.getElementById('hamburger').addEventListener('click', function() {
-            document.getElementById('mobileMenu').classList.toggle('open');
-            document.getElementById('hamburger').classList.toggle('active');
-        });
-        document.getElementById('closeMobile').addEventListener('click', function() {
-            document.getElementById('mobileMenu').classList.remove('open');
-            document.getElementById('hamburger').classList.remove('active');
-        });
-        document.querySelectorAll('.mobile-menu a').forEach(function(link) {
-            link.addEventListener('click', function() {
-                document.getElementById('mobileMenu').classList.remove('open');
-                document.getElementById('hamburger').classList.remove('active');
+        var hamburger = document.getElementById('hamburger');
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (hamburger) {
+            hamburger.addEventListener('click', function() {
+                if (mobileMenu) mobileMenu.classList.toggle('open');
+                hamburger.classList.toggle('active');
             });
-        });
+        }
+        var closeMobile = document.getElementById('closeMobile');
+        if (closeMobile) {
+            closeMobile.addEventListener('click', function() {
+                if (mobileMenu) mobileMenu.classList.remove('open');
+                if (hamburger) hamburger.classList.remove('active');
+            });
+        }
+        if (mobileMenu) {
+            mobileMenu.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('open');
+                    if (hamburger) hamburger.classList.remove('active');
+                });
+            });
+        }
 
-        // Mobile contact link
-        document.getElementById('mobileContact').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('mobileMenu').classList.remove('open');
-            document.getElementById('hamburger').classList.remove('active');
-            document.getElementById('contactSection').scrollIntoView({ behavior: 'smooth' });
-        });
+        var mobileContact = document.getElementById('mobileContact');
+        if (mobileContact) {
+            mobileContact.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (mobileMenu) mobileMenu.classList.remove('open');
+                if (hamburger) hamburger.classList.remove('active');
+                var contact = document.getElementById('contactSection');
+                if (contact) contact.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
 
         // ================================================================
-        // 22. CART TOGGLE
+        // 26. CART TOGGLE
         // ================================================================
-        document.getElementById('cartToggle').addEventListener('click', function() {
-            document.getElementById('cartSidebar').classList.toggle('open');
-        });
-        document.getElementById('closeCart').addEventListener('click', function() {
-            document.getElementById('cartSidebar').classList.remove('open');
-        });
-        document.getElementById('checkoutBtn').addEventListener('click', function() {
-            if (cart.length === 0) { toast('Your cart is empty', 'error'); return; }
-            document.getElementById('cartSidebar').classList.remove('open');
-            openCheckout();
-        });
+        var cartToggle = document.getElementById('cartToggle');
+        var cartSidebar = document.getElementById('cartSidebar');
+        if (cartToggle) {
+            cartToggle.addEventListener('click', function() {
+                if (cartSidebar) cartSidebar.classList.toggle('open');
+            });
+        }
+        var closeCart = document.getElementById('closeCart');
+        if (closeCart) {
+            closeCart.addEventListener('click', function() {
+                if (cartSidebar) cartSidebar.classList.remove('open');
+            });
+        }
+        var checkoutBtn = document.getElementById('checkoutBtn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', function() {
+                if (cart.length === 0) { toast('Your cart is empty', 'error'); return; }
+                if (cartSidebar) cartSidebar.classList.remove('open');
+                openCheckout();
+            });
+        }
 
         // ================================================================
-        // 23. SCROLL REVEAL
+        // 27. SCROLL REVEAL
         // ================================================================
         var revealObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
@@ -7028,10 +7551,11 @@
         document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
 
         // ================================================================
-        // 24. PARTICLES
+        // 28. PARTICLES
         // ================================================================
         (function initParticles() {
             var canvas = document.getElementById('particles-canvas');
+            if (!canvas) return;
             var ctx = canvas.getContext('2d');
             var w, h;
             var particles = [];
@@ -7086,7 +7610,7 @@
         })();
 
         // ================================================================
-        // 25. CHAT SYSTEM
+        // 29. CHAT SYSTEM
         // ================================================================
         var chatFab = document.getElementById('chatFab');
         var chatPanel = document.getElementById('chatPanel');
@@ -7114,6 +7638,7 @@
         }
 
         function renderChatMessages() {
+            if (!chatMessagesEl) return;
             chatMessagesEl.innerHTML = chatMsgHistory.map(function(msg) {
                 return '<div class="msg ' + (msg.sender === 'user' ? 'user' : 'bot') + '">' +
                     msg.text +
@@ -7132,8 +7657,9 @@
             renderChatMessages();
             if (sender === 'bot') {
                 chatUnread++;
-                document.getElementById('chatBadge').textContent = chatUnread;
-                document.getElementById('chatBadge').style.display = 'block';
+                var badge = document.getElementById('chatBadge');
+                if (badge) { badge.textContent = chatUnread;
+                    badge.style.display = 'block'; }
                 addNotification('chat_message', 'New message from Admin: ' + text.substring(0, 50) + '...');
             }
         }
@@ -7172,19 +7698,20 @@
         }
 
         function sendChatMessage() {
-            var text = chatInput.value.trim();
+            var text = chatInput ? chatInput.value.trim() : '';
             if (!text) return;
             if (!currentUser) { toast('Please sign in to chat', 'error');
                 openAuth('signin'); return; }
             addChatMessage('user', text);
-            chatInput.value = '';
+            if (chatInput) chatInput.value = '';
             addNotification('admin_message', 'User sent a message: ' + text.substring(0, 50) + '...');
             if (!adminOnline) {
                 setTimeout(function() {
                     var reply = getAIResponse(text);
                     addChatMessage('bot', reply);
                     chatUnread = 0;
-                    document.getElementById('chatBadge').style.display = 'none';
+                    var badge = document.getElementById('chatBadge');
+                    if (badge) badge.style.display = 'none';
                 }, 600);
             } else {
                 setTimeout(function() {
@@ -7193,108 +7720,129 @@
             }
         }
 
-        chatSendBtn.addEventListener('click', sendChatMessage);
-        chatInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') sendChatMessage(); });
+        if (chatSendBtn) chatSendBtn.addEventListener('click', sendChatMessage);
+        if (chatInput) chatInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') sendChatMessage(); });
 
-        chatFab.addEventListener('click', function() {
-            chatPanel.classList.toggle('open');
-            if (chatPanel.classList.contains('open')) {
-                chatUnread = 0;
-                document.getElementById('chatBadge').style.display = 'none';
-                if (currentUser) loadChatHistory();
-                else {
-                    chatMessagesEl.innerHTML =
-                        '<div class="msg bot">👋 Please sign in to start chatting. <a href="#" style="color:var(--purple);" onclick="openAuth(\'signin\');return false;">Sign In</a></div>';
+        if (chatFab) {
+            chatFab.addEventListener('click', function() {
+                if (!chatPanel) return;
+                chatPanel.classList.toggle('open');
+                if (chatPanel.classList.contains('open')) {
+                    chatUnread = 0;
+                    var badge = document.getElementById('chatBadge');
+                    if (badge) badge.style.display = 'none';
+                    if (currentUser) loadChatHistory();
+                    else {
+                        if (chatMessagesEl) chatMessagesEl.innerHTML =
+                            '<div class="msg bot">👋 Please sign in to start chatting. <a href="#" style="color:var(--purple);" onclick="openAuth(\'signin\');return false;">Sign In</a></div>';
+                    }
+                    if (chatInput) chatInput.focus();
                 }
-                chatInput.focus();
-            }
-        });
-        chatCloseBtn.addEventListener('click', function() { chatPanel.classList.remove('open'); });
+            });
+        }
+        if (chatCloseBtn) chatCloseBtn.addEventListener('click', function() { if (chatPanel) chatPanel.classList.remove(
+                'open'); });
 
-        chatStatusText.addEventListener('dblclick', function() {
-            adminOnline = !adminOnline;
-            chatStatusDot.className = 'status ' + (adminOnline ? 'online' : 'offline');
-            chatStatusText.textContent = adminOnline ? 'Online' : 'Offline';
-            toast('Admin is now ' + (adminOnline ? 'ONLINE' : 'OFFLINE'), 'info');
-            if (adminOnline) {
-                addNotification('admin_message', 'Admin is now online.');
-            }
-        });
-
-        chatImageBtn.addEventListener('click', function() { chatFileInput.click(); });
-        chatFileInput.addEventListener('change', function() {
-            var file = chatFileInput.files[0];
-            if (!file || !file.type.startsWith('image/')) return;
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var dataUrl = e.target.result;
-                addChatMessage('user', '📷 Image', dataUrl);
-                chatFileInput.value = '';
-                if (!adminOnline) {
-                    setTimeout(function() { addChatMessage('bot', '🖼️ Nice image! Our team will review it shortly.'); },
-                        500);
+        if (chatStatusText) {
+            chatStatusText.addEventListener('dblclick', function() {
+                adminOnline = !adminOnline;
+                if (chatStatusDot) chatStatusDot.className = 'status ' + (adminOnline ? 'online' : 'offline');
+                chatStatusText.textContent = adminOnline ? 'Online' : 'Offline';
+                toast('Admin is now ' + (adminOnline ? 'ONLINE' : 'OFFLINE'), 'info');
+                if (adminOnline) {
+                    addNotification('admin_message', 'Admin is now online.');
                 }
-            };
-            reader.readAsDataURL(file);
-        });
+            });
+        }
 
-        chatVoiceBtn.addEventListener('click', async function() {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                toast('Voice recording not supported', 'error');
-                return;
-            }
-            if (isRecording) {
-                mediaRecorder.stop();
-                isRecording = false;
-                chatVoiceBtn.classList.remove('recording');
-                chatVoiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-                return;
-            }
-            try {
-                var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                mediaRecorder.ondataavailable = function(e) { audioChunks.push(e.data); };
-                mediaRecorder.onstop = function() {
-                    var blob = new Blob(audioChunks, { type: 'audio/webm' });
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        var dataUrl = e.target.result;
-                        addChatMessage('user', '🎤 Voice message', null, dataUrl);
-                        if (!adminOnline) {
-                            setTimeout(function() { addChatMessage('bot', '🎧 Got your voice message! We\'ll respond soon.'); },
-                                500);
-                        }
-                    };
-                    reader.readAsDataURL(blob);
-                    stream.getTracks().forEach(function(t) { t.stop(); });
+        if (chatImageBtn) {
+            chatImageBtn.addEventListener('click', function() { if (chatFileInput) chatFileInput.click(); });
+        }
+        if (chatFileInput) {
+            chatFileInput.addEventListener('change', function() {
+                var file = chatFileInput.files[0];
+                if (!file || !file.type.startsWith('image/')) return;
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var dataUrl = e.target.result;
+                    addChatMessage('user', '📷 Image', dataUrl);
+                    chatFileInput.value = '';
+                    if (!adminOnline) {
+                        setTimeout(function() { addChatMessage('bot',
+                                '🖼️ Nice image! Our team will review it shortly.'); }, 500);
+                    }
                 };
-                mediaRecorder.start();
-                isRecording = true;
-                chatVoiceBtn.classList.add('recording');
-                chatVoiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
-                toast('Recording... Click again to stop', 'info');
-            } catch (err) { toast('Could not access microphone', 'error'); }
-        });
+                reader.readAsDataURL(file);
+            });
+        }
+
+        if (chatVoiceBtn) {
+            chatVoiceBtn.addEventListener('click', async function() {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    toast('Voice recording not supported', 'error');
+                    return;
+                }
+                if (isRecording) {
+                    if (mediaRecorder) mediaRecorder.stop();
+                    isRecording = false;
+                    chatVoiceBtn.classList.remove('recording');
+                    chatVoiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                    return;
+                }
+                try {
+                    var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = function(e) { audioChunks.push(e.data); };
+                    mediaRecorder.onstop = function() {
+                        var blob = new Blob(audioChunks, { type: 'audio/webm' });
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            var dataUrl = e.target.result;
+                            addChatMessage('user', '🎤 Voice message', null, dataUrl);
+                            if (!adminOnline) {
+                                setTimeout(function() { addChatMessage('bot',
+                                        '🎧 Got your voice message! We\'ll respond soon.'); },
+                                    500);
+                            }
+                        };
+                        reader.readAsDataURL(blob);
+                        stream.getTracks().forEach(function(t) { t.stop(); });
+                    };
+                    mediaRecorder.start();
+                    isRecording = true;
+                    chatVoiceBtn.classList.add('recording');
+                    chatVoiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                    toast('Recording... Click again to stop', 'info');
+                } catch (err) { toast('Could not access microphone', 'error'); }
+            });
+        }
 
         // ================================================================
-        // 26. CONTACT FORM
+        // 30. CONTACT FORM
         // ================================================================
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var name = document.getElementById('contactName').value.trim();
-            var email = document.getElementById('contactEmail').value.trim();
-            var subject = document.getElementById('contactSubject').value.trim();
-            var message = document.getElementById('contactMessage').value.trim();
-            if (!name || !email || !message) { toast('Please fill in all required fields', 'error'); return; }
-            if (!email.includes('@')) { toast('Please enter a valid email', 'error'); return; }
-            toast('✅ Message sent! We\'ll reply within 15 minutes.', 'success');
-            addNotification('complaint', 'New message from ' + name + ': ' + (subject || 'General inquiry'));
-            this.reset();
-        });
+        var contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var name = document.getElementById('contactName') ? document.getElementById('contactName')
+                    .value.trim() : '';
+                var email = document.getElementById('contactEmail') ? document.getElementById('contactEmail')
+                    .value.trim() : '';
+                var subject = document.getElementById('contactSubject') ? document.getElementById(
+                    'contactSubject').value.trim() : '';
+                var message = document.getElementById('contactMessage') ? document.getElementById(
+                    'contactMessage').value.trim() : '';
+                if (!name || !email || !message) { toast('Please fill in all required fields', 'error'); return; }
+                if (!email.includes('@')) { toast('Please enter a valid email', 'error'); return; }
+                toast('✅ Message sent! We\'ll reply within 15 minutes.', 'success');
+                addNotification('complaint', 'New message from ' + name + ': ' + (subject || 'General inquiry'));
+                contactForm.reset();
+            });
+        }
 
         // ================================================================
-        // 27. POLICY MODALS
+        // 31. POLICY MODALS
         // ================================================================
         function openPolicyModal(modalId) {
             var modal = document.getElementById(modalId);
@@ -7341,40 +7889,51 @@
         });
 
         // ================================================================
-        // 28. NOTIFICATION TOGGLE
+        // 32. NOTIFICATION TOGGLE
         // ================================================================
-        document.getElementById('notifToggle').addEventListener('click', function(e) {
-            e.stopPropagation();
-            var panel = document.getElementById('notifPanel');
-            panel.classList.toggle('open');
-        });
-        document.getElementById('markAllRead').addEventListener('click', function() {
-            notifications.forEach(function(n) { n.read = true; });
-            saveNotifications();
-            updateNotifBadge();
-            toast('All notifications marked as read', 'info');
-        });
+        var notifToggle = document.getElementById('notifToggle');
+        var notifPanel = document.getElementById('notifPanel');
+        if (notifToggle) {
+            notifToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!notifPanel) return;
+                notifPanel.classList.toggle('open');
+            });
+        }
+        var markAllRead = document.getElementById('markAllRead');
+        if (markAllRead) {
+            markAllRead.addEventListener('click', function() {
+                notifications.forEach(function(n) { n.read = true; });
+                saveNotifications();
+                updateNotifBadge();
+                toast('All notifications marked as read', 'info');
+            });
+        }
         document.addEventListener('click', function(e) {
-            var panel = document.getElementById('notifPanel');
+            if (!notifPanel) return;
             var toggle = document.getElementById('notifToggle');
-            if (!panel.contains(e.target) && !toggle.contains(e.target)) {
-                panel.classList.remove('open');
+            if (!notifPanel.contains(e.target) && !(toggle && toggle.contains(e.target))) {
+                notifPanel.classList.remove('open');
             }
         });
 
         // ================================================================
-        // 29. NAVIGATION: Logo back to home
+        // 33. NAVIGATION: Logo back to home
         // ================================================================
-        document.getElementById('logoLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            closeDetailOverlay();
-            closeProfileOverlay();
-            hideAllToolsPages();
-            document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
-        });
+        var logoLink = document.getElementById('logoLink');
+        if (logoLink) {
+            logoLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeDetailOverlay();
+                closeProfileOverlay();
+                hideAllToolsPages();
+                var home = document.getElementById('home');
+                if (home) home.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
 
         // ================================================================
-        // 30. INIT APP
+        // 34. INIT APP
         // ================================================================
         function initApp() {
             if (checkRemembered()) { updateAuthUI();
@@ -7382,6 +7941,7 @@
             if (currentUser) { updateAuthUI();
                 loadChatHistory(); }
             updateMobileSignIn();
+            applySettingsToUI(settings);
             renderCategories();
             renderProducts();
             renderFreeTools();
@@ -7397,8 +7957,15 @@
             if (ref && !currentUser) {
                 toast('Referral code detected! Sign up to claim your bonus.', 'info');
                 setTimeout(function() { openAuth('signup');
-                    document.getElementById('authRef').value = ref; }, 800);
+                    var refInput = document.getElementById('authRef'); if (refInput) refInput.value = ref; }, 800);
             }
+
+            // Listen for settings updates from admin
+            window.addEventListener('mh-sync', function(e) {
+                if (e.detail && e.detail.key === STORAGE_KEYS.SETTINGS && e.detail.data) {
+                    applySettingsToUI(e.detail.data);
+                }
+            });
         }
 
         if (document.readyState === 'complete') { initApp(); } else { window.addEventListener('load', initApp); }
@@ -7412,7 +7979,7 @@
         }
 
         // ================================================================
-        // 31. ESCAPE CLOSE
+        // 35. ESCAPE CLOSE
         // ================================================================
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
@@ -7422,17 +7989,21 @@
                     el.classList.remove('open');
                     document.body.style.overflow = '';
                 });
-                document.getElementById('searchOverlay').classList.remove('open');
-                document.getElementById('cartSidebar').classList.remove('open');
-                document.getElementById('chatPanel').classList.remove('open');
-                document.getElementById('notifPanel').classList.remove('open');
+                var searchOverlay = document.getElementById('searchOverlay');
+                if (searchOverlay) searchOverlay.classList.remove('open');
+                var cartSidebar = document.getElementById('cartSidebar');
+                if (cartSidebar) cartSidebar.classList.remove('open');
+                var chatPanel = document.getElementById('chatPanel');
+                if (chatPanel) chatPanel.classList.remove('open');
+                var notifPanel = document.getElementById('notifPanel');
+                if (notifPanel) notifPanel.classList.remove('open');
                 closeDetailOverlay();
                 closeProfileOverlay();
             }
         });
 
         // ================================================================
-        // 32. FORCE HIDE LOADER SAFETY
+        // 36. FORCE HIDE LOADER SAFETY
         // ================================================================
         setTimeout(function() {
             var loader = document.getElementById('loader');
@@ -7442,20 +8013,14 @@
             }
         }, 8000);
 
-        console.log('🚀 MH HACKS — Premium Edition Loaded!');
+        console.log('🚀 MH HACKS — Premium Edition Loaded with Full Admin Sync!');
+        console.log('📡 BroadcastChannel active: ' + SYNC_CHANNEL);
+        console.log('🔑 Storage keys: ' + Object.values(STORAGE_KEYS).join(', '));
         console.log('👤 Admin toggle: double-click "Offline" in chat header.');
-        console.log('📱 All Paid / Free Tools pages are live.');
-        console.log('🔍 Search bar: compact results.');
-        console.log('🎠 Hero carousel is active with auto-slide.');
-        console.log('🛒 Add To Cart → opens persistent Cart sidebar (right side).');
-        console.log('💰 Wallet system: PKR with daily check-in (1-7), referral (8 PKR), sign-up bonus (50 PKR).');
-        console.log('🔔 Notification system: 5 types (product_added, admin_message, chat_message, order_confirmed, order_rejected, complaint).');
-        console.log('📄 Privacy / Refund / Terms pages in modals.');
-        console.log('🎨 Color scheme: White, Purple (#7B2CBF), Black.');
-        console.log('📞 Contact: mhhackshelpzone@gmail.com | +971562100607 | +923007624789 | @MH_HACKS_OWNER');
-        console.log('📦 Pricing Plans: Basic, Standard, Premium with tool lists.');
-        console.log('📱 Social Sharing: Facebook, X, LinkedIn, Telegram, WhatsApp on product detail.');
-        console.log('🏷️ Capitalization: "MH HACKS" all caps, everything else Title Case.');
+        console.log('📦 All data synchronized with Admin Panel in real-time.');
+        console.log('🔄 No refresh needed — changes from admin appear instantly.');
+        console.log('💬 Live Chat: works with admin panel, stores history per user.');
+        console.log('📱 Fully responsive — desktop, tablet, mobile.');
     </script>
 </body>
 </html>
