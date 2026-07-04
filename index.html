@@ -11,6 +11,12 @@
     <meta property="og:url" content="https://mhhacks.com" />
     <meta name="theme-color" content="#7B2CBF" />
 
+    <!-- ========== FIREBASE CDN ========== -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js">
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
@@ -3686,6 +3692,10 @@
                 max-width: 440px;
                 margin: 0 auto;
             }
+            .hero-carousel {
+                aspect-ratio: 16/9;
+                min-height: 200px;
+            }
             .hero-carousel .slide .slide-overlay {
                 max-width: 80%;
                 padding: 30px 32px;
@@ -4813,9 +4823,28 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- ================================================================
-    JAVASCRIPT — COMPLETE WITH INTEGRATION LAYER
+    JAVASCRIPT — COMPLETE WITH FIREBASE INTEGRATION
     ================================================================ -->
     <script>
+        // ================================================================
+        // 🔥 FIREBASE CONFIG (EXACTLY AS PROVIDED)
+        // ================================================================
+        var firebaseConfig = {
+            apiKey: "AIzaSyBiDFZ4SiW6UJlnG7o6tmXl967GkrPSRmg",
+            authDomain: "mh-hacks-toolkit.firebaseapp.com",
+            projectId: "mh-hacks-toolkit",
+            storageBucket: "mh-hacks-toolkit.firebasestorage.app",
+            messagingSenderId: "1004438699703",
+            appId: "1:1004438699703:web:d14f54c5d9beaacb095732",
+            measurementId: "G-849J8JBJ3P"
+        };
+
+        // ================================================================
+        // 🔥 FIREBASE INIT
+        // ================================================================
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.database();
+
         // ================================================================
         // 0. LOADER
         // ================================================================
@@ -4865,193 +4894,21 @@
         };
 
         // ================================================================
-        // 2. REAL-TIME SYNCHRONIZATION LAYER (BroadcastChannel + storage)
+        // 2. FIREBASE DATA CACHE (local mirrors)
         // ================================================================
-        var SYNC_CHANNEL = 'mh_hacks_channel';
-        var syncChannel = null;
-
-        try {
-            syncChannel = new BroadcastChannel(SYNC_CHANNEL);
-            console.log('[SYNC] BroadcastChannel established: ' + SYNC_CHANNEL);
-        } catch (e) {
-            console.warn('[SYNC] BroadcastChannel not supported, using storage events only.');
-        }
-
-        function broadcastChange(type, key, data) {
-            var payload = { type: type, key: key, data: data, timestamp: Date.now() };
-            if (syncChannel) {
-                try {
-                    syncChannel.postMessage(payload);
-                } catch (e) { /* ignore */ }
-            }
-            // Also dispatch custom event within page
-            window.dispatchEvent(new CustomEvent('mh-sync', { detail: payload }));
-        }
-
-        // Listen for BroadcastChannel messages
-        if (syncChannel) {
-            syncChannel.onmessage = function(event) {
-                var payload = event.data;
-                if (payload && payload.key) {
-                    console.log('[SYNC] Received broadcast:', payload.type, payload.key);
-                    handleSyncMessage(payload);
-                }
-            };
-        }
-
-        // Listen for storage events from other tabs
-        window.addEventListener('storage', function(event) {
-            if (event.key && event.key.startsWith('mh_')) {
-                console.log('[SYNC] Storage event:', event.key);
-                var data = null;
-                try {
-                    data = JSON.parse(event.newValue);
-                } catch (e) { data = event.newValue; }
-                handleSyncMessage({ type: 'storage', key: event.key, data: data, timestamp: Date.now() });
-            }
-        });
-
-        // Listen for custom events within the same page
-        window.addEventListener('mh-sync', function(event) {
-            handleSyncMessage(event.detail);
-        });
-
-        // Handle sync messages
-        function handleSyncMessage(payload) {
-            var key = payload.key;
-            var data = payload.data;
-            var type = payload.type;
-
-            // Route to appropriate handler based on key
-            switch (key) {
-                case STORAGE_KEYS.PRODUCTS:
-                    if (data !== null) {
-                        window.products = data || getDefaultProducts();
-                        renderProducts();
-                        renderFreeTools();
-                        renderPaidToolsPage(
-                            document.getElementById('paidSortSelect') ? document.getElementById('paidSortSelect')
-                            .value : 'price-asc',
-                            document.getElementById('paidSearchInput') ? document.getElementById('paidSearchInput')
-                            .value : ''
-                        );
-                        renderFreeToolsPage(
-                            document.getElementById('freeSortSelect') ? document.getElementById('freeSortSelect')
-                            .value : 'rating',
-                            document.getElementById('freeSearchInput') ? document.getElementById('freeSearchInput')
-                            .value : ''
-                        );
-                        renderCategories();
-                        toast('🔄 Products updated from admin', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.CATEGORIES:
-                    if (data !== null) {
-                        window.categories = data || getDefaultCategories();
-                        renderCategories();
-                        toast('🔄 Categories updated from admin', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.USERS:
-                    if (data !== null) {
-                        window.users = data || [];
-                        if (window.currentUser) {
-                            var updated = window.users.find(function(u) { return u.id === window.currentUser.id; });
-                            if (updated) window.currentUser = updated;
-                        }
-                        toast('🔄 Users data refreshed', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.ORDERS:
-                    if (data !== null) {
-                        window.orders = data || [];
-                        toast('🔄 Orders updated from admin', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.NOTIFICATIONS:
-                    if (data !== null) {
-                        window.notifications = data || [];
-                        renderNotifications();
-                        updateNotifBadge();
-                        toast('🔄 Notifications updated', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.SETTINGS:
-                    if (data !== null) {
-                        window.settings = data || getDefaultSettings();
-                        applySettingsToUI(window.settings);
-                        toast('🔄 Site settings applied', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.PLANS:
-                    if (data !== null) {
-                        window.plans = data || getDefaultPlans();
-                        renderPricingPlans();
-                        toast('🔄 Pricing plans updated', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.COUPONS:
-                    if (data !== null) {
-                        window.coupons = data || [];
-                        toast('🔄 Coupons updated from admin', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.CHECKINS:
-                    if (data !== null) {
-                        if (window.currentUser) {
-                            var userCheckins = data[window.currentUser.id] || [];
-                            window.checkinData = userCheckins;
-                        }
-                        toast('🔄 Check-in data updated', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.CHAT_MESSAGES:
-                    if (data !== null) {
-                        window.chatHistory = data || [];
-                        if (document.getElementById('chatMessages')) {
-                            renderChatMessages();
-                        }
-                        toast('🔄 Chat messages updated', 'info');
-                    }
-                    break;
-
-                case STORAGE_KEYS.WALLET_TX:
-                case STORAGE_KEYS.ANALYTICS:
-                case STORAGE_KEYS.SLIDERS:
-                case STORAGE_KEYS.BANNERS:
-                    // These are handled elsewhere or just notify
-                    break;
-
-                default:
-                    // Generic refresh for unknown keys
-                    if (key && key.startsWith('mh_')) {
-                        // Let the page refresh relevant data
-                        if (key === STORAGE_KEYS.PRODUCTS || key === STORAGE_KEYS.CATEGORIES) {
-                            // already handled above
-                        }
-                    }
-                    break;
-            }
-
-            // Dispatch a refresh event for the current page
-            if (window.currentPage && key === STORAGE_KEYS.PRODUCTS) {
-                // If we're on a page that shows products, refresh it
-                var page = window.currentPage || 'home';
-                if (page === 'products' || page === 'home') {
-                    renderProducts();
-                    renderFreeTools();
-                }
-            }
-        }
+        var _fb_products = [];
+        var _fb_categories = [];
+        var _fb_users = [];
+        var _fb_orders = [];
+        var _fb_notifications = [];
+        var _fb_settings = {};
+        var _fb_plans = [];
+        var _fb_coupons = [];
+        var _fb_checkins = {};
+        var _fb_chat_messages = {};
+        var _fb_sliders = [];
+        var _fb_banners = [];
+        var _fb_analytics = { daily: {} };
 
         // ================================================================
         // 3. HELPERS: GET DEFAULTS
@@ -5439,39 +5296,153 @@
         }
 
         // ================================================================
-        // 4. DATA LAYER — READ/WRITE WITH SYNC
+        // 4. DATA LAYER — FIREBASE-BACKED (replaces localStorage)
         // ================================================================
-        function readData(key, fallback) {
-            try {
-                var data = localStorage.getItem(key);
-                return data ? JSON.parse(data) : fallback;
-            } catch (e) { return fallback; }
+
+        // ----- PRODUCTS -----
+        function getProducts() { return _fb_products; }
+
+        function setProducts(data) {
+            _fb_products = data || [];
+            try { db.ref('mh_products').set(_fb_products); } catch (e) { console.warn('Firebase setProducts error:',
+                    e); }
         }
 
-        function writeData(key, data) {
-            localStorage.setItem(key, JSON.stringify(data));
-            broadcastChange('update', key, data);
+        // ----- CATEGORIES -----
+        function getCategories() { return _fb_categories; }
+
+        function setCategories(data) {
+            _fb_categories = data || [];
+            try { db.ref('mh_categories').set(_fb_categories); } catch (e) { console.warn('Firebase setCategories error:',
+                    e); }
+        }
+
+        // ----- USERS -----
+        function getUsers() { return _fb_users; }
+
+        function setUsers(data) {
+            _fb_users = data || [];
+            try { db.ref('mh_users').set(_fb_users); } catch (e) { console.warn('Firebase setUsers error:', e); }
+        }
+
+        // ----- ORDERS -----
+        function getOrders() { return _fb_orders; }
+
+        function setOrders(data) {
+            _fb_orders = data || [];
+            try { db.ref('mh_orders').set(_fb_orders); } catch (e) { console.warn('Firebase setOrders error:', e); }
+        }
+
+        // ----- NOTIFICATIONS -----
+        function getNotifications() { return _fb_notifications; }
+
+        function setNotifications(data) {
+            _fb_notifications = data || [];
+            try { db.ref('mh_notifications').set(_fb_notifications); } catch (e) { console.warn(
+                    'Firebase setNotifications error:', e); }
+        }
+
+        // ----- PLANS -----
+        function getPlans() { return _fb_plans; }
+
+        function setPlans(data) {
+            _fb_plans = data || [];
+            try { db.ref('mh_plans').set(_fb_plans); } catch (e) { console.warn('Firebase setPlans error:', e); }
+        }
+
+        // ----- COUPONS -----
+        function getCoupons() { return _fb_coupons; }
+
+        function setCoupons(data) {
+            _fb_coupons = data || [];
+            try { db.ref('mh_coupons').set(_fb_coupons); } catch (e) { console.warn('Firebase setCoupons error:', e); }
+        }
+
+        // ----- SLIDERS -----
+        function getSliders() { return _fb_sliders; }
+
+        function setSliders(data) {
+            _fb_sliders = data || [];
+            try { db.ref('mh_sliders').set(_fb_sliders); } catch (e) { console.warn('Firebase setSliders error:', e); }
+        }
+
+        // ----- BANNERS -----
+        function getBanners() { return _fb_banners; }
+
+        function setBanners(data) {
+            _fb_banners = data || [];
+            try { db.ref('mh_banners').set(_fb_banners); } catch (e) { console.warn('Firebase setBanners error:', e); }
+        }
+
+        // ----- SETTINGS -----
+        function getSettings() { return _fb_settings; }
+
+        function setSettings(data) {
+            _fb_settings = data || {};
+            try { db.ref('mh_settings').set(_fb_settings); } catch (e) { console.warn('Firebase setSettings error:', e); }
+        }
+
+        // ----- CHECKINS (per user) -----
+        function getCheckins(userId) {
+            var key = String(userId);
+            return _fb_checkins[key] || [];
+        }
+
+        function setCheckins(userId, data) {
+            var key = String(userId);
+            _fb_checkins[key] = data || [];
+            var payload = {};
+            payload[key] = _fb_checkins[key];
+            try { db.ref('mh_checkins').update(payload); } catch (e) { console.warn('Firebase setCheckins error:', e); }
+        }
+
+        // ----- CHAT HISTORY (per user) -----
+        function getChatHistory(userId) {
+            var key = String(userId);
+            return _fb_chat_messages[key] || [];
+        }
+
+        function setChatHistory(userId, data) {
+            var key = String(userId);
+            _fb_chat_messages[key] = data || [];
+            var payload = {};
+            payload[key] = _fb_chat_messages[key];
+            try { db.ref('mh_chat').update(payload); } catch (e) { console.warn('Firebase setChatHistory error:', e); }
+        }
+
+        // ----- ANALYTICS -----
+        function getAnalytics() { return _fb_analytics || { daily: {} }; }
+
+        function setAnalytics(data) {
+            _fb_analytics = data || { daily: {} };
+            try { db.ref('mh_analytics').set(_fb_analytics); } catch (e) { console.warn('Firebase setAnalytics error:', e); }
         }
 
         // ================================================================
-        // 5. PRODUCT DATA (shared with localStorage)
+        // 5. HELPER FUNCTIONS (unchanged, just use the new getters)
         // ================================================================
-        var products = readData(STORAGE_KEYS.PRODUCTS, getDefaultProducts());
-        var categories = readData(STORAGE_KEYS.CATEGORIES, getDefaultCategories());
-        var users = readData(STORAGE_KEYS.USERS, []);
-        var orders = readData(STORAGE_KEYS.ORDERS, []);
-        var notifications = readData(STORAGE_KEYS.NOTIFICATIONS, []);
-        var settings = readData(STORAGE_KEYS.SETTINGS, getDefaultSettings());
-        var plans = readData(STORAGE_KEYS.PLANS, getDefaultPlans());
-        var coupons = readData(STORAGE_KEYS.COUPONS, []);
-        var checkinData = readData(STORAGE_KEYS.CHECKINS, {});
-        var chatHistory = readData(STORAGE_KEYS.CHAT_MESSAGES, []);
-        var analytics = readData(STORAGE_KEYS.ANALYTICS, { daily: {} });
-        var sliders = readData(STORAGE_KEYS.SLIDERS, []);
-        var banners = readData(STORAGE_KEYS.BANNERS, []);
+        function saveUsers() { setUsers(getUsers()); }
+
+        function saveOrders() { setOrders(getOrders()); }
+
+        function saveNotifications() { setNotifications(getNotifications()); }
+
+        function saveCheckins(userId, data) { setCheckins(userId, data); }
+
+        function saveChatHistory(userId, data) { setChatHistory(userId, data); }
+
+        function findUserByEmail(email) {
+            var users = getUsers();
+            return users.find(function(u) { return u.email.toLowerCase() === email.toLowerCase(); });
+        }
+
+        function findUserByRefCode(code) {
+            var users = getUsers();
+            return users.find(function(u) { return u.referralCode === code; });
+        }
 
         // ================================================================
-        // 6. STATE
+        // 6. STATE (local session + cart stay in localStorage)
         // ================================================================
         var cart = JSON.parse(localStorage.getItem('mh_cart')) || [];
         var currentFilter = 'all';
@@ -5492,10 +5463,17 @@
         var couponCode = '';
         var selectedPlan = null;
         var currentPage = 'home';
-        var notifUnread = notifications.filter(function(n) { return !n.read; }).length;
+        var notifUnread = 0;
+
+        function saveCart() { localStorage.setItem('mh_cart', JSON.stringify(cart)); }
+
+        function saveCurrentUser() {
+            if (currentUser) { localStorage.setItem('mh_currentUser', JSON.stringify(currentUser)); } else { localStorage
+                    .removeItem('mh_currentUser'); }
+        }
 
         // ================================================================
-        // 7. UTILITY FUNCTIONS
+        // 7. UTILITY FUNCTIONS (unchanged)
         // ================================================================
         function generateOrderId() { return 'MH-' + String(Math.floor(1000 + Math.random() * 9000)); }
 
@@ -5534,37 +5512,9 @@
         function generateRefCode() { return 'MH' + Math.random().toString(36).substring(2, 7).toUpperCase(); }
 
         function getInitials(name) { return name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(
-            0, 2); }
+                0, 2); }
 
-        function getProduct(id) { return products.find(function(p) { return p.id === id; }); }
-
-        function saveUsers() { writeData(STORAGE_KEYS.USERS, users); }
-
-        function saveOrders() { writeData(STORAGE_KEYS.ORDERS, orders); }
-
-        function saveCart() { localStorage.setItem('mh_cart', JSON.stringify(cart)); }
-
-        function saveCurrentUser() {
-            if (currentUser) { localStorage.setItem('mh_currentUser', JSON.stringify(currentUser)); } else { localStorage
-                    .removeItem('mh_currentUser'); }
-        }
-
-        function getCheckinKey(userId) { return 'mh_checkins_' + userId; }
-
-        function getCheckins(userId) { return JSON.parse(localStorage.getItem(getCheckinKey(userId))) || []; }
-
-        function saveCheckins(userId, data) { localStorage.setItem(getCheckinKey(userId), JSON.stringify(data)); }
-
-        function getChatKey(userId) { return 'mh_chat_' + userId; }
-
-        function getChatHistory(userId) { return JSON.parse(localStorage.getItem(getChatKey(userId))) || []; }
-
-        function saveChatHistory(userId, data) { localStorage.setItem(getChatKey(userId), JSON.stringify(data)); }
-
-        function findUserByEmail(email) { return users.find(function(u) { return u.email.toLowerCase() === email
-                .toLowerCase(); }); }
-
-        function findUserByRefCode(code) { return users.find(function(u) { return u.referralCode === code; }); }
+        function getProduct(id) { return getProducts().find(function(p) { return p.id === id; }); }
 
         function isPaid(p) { return !p.isFree; }
 
@@ -5575,7 +5525,6 @@
         // ================================================================
         function applySettingsToUI(settings) {
             if (!settings) return;
-            // Hero
             var headline = document.getElementById('heroHeadline');
             if (headline && settings.heroTitle) {
                 headline.innerHTML = settings.heroTitle.replace(/\n/g, '<br>');
@@ -5584,12 +5533,10 @@
             if (subline && settings.heroSubtitle) {
                 subline.textContent = settings.heroSubtitle;
             }
-            // Logo
             var logos = document.querySelectorAll('.logo img');
             logos.forEach(function(img) {
                 if (settings.logoUrl) img.src = settings.logoUrl;
             });
-            // Colors
             if (settings.primaryColor) {
                 document.documentElement.style.setProperty('--primary', settings.primaryColor);
                 document.documentElement.style.setProperty('--purple', settings.primaryColor);
@@ -5601,14 +5548,10 @@
         }
 
         // ================================================================
-        // 9. NOTIFICATIONS
+        // 9. NOTIFICATIONS (uses Firebase)
         // ================================================================
-        function saveNotifications() {
-            writeData(STORAGE_KEYS.NOTIFICATIONS, notifications);
-            updateNotifBadge();
-        }
-
         function addNotification(type, message, data) {
+            var notifs = getNotifications();
             var notif = {
                 id: Date.now(),
                 type: type,
@@ -5617,15 +5560,16 @@
                 read: false,
                 timestamp: new Date().toISOString()
             };
-            notifications.unshift(notif);
-            if (notifications.length > 100) notifications.pop();
-            saveNotifications();
+            notifs.unshift(notif);
+            if (notifs.length > 100) notifs.pop();
+            setNotifications(notifs);
             updateNotifBadge();
             toast('🔔 ' + message, 'info');
         }
 
         function updateNotifBadge() {
-            var unread = notifications.filter(function(n) { return !n.read; }).length;
+            var notifs = getNotifications();
+            var unread = notifs.filter(function(n) { return !n.read; }).length;
             var badge = document.getElementById('notifBadge');
             if (badge) { badge.textContent = unread;
                 badge.style.display = unread > 0 ? 'flex' : 'none'; }
@@ -5636,11 +5580,12 @@
         function renderNotifications() {
             var list = document.getElementById('notifList');
             if (!list) return;
-            if (notifications.length === 0) {
+            var notifs = getNotifications();
+            if (notifs.length === 0) {
                 list.innerHTML = '<div class="empty">No notifications.</div>';
                 return;
             }
-            list.innerHTML = notifications.slice(0, 30).map(function(n) {
+            list.innerHTML = notifs.slice(0, 30).map(function(n) {
                 var iconMap = {
                     'product_added': 'fa-plus-circle',
                     'admin_message': 'fa-user-shield',
@@ -5662,16 +5607,17 @@
             list.querySelectorAll('.notif-item').forEach(function(el) {
                 el.addEventListener('click', function() {
                     var id = parseInt(el.dataset.id);
-                    var n = notifications.find(function(not) { return not.id === id; });
+                    var notifs = getNotifications();
+                    var n = notifs.find(function(not) { return not.id === id; });
                     if (n) { n.read = true;
-                        saveNotifications();
+                        setNotifications(notifs);
                         updateNotifBadge(); }
                 });
             });
         }
 
         // ================================================================
-        // 10. AUTH SYSTEM
+        // 10. AUTH SYSTEM (uses Firebase users)
         // ================================================================
         function loginUser(email, password, remember) {
             var user = findUserByEmail(email);
@@ -5680,7 +5626,7 @@
             currentUser = user;
             saveCurrentUser();
             if (remember) { localStorage.setItem('mh_remembered', JSON.stringify({ email: user.email, password: user
-                    .password })); } else { localStorage.removeItem('mh_remembered'); }
+                        .password })); } else { localStorage.removeItem('mh_remembered'); }
             toast('Welcome back, ' + user.fullName + '!', 'success');
             updateAuthUI();
             return true;
@@ -5708,6 +5654,7 @@
                 var referrer = findUserByRefCode(refCode.trim().toUpperCase());
                 if (referrer) {
                     newUser.referrerId = referrer.id;
+                    var users = getUsers();
                     var uIdx = users.findIndex(function(u) { return u.id === referrer.id; });
                     if (uIdx !== -1) {
                         if (!users[uIdx].referralHistory) users[uIdx].referralHistory = [];
@@ -5716,14 +5663,15 @@
                         users[uIdx].referralHistory.push(refEntry);
                         users[uIdx].totalReferrals = (users[uIdx].totalReferrals || 0) + 1;
                         users[uIdx].walletBalance = (users[uIdx].walletBalance || 0) + 8;
-                        saveUsers();
+                        setUsers(users);
                         toast('Referrer earned 8 PKR!', 'success');
                     }
                 } else { toast('Referral code not found, account created.', 'info'); }
             }
 
+            var users = getUsers();
             users.push(newUser);
-            saveUsers();
+            setUsers(users);
             currentUser = newUser;
             saveCurrentUser();
             toast('Account created! You received 50 PKR bonus.', 'success');
@@ -5766,7 +5714,7 @@
         }
 
         // ================================================================
-        // 11. CART FUNCTIONS
+        // 11. CART FUNCTIONS (local, but uses getProduct from Firebase)
         // ================================================================
         function updateCartUI() {
             var badge = document.getElementById('cartBadge');
@@ -5852,10 +5800,10 @@
         }
 
         // ================================================================
-        // 12. RENDER PRODUCTS
+        // 12. RENDER PRODUCTS (uses Firebase products)
         // ================================================================
         function getFilteredProducts(filter, category) {
-            var result = products.slice();
+            var result = getProducts().slice();
             if (filter === 'paid') result = result.filter(function(p) { return !p.isFree; });
             else if (filter === 'free') result = result.filter(function(p) { return p.isFree; });
             if (category) {
@@ -5892,7 +5840,7 @@
         function renderFreeTools() {
             var grid = document.getElementById('freeToolsGrid');
             if (!grid) return;
-            var free = products.filter(function(p) { return p.isFree; });
+            var free = getProducts().filter(function(p) { return p.isFree; });
             if (free.length === 0) {
                 grid.innerHTML =
                     '<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--text-muted);">No free tools available.</div>';
@@ -5972,7 +5920,7 @@
         }
 
         // ================================================================
-        // 13. PRODUCT DETAIL OVERLAY
+        // 13. PRODUCT DETAIL OVERLAY (uses getProduct from Firebase)
         // ================================================================
         function openDetailOverlay(id) {
             var p = getProduct(id);
@@ -6053,8 +6001,8 @@
             }
 
             var relatedGrid = document.getElementById('detailRelatedGrid');
-            var related = products.filter(function(rp) { return rp.category === p.category && rp.id !== p.id; })
-            .slice(0, 4);
+            var related = getProducts().filter(function(rp) { return rp.category === p.category && rp.id !== p.id; })
+                .slice(0, 4);
             if (related.length === 0) {
                 relatedGrid.innerHTML =
                     '<div style="color:var(--text-muted);font-size:0.85rem;">No related products.</div>';
@@ -6164,17 +6112,19 @@
         if (detailBack) detailBack.addEventListener('click', closeDetailOverlay);
 
         // ================================================================
-        // 14. CATEGORY RENDER
+        // 14. CATEGORY RENDER (uses Firebase categories & products)
         // ================================================================
         function renderCategories() {
             var grid = document.getElementById('categoryGrid');
             if (!grid) return;
+            var cats = getCategories();
+            var prods = getProducts();
             var counts = {};
-            products.forEach(function(p) { var slug = p.categorySlug;
+            prods.forEach(function(p) { var slug = p.categorySlug;
                 counts[slug] = (counts[slug] || 0) + 1; });
-            categories.forEach(function(c) { c.count = counts[c.id] || 0; });
+            cats.forEach(function(c) { c.count = counts[c.id] || 0; });
 
-            grid.innerHTML = categories.map(function(c) {
+            grid.innerHTML = cats.map(function(c) {
                 return '<div class="category-item ' + (currentCategory === c.id ? 'active' : '') +
                     '" data-cat="' + c.id + '">' +
                     '<span class="icon"><i class="fas ' + c.icon + '"></i></span>' +
@@ -6201,12 +6151,12 @@
         }
 
         // ================================================================
-        // 15. DEDICATED PAID / FREE TOOLS PAGES
+        // 15. DEDICATED PAID / FREE TOOLS PAGES (uses Firebase)
         // ================================================================
         function renderPaidToolsPage(sort, query) {
             var grid = document.getElementById('paidToolsGrid');
             if (!grid) return;
-            var filtered = products.filter(function(p) { return !p.isFree; });
+            var filtered = getProducts().filter(function(p) { return !p.isFree; });
             if (query) { var q = query.toLowerCase();
                 filtered = filtered.filter(function(p) { return p.name.toLowerCase().includes(q) || p.category
                         .toLowerCase().includes(q); }); }
@@ -6229,7 +6179,7 @@
         function renderFreeToolsPage(sort, query) {
             var grid = document.getElementById('freeToolsPageGrid');
             if (!grid) return;
-            var filtered = products.filter(function(p) { return p.isFree; });
+            var filtered = getProducts().filter(function(p) { return p.isFree; });
             if (query) { var q = query.toLowerCase();
                 filtered = filtered.filter(function(p) { return p.name.toLowerCase().includes(q) || p.category
                         .toLowerCase().includes(q); }); }
@@ -6340,28 +6290,8 @@
         }, 300));
 
         // ================================================================
-        // 16. HERO CAROUSEL
+        // 16. HERO CAROUSEL (uses Firebase sliders)
         // ================================================================
-        var carouselSlides = readData(STORAGE_KEYS.SLIDERS, [{
-            image: 'https://picsum.photos/seed/banner1/1200/500',
-            title: '🔥 Premium Tools Collection',
-            subtitle: 'Top-rated tools for growth & automation.',
-            cta: 'Explore Now',
-            link: '#products'
-        }, {
-            image: 'https://picsum.photos/seed/banner2/1200/500',
-            title: '📈 Scale Your Business',
-            subtitle: 'Methods & courses used by top 1% earners.',
-            cta: 'View Methods',
-            link: '#products'
-        }, {
-            image: 'https://picsum.photos/seed/banner3/1200/500',
-            title: '🎁 Free Tools For Everyone',
-            subtitle: 'Powerful utilities at no cost. Start building.',
-            cta: 'Get Free Tools',
-            link: '#free-tools'
-        }]);
-
         var currentSlide = 0;
         var carouselInterval = null;
 
@@ -6369,7 +6299,30 @@
             var slidesContainer = document.getElementById('carouselSlides');
             var dotsContainer = document.getElementById('carouselDots');
             if (!slidesContainer || !dotsContainer) return;
-            slidesContainer.innerHTML = carouselSlides.map(function(s, i) {
+            var sliders = getSliders();
+            if (!sliders || sliders.length === 0) {
+                sliders = [{
+                    image: 'https://picsum.photos/seed/banner1/1200/500',
+                    title: '🔥 Premium Tools Collection',
+                    subtitle: 'Top-rated tools for growth & automation.',
+                    cta: 'Explore Now',
+                    link: '#products'
+                }, {
+                    image: 'https://picsum.photos/seed/banner2/1200/500',
+                    title: '📈 Scale Your Business',
+                    subtitle: 'Methods & courses used by top 1% earners.',
+                    cta: 'View Methods',
+                    link: '#products'
+                }, {
+                    image: 'https://picsum.photos/seed/banner3/1200/500',
+                    title: '🎁 Free Tools For Everyone',
+                    subtitle: 'Powerful utilities at no cost. Start building.',
+                    cta: 'Get Free Tools',
+                    link: '#free-tools'
+                }];
+                setSliders(sliders);
+            }
+            slidesContainer.innerHTML = sliders.map(function(s, i) {
                 return '<div class="slide" data-index="' + i + '">' +
                     '<img src="' + s.image + '" alt="' + s.title + '" loading="lazy">' +
                     '<div class="slide-overlay">' +
@@ -6381,7 +6334,7 @@
                     '</div>' +
                     '</div>';
             }).join('');
-            dotsContainer.innerHTML = carouselSlides.map(function(_, i) {
+            dotsContainer.innerHTML = sliders.map(function(_, i) {
                 return '<span class="dot ' + (i === 0 ? 'active' : '') + '" data-index="' + i + '"></span>';
             }).join('');
             updateCarousel(0);
@@ -6396,10 +6349,10 @@
             currentSlide = index;
         }
 
-        function nextSlide() { var next = (currentSlide + 1) % carouselSlides.length;
+        function nextSlide() { var next = (currentSlide + 1) % getSliders().length;
             updateCarousel(next); }
 
-        function prevSlide() { var prev = (currentSlide - 1 + carouselSlides.length) % carouselSlides.length;
+        function prevSlide() { var prev = (currentSlide - 1 + getSliders().length) % getSliders().length;
             updateCarousel(prev); }
 
         function startCarousel() {
@@ -6425,14 +6378,10 @@
         }
 
         // ================================================================
-        // 17. PRICING PLANS
+        // 17. PRICING PLANS (uses Firebase plans)
         // ================================================================
-        function getPaidToolNames() {
-            return products.filter(function(p) { return !p.isFree; }).map(function(p) { return p.name; });
-        }
-
         function getPlanTools(percentage) {
-            var paid = products.filter(function(p) { return !p.isFree; });
+            var paid = getProducts().filter(function(p) { return !p.isFree; });
             var count = Math.floor(paid.length * percentage / 100);
             return paid.slice(0, count).map(function(p) { return p.name; });
         }
@@ -6440,7 +6389,7 @@
         function renderPricingPlans() {
             var grid = document.getElementById('plansGrid');
             if (!grid) return;
-            var allPaid = products.filter(function(p) { return !p.isFree; });
+            var allPaid = getProducts().filter(function(p) { return !p.isFree; });
             var totalPaid = allPaid.length;
             var totalValue = allPaid.reduce(function(sum, p) { return sum + p.price; }, 0);
 
@@ -6569,7 +6518,7 @@
         });
 
         // ================================================================
-        // 18. CHECKOUT
+        // 18. CHECKOUT (uses Firebase users, orders, coupons)
         // ================================================================
         function openCheckout() {
             if (!currentUser) { toast('Please sign in to checkout', 'error');
@@ -6720,7 +6669,7 @@
                 var code = document.getElementById('couponInput') ? document.getElementById('couponInput')
                     .value.trim().toUpperCase() : '';
                 if (!code) { toast('Please enter a coupon code', 'error'); return; }
-                var validCoupons = readData(STORAGE_KEYS.COUPONS, []);
+                var validCoupons = getCoupons();
                 var found = validCoupons.find(function(c) { return c.code === code && c.active; });
                 if (found) {
                     var discountAmount = 0;
@@ -6768,11 +6717,12 @@
                         toast('Insufficient wallet balance. You need ' + totalPKR + ' PKR.', 'error');
                         return;
                     }
+                    var users = getUsers();
                     var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
                     if (uIdx !== -1) {
                         users[uIdx].walletBalance = balance - totalPKR;
                         currentUser = users[uIdx];
-                        saveUsers();
+                        setUsers(users);
                         saveCurrentUser();
                         var orderId = generateOrderId();
                         var order = {
@@ -6787,10 +6737,11 @@
                             date: new Date().toISOString(),
                             status: 'Completed'
                         };
+                        var orders = getOrders();
                         orders.push(order);
-                        saveOrders();
+                        setOrders(orders);
                         users[uIdx].totalPurchased = (users[uIdx].totalPurchased || 0) + 1;
-                        saveUsers();
+                        setUsers(users);
                         cart = [];
                         saveCart();
                         updateCartUI();
@@ -6832,9 +6783,11 @@
                         date: new Date().toISOString(),
                         status: 'Pending'
                     };
+                    var orders = getOrders();
                     orders.push(order);
-                    saveOrders();
+                    setOrders(orders);
 
+                    var users = getUsers();
                     var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
                     if (uIdx !== -1) {
                         users[uIdx].totalPurchased = (users[uIdx].totalPurchased || 0) + 1;
@@ -6843,18 +6796,16 @@
                                     .referrerId; });
                             if (refIdx !== -1) {
                                 var commission = finalTotal * 0.10;
-                                users[refIdx].walletBalance = (users[refIdx].walletBalance || 0) + (
-                                    commission * 280);
+                                users[refIdx].walletBalance = (users[refIdx].walletBalance || 0) + (commission * 280);
                                 if (!users[refIdx].referralHistory) users[refIdx].referralHistory = [];
                                 var refEntry = users[refIdx].referralHistory.find(function(r) { return r
                                         .userId === currentUser.id; });
-                                if (refEntry) { refEntry.earnings = (refEntry.earnings || 0) + (
-                                        commission * 280);
+                                if (refEntry) { refEntry.earnings = (refEntry.earnings || 0) + (commission * 280);
                                     refEntry.status = 'Purchased'; }
-                                saveUsers();
+                                setUsers(users);
                             }
                         }
-                        saveUsers();
+                        setUsers(users);
                     }
 
                     cart = [];
@@ -6906,7 +6857,7 @@
         });
 
         // ================================================================
-        // 19. DAILY CHECK-IN
+        // 19. DAILY CHECK-IN (uses Firebase checkins)
         // ================================================================
         function openCheckin() {
             if (!currentUser) { toast('Please sign in to check in', 'error');
@@ -6982,13 +6933,14 @@
                 var streak = getCheckinStreak(checkins);
                 var reward = (streak % 7) + 1;
                 checkins.push({ date: new Date().toISOString(), points: reward });
-                saveCheckins(currentUser.id, checkins);
+                setCheckins(currentUser.id, checkins);
+                var users = getUsers();
                 var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
                 if (uIdx !== -1) {
                     users[uIdx].walletBalance = (users[uIdx].walletBalance || 0) + reward;
                     users[uIdx].totalCheckins = (users[uIdx].totalCheckins || 0) + 1;
                     currentUser = users[uIdx];
-                    saveUsers();
+                    setUsers(users);
                     saveCurrentUser();
                 }
                 toast('🎉 +' + reward + ' PKR added to your wallet!', 'success');
@@ -7018,7 +6970,7 @@
         });
 
         // ================================================================
-        // 20. PROFILE OVERLAY
+        // 20. PROFILE OVERLAY (uses Firebase users, orders, checkins)
         // ================================================================
         function openProfileOverlay() {
             if (!currentUser) { toast('Please sign in to view profile', 'error');
@@ -7092,7 +7044,7 @@
             }
 
             var orderList = document.getElementById('orderHistoryList');
-            var userOrders = orders.filter(function(o) { return o.userId === currentUser.id; });
+            var userOrders = getOrders().filter(function(o) { return o.userId === currentUser.id; });
             if (orderList) {
                 if (userOrders.length === 0) {
                     orderList.innerHTML = '<div class="empty">No orders yet.</div>';
@@ -7152,10 +7104,11 @@
                 if (!currentUser) return;
                 var newPwd = prompt('Enter new password (min 6 characters):');
                 if (newPwd && newPwd.length >= 6) {
+                    var users = getUsers();
                     var uIdx = users.findIndex(function(u) { return u.id === currentUser.id; });
                     if (uIdx !== -1) { users[uIdx].password = newPwd;
                         currentUser = users[uIdx];
-                        saveUsers();
+                        setUsers(users);
                         saveCurrentUser();
                         toast('Password updated!', 'success'); }
                 } else if (newPwd !== null) { toast('Password must be at least 6 characters', 'error'); }
@@ -7163,7 +7116,7 @@
         }
 
         // ================================================================
-        // 21. AUTH MODAL
+        // 21. AUTH MODAL (uses Firebase users)
         // ================================================================
         function openAuth(mode) {
             if (typeof mode === 'undefined') mode = 'signin';
@@ -7325,7 +7278,7 @@
         }
 
         // ================================================================
-        // 22. SEARCH
+        // 22. SEARCH (uses Firebase products)
         // ================================================================
         var searchOverlay = document.getElementById('searchOverlay');
         var searchInput = document.getElementById('searchInput');
@@ -7350,7 +7303,7 @@
 
         function showTrending() {
             if (!searchResults) return;
-            var trending = products.slice().sort(function(a, b) { return b.rating - a.rating; }).slice(0, 6);
+            var trending = getProducts().slice().sort(function(a, b) { return b.rating - a.rating; }).slice(0, 6);
             var recent = JSON.parse(localStorage.getItem('mh_recentSearches')) || [];
             var html = '';
             if (trending.length) {
@@ -7412,7 +7365,7 @@
             if (recent.length > 10) recent = recent.slice(0, 10);
             localStorage.setItem('mh_recentSearches', JSON.stringify(recent));
 
-            var results = products.filter(function(p) {
+            var results = getProducts().filter(function(p) {
                 return p.name.toLowerCase().includes(q) ||
                     p.category.toLowerCase().includes(q) ||
                     p.description.toLowerCase().includes(q);
@@ -7442,7 +7395,7 @@
         }
 
         // ================================================================
-        // 23. FILTERS
+        // 23. FILTERS (uses Firebase products)
         // ================================================================
         var filterBtns = document.querySelectorAll('#filterButtons button');
         filterBtns.forEach(function(btn) {
@@ -7610,7 +7563,7 @@
         })();
 
         // ================================================================
-        // 29. CHAT SYSTEM
+        // 29. CHAT SYSTEM (uses Firebase chat per user)
         // ================================================================
         var chatFab = document.getElementById('chatFab');
         var chatPanel = document.getElementById('chatPanel');
@@ -7632,7 +7585,7 @@
             if (chatMsgHistory.length === 0) {
                 chatMsgHistory = [{ sender: 'bot', text: '👋 Hello! Ask me anything about our products, payments, or support.',
                     time: new Date().toISOString() }];
-                saveChatHistory(currentUser.id, chatMsgHistory);
+                setChatHistory(currentUser.id, chatMsgHistory);
             }
             renderChatMessages();
         }
@@ -7653,7 +7606,7 @@
         function addChatMessage(sender, text, image, audio) {
             var msg = { sender: sender, text: text, time: new Date().toISOString(), image: image, audio: audio };
             chatMsgHistory.push(msg);
-            if (currentUser) { saveChatHistory(currentUser.id, chatMsgHistory); }
+            if (currentUser) { setChatHistory(currentUser.id, chatMsgHistory); }
             renderChatMessages();
             if (sender === 'bot') {
                 chatUnread++;
@@ -7903,8 +7856,9 @@
         var markAllRead = document.getElementById('markAllRead');
         if (markAllRead) {
             markAllRead.addEventListener('click', function() {
-                notifications.forEach(function(n) { n.read = true; });
-                saveNotifications();
+                var notifs = getNotifications();
+                notifs.forEach(function(n) { n.read = true; });
+                setNotifications(notifs);
                 updateNotifBadge();
                 toast('All notifications marked as read', 'info');
             });
@@ -7933,15 +7887,320 @@
         }
 
         // ================================================================
-        // 34. INIT APP
+        // 34. FIREBASE REAL-TIME LISTENERS
+        // ================================================================
+        var firebaseListenersSetup = false;
+
+        function seedIfEmpty(refPath, defaultData, setter) {
+            return db.ref(refPath).once('value').then(function(snap) {
+                var data = snap.val();
+                if (data === null || data === undefined || (Array.isArray(data) && data.length === 0)) {
+                    console.log('🌱 Seeding', refPath, 'with default data');
+                    return setter(defaultData());
+                }
+                return Promise.resolve();
+            }).catch(function(err) {
+                console.warn('⚠️ Seed check failed for', refPath, err);
+                return Promise.resolve();
+            });
+        }
+
+        function setupFirebaseListeners() {
+            if (firebaseListenersSetup) return;
+            firebaseListenersSetup = true;
+            console.log('🔥 Setting up Firebase real-time listeners...');
+
+            // ----- SEED ALL NODES FIRST (once) -----
+            Promise.all([
+                seedIfEmpty('mh_products', getDefaultProducts, setProducts),
+                seedIfEmpty('mh_categories', getDefaultCategories, setCategories),
+                seedIfEmpty('mh_plans', getDefaultPlans, setPlans),
+                seedIfEmpty('mh_settings', getDefaultSettings, setSettings),
+                seedIfEmpty('mh_sliders', function() {
+                    return [{
+                        image: 'https://picsum.photos/seed/banner1/1200/500',
+                        title: '🔥 Premium Tools Collection',
+                        subtitle: 'Top-rated tools for growth & automation.',
+                        cta: 'Explore Now',
+                        link: '#products'
+                    }, {
+                        image: 'https://picsum.photos/seed/banner2/1200/500',
+                        title: '📈 Scale Your Business',
+                        subtitle: 'Methods & courses used by top 1% earners.',
+                        cta: 'View Methods',
+                        link: '#products'
+                    }, {
+                        image: 'https://picsum.photos/seed/banner3/1200/500',
+                        title: '🎁 Free Tools For Everyone',
+                        subtitle: 'Powerful utilities at no cost. Start building.',
+                        cta: 'Get Free Tools',
+                        link: '#free-tools'
+                    }];
+                }, setSliders),
+                seedIfEmpty('mh_users', function() { return []; }, setUsers),
+                seedIfEmpty('mh_orders', function() { return []; }, setOrders),
+                seedIfEmpty('mh_notifications', function() { return []; }, setNotifications),
+                seedIfEmpty('mh_coupons', function() { return []; }, setCoupons),
+                seedIfEmpty('mh_checkins', function() { return {}; }, function(data) { _fb_checkins = data || {};
+                    db.ref('mh_checkins').set(_fb_checkins); }),
+                seedIfEmpty('mh_chat', function() { return {}; }, function(data) { _fb_chat_messages = data || {};
+                    db.ref('mh_chat').set(_fb_chat_messages); }),
+                seedIfEmpty('mh_analytics', function() { return { daily: {} }; }, setAnalytics)
+            ]).then(function() {
+                console.log('✅ All Firebase nodes seeded (if empty).');
+                attachListeners();
+            }).catch(function(err) {
+                console.warn('⚠️ Seeding error:', err);
+                attachListeners(); // still attach listeners
+            });
+
+            function attachListeners() {
+                // ----- PRODUCTS -----
+                db.ref('mh_products').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_products = data;
+                        } else {
+                            _fb_products = getDefaultProducts();
+                            db.ref('mh_products').set(_fb_products);
+                        }
+                        renderProducts();
+                        renderFreeTools();
+                        renderPaidToolsPage(
+                            document.getElementById('paidSortSelect') ? document.getElementById('paidSortSelect')
+                            .value : 'price-asc',
+                            document.getElementById('paidSearchInput') ? document.getElementById('paidSearchInput')
+                            .value : ''
+                        );
+                        renderFreeToolsPage(
+                            document.getElementById('freeSortSelect') ? document.getElementById('freeSortSelect')
+                            .value : 'rating',
+                            document.getElementById('freeSearchInput') ? document.getElementById('freeSearchInput')
+                            .value : ''
+                        );
+                        renderCategories();
+                        renderPricingPlans();
+                        updateCartUI();
+                    } catch (e) { console.warn('Products listener error:', e); }
+                });
+
+                // ----- CATEGORIES -----
+                db.ref('mh_categories').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_categories = data;
+                        } else {
+                            _fb_categories = getDefaultCategories();
+                            db.ref('mh_categories').set(_fb_categories);
+                        }
+                        renderCategories();
+                    } catch (e) { console.warn('Categories listener error:', e); }
+                });
+
+                // ----- USERS -----
+                db.ref('mh_users').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_users = data;
+                            if (currentUser) {
+                                var updated = _fb_users.find(function(u) { return u.id === currentUser.id; });
+                                if (updated) {
+                                    currentUser = updated;
+                                    saveCurrentUser();
+                                }
+                            }
+                        } else {
+                            _fb_users = [];
+                            db.ref('mh_users').set([]);
+                        }
+                        if (document.getElementById('profileOverlay').classList.contains('active')) {
+                            renderProfile();
+                        }
+                    } catch (e) { console.warn('Users listener error:', e); }
+                });
+
+                // ----- ORDERS -----
+                db.ref('mh_orders').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_orders = data;
+                        } else {
+                            _fb_orders = [];
+                            db.ref('mh_orders').set([]);
+                        }
+                        if (document.getElementById('profileOverlay').classList.contains('active')) {
+                            renderProfile();
+                        }
+                    } catch (e) { console.warn('Orders listener error:', e); }
+                });
+
+                // ----- NOTIFICATIONS -----
+                db.ref('mh_notifications').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_notifications = data;
+                        } else {
+                            _fb_notifications = [];
+                            db.ref('mh_notifications').set([]);
+                        }
+                        renderNotifications();
+                        updateNotifBadge();
+                    } catch (e) { console.warn('Notifications listener error:', e); }
+                });
+
+                // ----- PLANS -----
+                db.ref('mh_plans').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_plans = data;
+                        } else {
+                            _fb_plans = getDefaultPlans();
+                            db.ref('mh_plans').set(_fb_plans);
+                        }
+                        renderPricingPlans();
+                    } catch (e) { console.warn('Plans listener error:', e); }
+                });
+
+                // ----- COUPONS -----
+                db.ref('mh_coupons').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_coupons = data;
+                        } else {
+                            _fb_coupons = [];
+                            db.ref('mh_coupons').set([]);
+                        }
+                    } catch (e) { console.warn('Coupons listener error:', e); }
+                });
+
+                // ----- SLIDERS -----
+                db.ref('mh_sliders').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_sliders = data;
+                        } else {
+                            _fb_sliders = [{
+                                image: 'https://picsum.photos/seed/banner1/1200/500',
+                                title: '🔥 Premium Tools Collection',
+                                subtitle: 'Top-rated tools for growth & automation.',
+                                cta: 'Explore Now',
+                                link: '#products'
+                            }, {
+                                image: 'https://picsum.photos/seed/banner2/1200/500',
+                                title: '📈 Scale Your Business',
+                                subtitle: 'Methods & courses used by top 1% earners.',
+                                cta: 'View Methods',
+                                link: '#products'
+                            }, {
+                                image: 'https://picsum.photos/seed/banner3/1200/500',
+                                title: '🎁 Free Tools For Everyone',
+                                subtitle: 'Powerful utilities at no cost. Start building.',
+                                cta: 'Get Free Tools',
+                                link: '#free-tools'
+                            }];
+                            db.ref('mh_sliders').set(_fb_sliders);
+                        }
+                        renderCarousel();
+                    } catch (e) { console.warn('Sliders listener error:', e); }
+                });
+
+                // ----- SETTINGS -----
+                db.ref('mh_settings').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_settings = data;
+                        } else {
+                            _fb_settings = getDefaultSettings();
+                            db.ref('mh_settings').set(_fb_settings);
+                        }
+                        applySettingsToUI(_fb_settings);
+                    } catch (e) { console.warn('Settings listener error:', e); }
+                });
+
+                // ----- CHECKINS (whole object) -----
+                db.ref('mh_checkins').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_checkins = data;
+                        } else {
+                            _fb_checkins = {};
+                            db.ref('mh_checkins').set({});
+                        }
+                        if (document.getElementById('checkinModal').classList.contains('open') && currentUser) {
+                            renderCheckinUI();
+                        }
+                        if (document.getElementById('profileOverlay').classList.contains('active')) {
+                            renderProfile();
+                        }
+                    } catch (e) { console.warn('Checkins listener error:', e); }
+                });
+
+                // ----- CHAT (whole object) -----
+                db.ref('mh_chat').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_chat_messages = data;
+                        } else {
+                            _fb_chat_messages = {};
+                            db.ref('mh_chat').set({});
+                        }
+                        if (chatPanel && chatPanel.classList.contains('open') && currentUser) {
+                            loadChatHistory();
+                        }
+                        var unread = 0;
+                        if (currentUser) {
+                            var userChat = _fb_chat_messages[String(currentUser.id)] || [];
+                            unread = userChat.filter(function(m) { return m.sender === 'bot' && !m.read; })
+                            .length;
+                        }
+                        var chatBadge = document.getElementById('chatBadge');
+                        if (chatBadge) {
+                            if (unread > 0) { chatBadge.textContent = unread;
+                                chatBadge.style.display = 'block'; } else { chatBadge.style.display = 'none'; }
+                        }
+                    } catch (e) { console.warn('Chat listener error:', e); }
+                });
+
+                // ----- ANALYTICS -----
+                db.ref('mh_analytics').on('value', function(snap) {
+                    try {
+                        var data = snap.val();
+                        if (data !== null && data !== undefined) {
+                            _fb_analytics = data;
+                        } else {
+                            _fb_analytics = { daily: {} };
+                            db.ref('mh_analytics').set(_fb_analytics);
+                        }
+                    } catch (e) { console.warn('Analytics listener error:', e); }
+                });
+
+                console.log('🔥 All Firebase real-time listeners attached.');
+            }
+        }
+
+        // ================================================================
+        // 35. INIT APP
         // ================================================================
         function initApp() {
+            setupFirebaseListeners();
+
             if (checkRemembered()) { updateAuthUI();
                 toast('Auto-logged in', 'success'); }
             if (currentUser) { updateAuthUI();
                 loadChatHistory(); }
             updateMobileSignIn();
-            applySettingsToUI(settings);
+            applySettingsToUI(getSettings());
             renderCategories();
             renderProducts();
             renderFreeTools();
@@ -7960,12 +8219,11 @@
                     var refInput = document.getElementById('authRef'); if (refInput) refInput.value = ref; }, 800);
             }
 
-            // Listen for settings updates from admin
-            window.addEventListener('mh-sync', function(e) {
-                if (e.detail && e.detail.key === STORAGE_KEYS.SETTINGS && e.detail.data) {
-                    applySettingsToUI(e.detail.data);
-                }
-            });
+            console.log('🚀 MH HACKS — Firebase Edition Loaded with Real-Time Sync!');
+            console.log('🔥 Firebase Realtime Database connected.');
+            console.log('📡 All data nodes: mh_products, mh_orders, mh_users, mh_notifications, mh_chat, mh_checkins, mh_plans, mh_coupons, mh_sliders, mh_settings, mh_analytics');
+            console.log('🔄 Real-time sync between Website and Admin Panel enabled.');
+            console.log('👤 Admin toggle: double-click "Offline" in chat header.');
         }
 
         if (document.readyState === 'complete') { initApp(); } else { window.addEventListener('load', initApp); }
@@ -7979,7 +8237,7 @@
         }
 
         // ================================================================
-        // 35. ESCAPE CLOSE
+        // 36. ESCAPE CLOSE
         // ================================================================
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
@@ -8003,7 +8261,7 @@
         });
 
         // ================================================================
-        // 36. FORCE HIDE LOADER SAFETY
+        // 37. FORCE HIDE LOADER SAFETY
         // ================================================================
         setTimeout(function() {
             var loader = document.getElementById('loader');
@@ -8013,14 +8271,9 @@
             }
         }, 8000);
 
-        console.log('🚀 MH HACKS — Premium Edition Loaded with Full Admin Sync!');
-        console.log('📡 BroadcastChannel active: ' + SYNC_CHANNEL);
-        console.log('🔑 Storage keys: ' + Object.values(STORAGE_KEYS).join(', '));
-        console.log('👤 Admin toggle: double-click "Offline" in chat header.');
-        console.log('📦 All data synchronized with Admin Panel in real-time.');
-        console.log('🔄 No refresh needed — changes from admin appear instantly.');
-        console.log('💬 Live Chat: works with admin panel, stores history per user.');
-        console.log('📱 Fully responsive — desktop, tablet, mobile.');
+        console.log('✅ MH HACKS — Website with Firebase integration complete.');
+        console.log('📦 Remember to set Firebase Security Rules:');
+        console.log('{ "rules": { ".read": true, ".write": true } }');
     </script>
 </body>
 </html>
